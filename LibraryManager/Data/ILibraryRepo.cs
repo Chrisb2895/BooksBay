@@ -1,4 +1,5 @@
-﻿using LibraryManager.Models;
+﻿using LibraryManager.Helpers;
+using LibraryManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace LibraryManager.Data
 
         IEnumerable<Library> GetLibraries();
 
-        IEnumerable<Library> GetLibraries(LibraryParameters libParam);
+        PagedList<Library> GetLibraries(LibraryParameters libParam);
 
         Library GetLibrariesById(int id);
 

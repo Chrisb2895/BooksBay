@@ -5,6 +5,7 @@ using LibraryManager.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,9 +49,27 @@ namespace LibraryManager.Controllers
         {
             _logger.LogDebug("Libraries Controlller GetAllLibrariesPaged Method Start");
             var libraryItems = _repository.GetLibraries(libParams);
-
+           
             if (libraryItems != null)
+            {
+                var metadata = new
+                {
+                    libraryItems.TotalCount,
+                    libraryItems.PageSize,
+                    libraryItems.CurrentPage,
+                    libraryItems.HasNext,
+                    libraryItems.HasPrevious,
+
+                };
+
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+                _logger.LogInformation($"Returned {libraryItems.TotalCount} libraries from db");
+
+
                 return Ok(_mapper.Map<IEnumerable<LibraryReadDTO>>(libraryItems));
+
+            }
 
             return NotFound();
         }

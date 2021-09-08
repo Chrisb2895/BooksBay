@@ -1,4 +1,5 @@
-﻿using LibraryManager.Models;
+﻿using LibraryManager.Helpers;
+using LibraryManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,13 +37,10 @@ namespace LibraryManager.Data
             return _context.Libraries.ToList();
         }
 
-        public IEnumerable<Library> GetLibraries(LibraryParameters libParam)
+        public PagedList<Library> GetLibraries(LibraryParameters libParam)
         {
-            return _context.Libraries
-                .OrderBy(l=> l.Id)
-                .Skip((libParam.PageNumber - 1) * libParam.PageSize)
-                .Take(libParam.PageSize)
-                .ToList();
+            return PagedList<Library>.ToPagedList(_context.Libraries.OrderBy(l => l.Id),
+                libParam.PageNumber, libParam.PageSize);
         }
 
         public Library GetLibrariesById(int id)
