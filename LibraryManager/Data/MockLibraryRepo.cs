@@ -1,4 +1,5 @@
-﻿using LibraryManager.Models;
+﻿using LibraryManager.Helpers;
+using LibraryManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,11 @@ namespace LibraryManager.Data
         }
 
         public void UpdateLibrary(Library lib)
+        {
+            throw new NotImplementedException();
+        }
+
+        PagedList<Library> ILibraryRepo.GetLibraries(LibraryParameters libParam)
         {
             throw new NotImplementedException();
         }

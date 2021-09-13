@@ -97,7 +97,7 @@ namespace LibraryManager.Controllers
 
 
             return CreatedAtRoute(nameof(GetLibraryByID), new { Id = libraryReadDTO.Id, libraryReadDTO });
-            //return Ok(libraryReadDTO);
+            
         }
 
         //PUT api/libraries/{id}
