@@ -2,6 +2,7 @@ using LibraryManager.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -43,6 +44,10 @@ namespace LibraryManager
 
             services.AddScoped<ILibraryRepo, SqlLibraryRepo>();
 
+            //Step 2 for identity auth
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<LibraryContext>();
+
             
 
             
@@ -70,6 +75,9 @@ namespace LibraryManager
             {
                 endpoints.MapControllers();
             });
+
+            //Step 3 for identity auth, step 4 addmigration
+            app.UseAuthentication();
         }
     }
 }

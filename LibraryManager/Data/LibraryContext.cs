@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 
 namespace LibraryManager.Data
 {
-    public class LibraryContext : DbContext
+    public class LibraryContext  : IdentityDbContext //Step 1 for identity auth
     {
         public static readonly ILoggerFactory _LoggerFactory = LoggerFactory.Create(builder => builder.AddLog4Net());
 
@@ -24,6 +25,12 @@ namespace LibraryManager.Data
             optionsBuilder.UseLoggerFactory(_LoggerFactory.AddLog4Net());
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.EnableDetailedErrors();
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            //builder.Seed();
         }
 
         public DbSet<Library>  Libraries { get; set; }
