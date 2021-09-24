@@ -16,19 +16,16 @@ namespace LibraryManager.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
 
-        public AccountController()
-        {
-            
-        }
-
+        
         public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
 
-        //POST api/libraries
+        //POST api/account/Register
         [HttpPost]
+        [Route("account/Register")]
         public async Task<IActionResult> RegisterUser(RegisterViewModel model)
         {
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };

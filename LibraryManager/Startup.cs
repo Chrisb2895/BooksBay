@@ -20,7 +20,7 @@ namespace LibraryManager
 {
     public class Startup
     {
-       
+
 
         public Startup(IConfiguration configuration)
         {
@@ -32,8 +32,12 @@ namespace LibraryManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
-            services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(Configuration.GetConnectionString("LibraryConn"));   });
+
+            services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(Configuration.GetConnectionString("LibraryConn")); });
+            //Step 2 for identity auth
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<LibraryContext>();
+
             services.AddControllers().AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
             services.AddSwaggerGen(c =>
             {
@@ -44,26 +48,27 @@ namespace LibraryManager
 
             services.AddScoped<ILibraryRepo, SqlLibraryRepo>();
 
-            //Step 2 for identity auth
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<LibraryContext>();
-
             
 
-            
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddLog4Net();
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryManager v1"));
             }
+
+            //Step 3 for identity auth, step 4 addmigration
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
@@ -74,10 +79,9 @@ namespace LibraryManager
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                
             });
 
-            //Step 3 for identity auth, step 4 addmigration
-            app.UseAuthentication();
         }
     }
 }

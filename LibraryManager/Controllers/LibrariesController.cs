@@ -42,9 +42,9 @@ namespace LibraryManager.Controllers
             return NotFound();
         }
 
-        //GET api/librariesPaged
+        //GET api/libraries/librariesPaged
         [HttpGet]
-        [Route("librariesPaged")]
+        [Route("libraries/librariesPaged")]
         public ActionResult<IEnumerable<LibraryReadDTO>> GetAllLibrariesPaged([FromQuery] LibraryParameters libParams)
         {
             _logger.LogDebug("Libraries Controlller GetAllLibrariesPaged Method Start");

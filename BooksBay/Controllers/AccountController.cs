@@ -1,4 +1,5 @@
-﻿using BooksBay.ViewModels;
+﻿using BooksBay.Helpers;
+using BooksBay.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,9 +11,12 @@ using APIModels = LibraryManager.Models;
 
 namespace BooksBay.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class AccountController : Controller
     {
 
+        LibraryAPI _api = new LibraryAPI();
 
         [HttpGet]
         public IActionResult Register()
@@ -21,24 +25,25 @@ namespace BooksBay.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterViewModel model)
+        [Route("account/Register")]
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                API.AccountController accService = new API.AccountController();
+                
                 APIModels.RegisterViewModel mod = new APIModels.RegisterViewModel()
                 {
                     Email = model.Email,
                     Password = model.Password,
                     ConfirmPassword = model.ConfirmPassword
                 };
-                var result = accService.RegisterUser(mod);
+                var result = _api.RegisterUser(mod);
                 if (result.IsCompletedSuccessfully)
                 {
                     return RedirectToAction("index", "home");
                 }
 
-                if (result is IdentityResult)
+                if (result.Result is IdentityResult)
                 {
                     foreach (IdentityError error in ((IdentityResult)result.Result).Errors)
                     {
