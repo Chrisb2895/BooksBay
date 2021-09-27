@@ -11,21 +11,21 @@ using APIModels = LibraryManager.Models;
 
 namespace BooksBay.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    
     public class AccountController : Controller
     {
 
         LibraryAPI _api = new LibraryAPI();
 
         [HttpGet]
+        [Route("Account/Register")]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        [Route("account/Register")]
+        [Route("Account/Register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -37,15 +37,15 @@ namespace BooksBay.Controllers
                     Password = model.Password,
                     ConfirmPassword = model.ConfirmPassword
                 };
-                var result = _api.RegisterUser(mod);
-                if (result.IsCompletedSuccessfully)
+                var result = await _api.RegisterUser(mod);
+                if (result.Succeeded)
                 {
                     return RedirectToAction("index", "home");
                 }
 
-                if (result.Result is IdentityResult)
+                if (result is IdentityResultDTO)
                 {
-                    foreach (IdentityError error in ((IdentityResult)result.Result).Errors)
+                    foreach (IdentityError error in ((IdentityResultDTO)result).Errors)
                     {
                         ModelState.AddModelError("", error.Description);
                     }

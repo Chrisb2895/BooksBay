@@ -23,10 +23,10 @@ namespace LibraryManager.Controllers
             this.signInManager = signInManager;
         }
 
-        //POST api/account/Register
+        //POST api/account/RegisterUser
         [HttpPost]
-        [Route("account/Register")]
-        public async Task<IActionResult> RegisterUser(RegisterViewModel model)
+        [Route("RegisterUser")]
+        public async Task<IdentityResult> RegisterUser(RegisterViewModel model)
         {
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };
             var result = await userManager.CreateAsync(user, model.Password);
@@ -36,7 +36,7 @@ namespace LibraryManager.Controllers
                 await signInManager.SignInAsync(user, isPersistent: false);
             }
 
-            return (IActionResult)result;
+            return result;
             //return CreatedAtRoute(nameof(GetLibraryByID), new { Id = libraryReadDTO.Id, libraryReadDTO });
 
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -21,23 +22,22 @@ namespace BooksBay.Helpers
             return client;
         }
 
-        public async Task<IActionResult> RegisterUser(APIModels.RegisterViewModel model)
+        public async Task<IdentityResultDTO> RegisterUser(APIModels.RegisterViewModel model)
         {
-            Task<IActionResult> result;
+            IdentityResult result = null;
+            IdentityResultDTO realRes=null;
             HttpClient cli = this.Initial();
             var stringContent = new StringContent(JsonConvert.SerializeObject(model), UnicodeEncoding.UTF8, "application/json");
-            HttpResponseMessage res = await cli.PostAsync("api/account/Register", stringContent);
+            HttpResponseMessage res = await cli.PostAsync("api/Account/RegisterUser", stringContent);
             if (res.IsSuccessStatusCode)
             {
-                var results = res.Content.ReadAsStringAsync().Result;
-                result = JsonConvert.DeserializeObject<Task<IActionResult>>(results);
-                return result.Result;
+                var results = await  res.Content.ReadAsStringAsync();
+                realRes = JsonConvert.DeserializeObject<IdentityResultDTO>(results);
+                result = realRes;
+                return realRes;
 
             }
-            return new ObjectResult(new { error = res.Content.ReadAsStringAsync().Result})
-            {
-                StatusCode = (int)res.StatusCode
-            };
+            return null;
         }
     }
 }
