@@ -35,9 +35,13 @@ namespace LibraryManager
 
             services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(Configuration.GetConnectionString("LibraryConn")); });
             //Step 2 for identity auth
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<LibraryContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 10;
+                options.Password.RequiredUniqueChars = 3;
+            }).AddEntityFrameworkStores<LibraryContext>();
 
+           
             services.AddControllers().AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
             services.AddSwaggerGen(c =>
             {
@@ -47,11 +51,6 @@ namespace LibraryManager
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<ILibraryRepo, SqlLibraryRepo>();
-
-            
-
-
-
 
         }
 

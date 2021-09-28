@@ -11,11 +11,11 @@ using APIModels = LibraryManager.Models;
 
 namespace BooksBay.Controllers
 {
-    
+
     public class AccountController : Controller
     {
 
-        LibraryAPI _api = new LibraryAPI();
+        readonly LibraryAPI _api = new LibraryAPI();
 
         [HttpGet]
         [Route("Account/Register")]
@@ -30,7 +30,7 @@ namespace BooksBay.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 APIModels.RegisterViewModel mod = new APIModels.RegisterViewModel()
                 {
                     Email = model.Email,
@@ -54,5 +54,17 @@ namespace BooksBay.Controllers
             }
             return View(model);
         }
-    }
+
+
+        [HttpPost]
+        [Route("Account/Logout")]
+        public async Task<IActionResult> Logout(RegisterViewModel model)
+        {
+            await _api.SignOut();
+
+            return RedirectToAction("index", "home");
+        }
+
+    }   
+
 }

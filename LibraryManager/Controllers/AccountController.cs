@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace LibraryManager.Controllers
@@ -39,6 +40,22 @@ namespace LibraryManager.Controllers
             return result;
             //return CreatedAtRoute(nameof(GetLibraryByID), new { Id = libraryReadDTO.Id, libraryReadDTO });
 
+        }
+
+        //POST api/account/User/IsSignedIn
+        [HttpPost]
+        [Route("User/IsSignedIn")]
+        public bool IsSignedIn(ClaimsPrincipal user)
+        {
+            return signInManager.IsSignedIn(user);            
+        }
+
+        //POST api/account/User/SignOut
+        [HttpPost]
+        [Route("User/SignOut")]
+        public async Task SignOutUser()
+        {
+            await signInManager.SignOutAsync();
         }
     }
 }
