@@ -35,13 +35,22 @@ namespace LibraryManager
 
             services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(Configuration.GetConnectionString("LibraryConn")); });
             //Step 2 for identity auth
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            /*services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
-            }).AddEntityFrameworkStores<LibraryContext>();
+            }).AddEntityFrameworkStores<LibraryContext>();*/
 
-           
+            //IDServer step 4
+            services.AddAuthentication()
+                .AddJwtBearer("Bearer", config =>
+                {
+                    config.Authority = "https://localhost:44306/";
+                    //usare nome corretto in progetto booksbay c'è configuration getapi
+                    config.Audience = "ApiOne";
+                });
+
+
             services.AddControllers().AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
             services.AddSwaggerGen(c =>
             {
@@ -66,13 +75,13 @@ namespace LibraryManager
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryManager v1"));
             }
 
-            //Step 3 for identity auth, step 4 addmigration
-            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            //IDServer step 3
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

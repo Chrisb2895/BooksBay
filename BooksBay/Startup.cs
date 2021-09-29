@@ -1,4 +1,5 @@
 using BooksBay.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BooksBay
@@ -24,8 +26,15 @@ namespace BooksBay
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {           
+        {
+            //IDServer step 2
+            services.AddIdentityServer()
+                .AddInMemoryApiResources(BooksBay.Configuration.GetApis())
+                .AddInMemoryClients(BooksBay.Configuration.GetClients())
+                .AddDeveloperSigningCredential();
+
             services.AddControllersWithViews();
+
             services.AddTransient<LibraryAPI>();
         }
 
@@ -43,13 +52,13 @@ namespace BooksBay
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
-           // app.UseAuthentication();
-
-            app.UseAuthorization();
+            //IDServer step 1
+            app.UseIdentityServer();    
 
             app.UseEndpoints(endpoints =>
             {

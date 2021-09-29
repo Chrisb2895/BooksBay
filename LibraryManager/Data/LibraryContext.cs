@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace LibraryManager.Data
 {
-    public class LibraryContext  : IdentityDbContext //Step 1 for identity auth
+    public class LibraryContext : DbContext  //: IdentityDbContext //Step 1 for identity auth
     {
         public static readonly ILoggerFactory _LoggerFactory = LoggerFactory.Create(builder => builder.AddLog4Net());
 
