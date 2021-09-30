@@ -39,11 +39,12 @@ namespace BooksBay
                 .AddCookie("Cookie")
                 .AddOpenIdConnect("oidc", config =>
                 {
+                    //questo punta al progetto IdentityServer
+                    config.Authority = "https://localhost:44326/";
                     config.ClientId = "client_id_mvc";
                     config.ClientSecret = "client_secret_mvc";
                     config.SaveTokens = true;
-                    //questo punta al progetto IdentityServer
-                    config.Authority = "https://localhost:44326/";
+                    config.ResponseType = "code";
 
                 });
 

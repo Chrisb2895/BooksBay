@@ -17,6 +17,7 @@ namespace LibraryManager.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
+        [Route("/home")]
         public async Task<IActionResult>  Index()
         {
             //retrieve access token

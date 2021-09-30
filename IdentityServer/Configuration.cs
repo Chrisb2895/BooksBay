@@ -1,4 +1,5 @@
 ﻿using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,14 @@ namespace IdentityServer
 {
     public static class Configuration
     {
+
+        public static IEnumerable<IdentityResource> GetIdentityResources() => new List<IdentityResource>
+        { 
+            new IdentityResources.OpenId(),
+            new IdentityResources.Profile(),
+            
+            };
+
         public static IEnumerable<ApiResource> GetApis() => 
             new List<ApiResource> { 
                 new ApiResource("ApiOne") 
@@ -30,7 +39,10 @@ namespace IdentityServer
                 ClientSecrets = { new Secret("client_secret_mvc".ToSha256()) },
                 AllowedGrantTypes =  GrantTypes.Code,
 
-                AllowedScopes = { "ApiOne" }
+                //punta a booksbay
+                RedirectUris = { "https://localhost:44306/signin-oidc" },
+
+                AllowedScopes = { "ApiOne", IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile }
             }
 
             };
