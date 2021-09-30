@@ -45,10 +45,12 @@ namespace LibraryManager
             services.AddAuthentication()
                 .AddJwtBearer("Bearer", config =>
                 {
-                    config.Authority = "https://localhost:44306/";
+                    config.Authority = "https://localhost:44326/";
                     //usare nome corretto in progetto booksbay c'è configuration getapi
                     config.Audience = "ApiOne";
                 });
+
+            services.AddHttpClient();
 
 
             services.AddControllers().AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });

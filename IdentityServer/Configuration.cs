@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BooksBay
+namespace IdentityServer
 {
     public static class Configuration
     {
@@ -21,6 +21,14 @@ namespace BooksBay
                 ClientId = "client_id",
                 ClientSecrets = { new Secret("client_secret".ToSha256()) },
                 AllowedGrantTypes =  GrantTypes.ClientCredentials,
+
+                AllowedScopes = { "ApiOne" }
+            },
+             new Client
+            {
+                ClientId = "client_id_mvc",
+                ClientSecrets = { new Secret("client_secret_mvc".ToSha256()) },
+                AllowedGrantTypes =  GrantTypes.Code,
 
                 AllowedScopes = { "ApiOne" }
             }
