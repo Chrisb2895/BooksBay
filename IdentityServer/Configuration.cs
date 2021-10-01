@@ -42,7 +42,8 @@ namespace IdentityServer
                 //punta a booksbay
                 RedirectUris = { "https://localhost:44306/signin-oidc" },
 
-                AllowedScopes = { "ApiOne", IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile }
+                AllowedScopes = { "ApiOne", IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile },
+                RequireConsent = false
             }
 
             };

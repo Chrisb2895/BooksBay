@@ -1,6 +1,8 @@
+using IdentityServer.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,8 +25,27 @@ namespace IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Identity step 1
+
+            services.AddDbContext<AppDbContext>();
+
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+             {
+
+             })
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "IdentityServer.Cookie";
+                config.LoginPath = "/Auth/Login";
+            });
+
+
             //IDServer step 2
             services.AddIdentityServer()
+                .AddAspNetIdentity<IdentityUser>()
                 .AddInMemoryApiResources(IdentityServer.Configuration.GetApis())
                 .AddInMemoryIdentityResources(IdentityServer.Configuration.GetIdentityResources())
                 .AddInMemoryClients(IdentityServer.Configuration.GetClients())
@@ -61,6 +82,10 @@ namespace IdentityServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
