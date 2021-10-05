@@ -57,6 +57,11 @@ namespace BooksBay.Controllers
             return RedirectToAction("index");
         }
 
+        public IActionResult Logout()
+        {
+            return SignOut("Cookie","oidc");
+        }
+
         public IActionResult Privacy()
         {
             return View();

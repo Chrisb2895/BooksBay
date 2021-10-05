@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManager.Controllers
 {
-    public class SecretController : Controller
+    /*public class SecretController : Controller
     {
         [Route("/secret")]
         [Authorize]
@@ -15,5 +15,5 @@ namespace LibraryManager.Controllers
         {
             return "secret message from apione";
         }
-    }
+    }*/
 }

@@ -35,20 +35,20 @@ namespace LibraryManager
 
             services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(Configuration.GetConnectionString("LibraryConn")); });
             //Step 2 for identity auth
-            /*services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
-            }).AddEntityFrameworkStores<LibraryContext>();*/
+            }).AddEntityFrameworkStores<LibraryContext>();
 
             //IDServer step 4
-            services.AddAuthentication()
+            /*services.AddAuthentication()
                 .AddJwtBearer("Bearer", config =>
                 {
                     config.Authority = "https://localhost:44326/";
                     //usare nome corretto in progetto booksbay c'è configuration getapi
                     config.Audience = "ApiOne";
-                });
+                });*/
 
             services.AddHttpClient();
 
@@ -83,8 +83,8 @@ namespace LibraryManager
             app.UseRouting();
 
             //IDServer step 3
-            app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

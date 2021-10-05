@@ -40,6 +40,7 @@ namespace IdentityServer
             {
                 config.Cookie.Name = "IdentityServer.Cookie";
                 config.LoginPath = "/Auth/Login";
+                config.LogoutPath = "/Auth/Logout";
             });
 
 

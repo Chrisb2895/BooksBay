@@ -29,7 +29,7 @@ namespace BooksBay
         {
 
             //IDServer step 6
-            services.AddAuthentication( config =>
+            /*services.AddAuthentication( config =>
             {
                 config.DefaultScheme = "Cookie";
                 config.DefaultChallengeScheme = "oidc";
@@ -45,8 +45,9 @@ namespace BooksBay
                     config.ClientSecret = "client_secret_mvc";
                     config.SaveTokens = true;
                     config.ResponseType = "code";
+                    config.SignedOutCallbackPath = "Home/Index";
 
-                });
+                });*/
 
             services.AddControllersWithViews();
 
@@ -74,8 +75,8 @@ namespace BooksBay
 
             //IDServer step 5
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
                
             app.UseEndpoints(endpoints =>
             {

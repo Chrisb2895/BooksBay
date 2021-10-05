@@ -39,9 +39,10 @@ namespace BooksBay.Helpers
             return result;
         }
 
-        public async Task<bool> IsSignedIn(ClaimsPrincipal user)
+        public async Task<bool> IsSignedIn( System.Security.Claims.ClaimsPrincipal user)
         {
             bool result = false;
+            ClaimsPrincipal us = (ClaimsPrincipal)user;
 
             result = await PostAsync<bool>("api/Account/User/IsSignedIn", user);
            

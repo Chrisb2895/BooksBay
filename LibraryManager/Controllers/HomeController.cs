@@ -8,6 +8,8 @@ using IdentityModel.Client;
 
 namespace LibraryManager.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class HomeController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -17,7 +19,7 @@ namespace LibraryManager.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        [Route("/home")]
+        /*[Route("/home")]
         public async Task<IActionResult>  Index()
         {
             //retrieve access token
@@ -49,6 +51,6 @@ namespace LibraryManager.Controllers
             access_token = tokenResponse.AccessToken,
             message = content
             });
-        }
+        }*/
     }
 }
