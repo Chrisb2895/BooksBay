@@ -34,12 +34,32 @@ namespace LibraryManager
         {
 
             services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(Configuration.GetConnectionString("LibraryConn")); });
-            //Step 2 for identity auth
+
+            //IDServer step 2
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
-            }).AddEntityFrameworkStores<LibraryContext>();
+            }).AddEntityFrameworkStores<LibraryContext>()
+            .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "IdentityServer.Cookie";
+                config.LoginPath = "/Auth/Login";
+                config.LogoutPath = "/Auth/Logout";
+            });
+
+            services.AddIdentityServer()
+                .AddAspNetIdentity<IdentityUser>()
+                //.AddInMemoryApiResources(LibraryManager.Configuration.GetApis())
+                .AddInMemoryIdentityResources(LibraryManager.Configuration.GetIdentityResources())
+                .AddInMemoryClients(LibraryManager.Configuration.GetClients())
+                .AddDeveloperSigningCredential();
+           
+            
+
+            //services.AddAuthentication();
 
             //IDServer step 4
             /*services.AddAuthentication()
@@ -53,7 +73,7 @@ namespace LibraryManager
             services.AddHttpClient();
 
 
-            services.AddControllers().AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
+            //services.AddControllers().AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LibraryManager", Version = "v1" });
@@ -62,6 +82,10 @@ namespace LibraryManager
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<ILibraryRepo, SqlLibraryRepo>();
+
+           
+            services.AddRazorPages();
+            services.AddControllersWithViews().AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
 
         }
 
@@ -82,15 +106,17 @@ namespace LibraryManager
 
             app.UseRouting();
 
-            //IDServer step 3
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            //IDServer step 1
+            app.UseIdentityServer();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 
             });
+
 
         }
     }

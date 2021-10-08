@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BooksBay.Helpers.ClaimsSerialize;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
@@ -42,7 +44,6 @@ namespace BooksBay.Helpers
         public async Task<bool> IsSignedIn( System.Security.Claims.ClaimsPrincipal user)
         {
             bool result = false;
-            ClaimsPrincipal us = (ClaimsPrincipal)user;
 
             result = await PostAsync<bool>("api/Account/User/IsSignedIn", user);
            
@@ -59,6 +60,13 @@ namespace BooksBay.Helpers
         private async Task<TResult> PostAsync<TResult>(string requestUri,object postData)
         {
             HttpClient cli = this.Initial();
+            if(postData is ClaimsPrincipal)
+            {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    Converters = new List<JsonConverter> { new JsonClaimConverter(), new JsonClaimsIdentityConverter(), new JsonClaimsPrincipalConverter() }
+                };
+            }
             var stringContent = new StringContent(JsonConvert.SerializeObject(postData), UnicodeEncoding.UTF8, "application/json");
             HttpResponseMessage res = await cli.PostAsync(requestUri, stringContent);
             if (res.IsSuccessStatusCode)
