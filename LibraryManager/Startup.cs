@@ -21,19 +21,21 @@ namespace LibraryManager
     public class Startup
     {
 
+        public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+       
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(Configuration.GetConnectionString("LibraryConn")); });
+            var connString = Configuration.GetConnectionString("LibraryConn");
+            services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(connString); });
 
             //IDServer step 2
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -50,11 +52,22 @@ namespace LibraryManager
                 config.LogoutPath = "/Auth/Logout";
             });
 
+            var assembly = typeof(Startup).Assembly.GetName().Name;
             services.AddIdentityServer()
                 .AddAspNetIdentity<IdentityUser>()
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connString,
+                        sql => sql.MigrationsAssembly(assembly));
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connString,
+                        sql => sql.MigrationsAssembly(assembly));
+                })
                 //.AddInMemoryApiResources(LibraryManager.Configuration.GetApis())
-                .AddInMemoryIdentityResources(LibraryManager.Configuration.GetIdentityResources())
-                .AddInMemoryClients(LibraryManager.Configuration.GetClients())
+                //.AddInMemoryIdentityResources(LibraryManager.Configuration.GetIdentityResources())
+                //.AddInMemoryClients(LibraryManager.Configuration.GetClients())                
                 .AddDeveloperSigningCredential();
            
             

@@ -63,7 +63,7 @@ namespace LibraryManager.Controllers
         }
 
         [HttpGet]
-        [Route("/Logout")]
+        [Route("/Auth/Logout")]
         public async Task<IActionResult> Logout(string logoutId)
         {
             await _signInManager.SignOutAsync();

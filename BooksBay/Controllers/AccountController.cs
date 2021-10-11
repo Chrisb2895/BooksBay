@@ -58,12 +58,12 @@ namespace BooksBay.Controllers
 
         [HttpPost]
         [Route("Account/Logout")]
-        public async Task<IActionResult> Logout(RegisterViewModel model)
+        public IActionResult Logout(RegisterViewModel model)
         {
-            await _api.SignOut();
-
-            return RedirectToAction("index", "home");
+            return SignOut("Cookie", "oidc");
         }
+
+
 
     }   
 

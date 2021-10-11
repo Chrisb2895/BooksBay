@@ -33,7 +33,7 @@ namespace BooksBay.Controllers
             return View();
         }
 
-        [Authorize]
+        /*[Authorize]
         public IActionResult Authenticate()
         {
             var userIDClaims = new List<Claim>()
@@ -56,13 +56,9 @@ namespace BooksBay.Controllers
             HttpContext.SignInAsync(userPrincipal);
 
             return RedirectToAction("index");
-        }
+        }*/
 
-        public IActionResult Logout()
-        {
-            return SignOut("Cookie","oidc");
-        }
-
+       
         public IActionResult Privacy()
         {
             return View();
