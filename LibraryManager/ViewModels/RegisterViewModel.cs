@@ -5,11 +5,13 @@ namespace LibraryManager.ViewModels
     public class RegisterViewModel
     {
         [Required]
-        public string UserName { get; set; }
+        [EmailAddress]
+        public string Email { get; set; }
 
-        [DataType(DataType.Password)]
         [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+
 
         [Display(Name = "Confirm password")]
         [DataType(DataType.Password)]

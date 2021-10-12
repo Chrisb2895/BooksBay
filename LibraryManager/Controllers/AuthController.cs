@@ -38,20 +38,25 @@ namespace LibraryManager.Controllers
         [Route("/Register")]
         public async Task<IActionResult> Register(RegisterViewModel vm)
         {
-            if(!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(vm);
-            }
-            var user = new IdentityUser(vm.UserName);
-            var result = await _userManager.CreateAsync(user, vm.Password);
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, false);
-                return Redirect(vm.ReturnUrl);
-            }
-            
 
-            return View();
+                var user = new IdentityUser(vm.Email);
+                var result = await _userManager.CreateAsync(user, vm.Password);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, false);
+                    return Redirect(vm.ReturnUrl);
+                }
+
+                foreach (IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+
+            return View(vm);
         }
 
         [HttpGet]
@@ -60,6 +65,28 @@ namespace LibraryManager.Controllers
         {
             return View(new LoginViewModel { ReturnUrl = returnUrl });
 
+        }
+
+        [HttpPost]
+        [Route("/Login")]
+        public async Task<IActionResult> Login(LoginViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var result = await _signInManager.PasswordSignInAsync(vm.Email, vm.Password, vm.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    return Redirect(vm.ReturnUrl);
+                }
+                else if (result.IsLockedOut)
+                {
+
+                }
+                ModelState.AddModelError("", "Invalid login attempt");
+            }
+
+            return View(vm);
         }
 
         [HttpGet]
@@ -75,23 +102,7 @@ namespace LibraryManager.Controllers
 
         }
 
-        [HttpPost]
-        [Route("/Login")]
-        public async Task<IActionResult> Login(LoginViewModel vm)
-        {
 
-            var result = await _signInManager.PasswordSignInAsync(vm.UserName, vm.Password, false, false);
-            if(result.Succeeded)
-            {
-                return Redirect(vm.ReturnUrl);
-            }
-            else if(result.IsLockedOut)
-            {
-
-            }
-
-            return View();
-        }
 
         [HttpGet]
         public IActionResult Index()

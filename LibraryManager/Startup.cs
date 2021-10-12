@@ -13,7 +13,9 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace LibraryManager
@@ -22,10 +24,12 @@ namespace LibraryManager
     {
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Env { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Env= env;
         }
 
        
@@ -53,6 +57,11 @@ namespace LibraryManager
             });
 
             var assembly = typeof(Startup).Assembly.GetName().Name;
+
+            var certPath = Path.Combine(Env.ContentRootPath, "libManager.pfx");
+
+            var certificate = new X509Certificate2(certPath,"XCertificate");
+
             services.AddIdentityServer()
                 .AddAspNetIdentity<IdentityUser>()
                 .AddConfigurationStore(options =>
@@ -65,10 +74,11 @@ namespace LibraryManager
                     options.ConfigureDbContext = b => b.UseSqlServer(connString,
                         sql => sql.MigrationsAssembly(assembly));
                 })
+                .AddSigningCredential(certificate);
                 //.AddInMemoryApiResources(LibraryManager.Configuration.GetApis())
                 //.AddInMemoryIdentityResources(LibraryManager.Configuration.GetIdentityResources())
                 //.AddInMemoryClients(LibraryManager.Configuration.GetClients())                
-                .AddDeveloperSigningCredential();
+                //.AddDeveloperSigningCredential();
            
             
 
