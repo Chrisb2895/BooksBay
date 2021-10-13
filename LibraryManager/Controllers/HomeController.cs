@@ -25,7 +25,7 @@ namespace LibraryManager.Controllers
             //retrieve access token
             var serverClient = _httpClientFactory.CreateClient();
 
-            var discoveryDocument = await serverClient.GetDiscoveryDocumentAsync("https://localhost:44326/");
+            var discoveryDocument = await serverClient.GetDiscoveryDocumentAsync("https://localhost:44380/");
 
             var tokenResponse = await serverClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest {
             
@@ -42,7 +42,7 @@ namespace LibraryManager.Controllers
 
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await apiClient.GetAsync("https://localhost:44380/secret");
+            var response = await apiClient.GetAsync("https://localhost:44306/home");
 
             var content = await response.Content.ReadAsStringAsync();
 

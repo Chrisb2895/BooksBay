@@ -68,7 +68,7 @@ namespace LibraryManager.Controllers
         }
 
         [HttpPost]
-        [Route("/Login")]
+        [Route("/Auth/Login")]
         public async Task<IActionResult> Login(LoginViewModel vm)
         {
             if (ModelState.IsValid)

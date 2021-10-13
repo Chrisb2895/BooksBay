@@ -85,13 +85,15 @@ namespace LibraryManager
             //services.AddAuthentication();
 
             //IDServer step 4
-            /*services.AddAuthentication()
+            services.AddAuthentication()
                 .AddJwtBearer("Bearer", config =>
                 {
-                    config.Authority = "https://localhost:44326/";
+                    config.Authority = "https://localhost:44380/";
                     //usare nome corretto in progetto booksbay c'è configuration getapi
                     config.Audience = "ApiOne";
-                });*/
+                    config.TokenValidationParameters.RoleClaimType = "roles";
+                    config.TokenValidationParameters.NameClaimType = System.Security.Claims.ClaimTypes.Name;
+                });
 
             services.AddHttpClient();
 
@@ -126,6 +128,8 @@ namespace LibraryManager
 
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 

@@ -27,15 +27,17 @@ namespace BooksBay
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+
             services.AddAuthentication();
             //IDServer step 6
-            services.AddAuthentication( config =>
-            {
-                config.DefaultScheme = "Cookie";
-                config.DefaultChallengeScheme = "oidc";
+            services.AddAuthentication(config =>
+           {
+               config.DefaultScheme = "Cookie";
+               config.DefaultChallengeScheme = "oidc";
 
 
-            })
+           })
                 .AddCookie("Cookie")
                 .AddOpenIdConnect("oidc", config =>
                 {
@@ -47,9 +49,14 @@ namespace BooksBay
                     config.ResponseType = "code";
                     config.SignedOutCallbackPath = "/Home/Index";
 
+                }).AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters.RoleClaimType = "roles";
+                    opt.TokenValidationParameters.NameClaimType = System.Security.Claims.ClaimTypes.Name;
                 });
 
-            services.AddControllersWithViews();
+
+                    services.AddControllersWithViews();
             services.AddRazorPages();
 
             services.AddTransient<LibraryAPI>();
@@ -75,7 +82,7 @@ namespace BooksBay
             app.UseRouting();
 
             //IDServer step 5
-
+            
             app.UseAuthentication();
             app.UseAuthorization();
                
