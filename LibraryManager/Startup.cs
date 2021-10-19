@@ -32,6 +32,10 @@ namespace LibraryManager
             Env= env;
         }
 
+        //SOLUTION THINGS TO ADJUST:
+        //1) PUT ALL HARDCODED STRING IN APPSETTING.JSON
+        //2) LIBRARY MANAGER AUTH CONTROLLER, CONFIGURE ROUTE WITHOUT NEED TO REPEAT CONTROLLER NAME
+        //3) BOOKSBAY MVC CLIENT ADD LOG4NET AS DONE IN LIBRARY MANAGER
        
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -58,9 +62,9 @@ namespace LibraryManager
 
             var assembly = typeof(Startup).Assembly.GetName().Name;
 
-            var certPath = Path.Combine(Env.ContentRootPath, "libManager.pfx");
+            /*var certPath = Path.Combine(Env.ContentRootPath, "libManager.pfx");
 
-            var certificate = new X509Certificate2(certPath,"XCertificate");
+            var certificate = new X509Certificate2(certPath,"XCertificate");*/
 
             services.AddIdentityServer()
                 .AddAspNetIdentity<IdentityUser>()
@@ -74,15 +78,20 @@ namespace LibraryManager
                     options.ConfigureDbContext = b => b.UseSqlServer(connString,
                         sql => sql.MigrationsAssembly(assembly));
                 })
-                .AddSigningCredential(certificate);
+                //.AddSigningCredential(certificate);
                 //.AddInMemoryApiResources(LibraryManager.Configuration.GetApis())
                 //.AddInMemoryIdentityResources(LibraryManager.Configuration.GetIdentityResources())
                 //.AddInMemoryClients(LibraryManager.Configuration.GetClients())                
-                //.AddDeveloperSigningCredential();
-           
-            
+                .AddDeveloperSigningCredential();
 
-            //services.AddAuthentication();
+
+            //External Login FB Step 1, poi per configurare appid --> https://developers.facebook.com/docs/facebook-login/
+            services.AddAuthentication().AddFacebook(config=>
+            {
+                config.AppId = "839658230062666";
+                config.AppSecret = "2e309b81510419e8db96494b6f91cd5f";
+            
+            });
 
             //IDServer step 4
             /*services.AddAuthentication()

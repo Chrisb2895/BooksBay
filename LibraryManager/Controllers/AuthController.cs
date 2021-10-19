@@ -61,9 +61,16 @@ namespace LibraryManager.Controllers
 
         [HttpGet]
         [Route("/Auth/Login")]
-        public IActionResult Login(string returnUrl)
+        public async Task<IActionResult> Login(string returnUrl)
         {
-            return View(new LoginViewModel { ReturnUrl = returnUrl });
+            //External Login FB Step 2
+            var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
+
+            return View(new LoginViewModel { 
+                ReturnUrl = returnUrl,
+                ExternalProviders = externalProviders
+            
+            });
 
         }
 
@@ -100,6 +107,32 @@ namespace LibraryManager.Controllers
 
             return Redirect(logoutRequest.PostLogoutRedirectUri);
 
+        }
+
+        //External Login FB Step 4
+        [HttpPost]
+        [Route("/Auth/ExternalLogin")]
+        public async Task<IActionResult> ExternalLogin(string provider,string returnUrl)
+        {
+            var redirectUri = Url.Action(nameof(ExternalLoginCallback), "Auth", new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUri);
+            return Challenge(properties,provider);
+        }
+
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return RedirectToAction("Login");
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+
+            if(result.Succeeded)
+            {
+                return Redirect(returnUrl);
+            }
+
+            return View();
         }
 
 

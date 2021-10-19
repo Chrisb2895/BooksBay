@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace LibraryManager.ViewModels
 {
@@ -16,5 +18,7 @@ namespace LibraryManager.ViewModels
         public bool RememberMe { get; set; }
 
         public string ReturnUrl { get; set; }
+
+        public IEnumerable<AuthenticationScheme> ExternalProviders { get; set; }
     }
 }
