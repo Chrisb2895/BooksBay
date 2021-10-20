@@ -151,6 +151,7 @@ namespace LibraryManager
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 
+                
             });
 
 

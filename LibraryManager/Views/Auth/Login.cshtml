@@ -14,7 +14,7 @@
             <h1>Sign In With</h1>
             @foreach (var provider in Model.ExternalProviders)
             {
-                <button name="provider" type="submit" value="=@provider.Name">
+                <button name="provider" type="submit" value="@provider.Name">
                     @provider.Name
                 </button>
             }
