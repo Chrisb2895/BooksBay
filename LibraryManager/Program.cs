@@ -80,7 +80,7 @@ namespace LibraryManager
             }
             catch(Exception ex)
             {
-                log.ErrorFormat("Errore in LibraryManager WebAPI: {0}  \r\n {1}", ex.Message, ex.StackTrace);
+                log.ErrorFormat("Errore in LibraryManager WebAPI Program: {0}  \r\n {1}", ex.Message, ex.StackTrace);
             }
           
         }
@@ -91,8 +91,8 @@ namespace LibraryManager
                 {
                     webBuilder.UseStartup<Startup>().ConfigureLogging((hostingContext, logging) =>
                     {
-                        
-                        
+                        logging.AddLog4Net();
+
                     });
 
 

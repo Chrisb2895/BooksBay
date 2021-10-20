@@ -7,23 +7,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LibraryManager;
+using log4net;
+using System.Xml;
+using System.Reflection;
+using System.IO;
 
 namespace BooksBay
 {
     public class Program
     {
+        private static ILog log = LogManager.GetLogger(typeof(Program));
         public static void Main(string[] args)
         {
-           
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+
+                XmlDocument log4netConfig = new XmlDocument();
+                log4netConfig.Load(File.OpenRead("log4net.config"));
+                var repo = LogManager.CreateRepository(
+                    Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
+                log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
+                log.Warn("Application - Main is invoked");
+
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                log.ErrorFormat("Errore in BooksBay Program: {0}  \r\n {1}", ex.Message, ex.StackTrace);
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
-                    
+                    webBuilder.UseStartup<Startup>().ConfigureLogging((hostingContext, logging) =>
+                    {
+                        logging.AddLog4Net();
+
+                    });
+
                 });
     }
 }
