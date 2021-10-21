@@ -1,4 +1,5 @@
 ﻿using BooksBay.Models;
+using BooksBay.ViewModels;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -68,6 +69,11 @@ namespace BooksBay.Controllers
                 access_token = tokenResponse.AccessToken,
                 message = content
             });*/
+
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            if (identity.IsAuthenticated)             
+                return View(new BaseViewModel { CurrentLoggedUser = claims.FirstOrDefault(cl=> cl.Type == "name").Value });
 
             return View();
         }

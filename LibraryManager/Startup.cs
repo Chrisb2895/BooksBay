@@ -62,9 +62,9 @@ namespace LibraryManager
 
             var assembly = typeof(Startup).Assembly.GetName().Name;
 
-            /*var certPath = Path.Combine(Env.ContentRootPath, "libManager.pfx");
+            var certPath = Path.Combine(Env.ContentRootPath, "libManager.pfx");
 
-            var certificate = new X509Certificate2(certPath,"XCertificate");*/
+            var certificate = new X509Certificate2(certPath,"XCertificate");
 
             services.AddIdentityServer()
                 .AddAspNetIdentity<IdentityUser>()
@@ -78,36 +78,24 @@ namespace LibraryManager
                     options.ConfigureDbContext = b => b.UseSqlServer(connString,
                         sql => sql.MigrationsAssembly(assembly));
                 })
-                //.AddSigningCredential(certificate);
-                //.AddInMemoryApiResources(LibraryManager.Configuration.GetApis())
-                //.AddInMemoryIdentityResources(LibraryManager.Configuration.GetIdentityResources())
-                //.AddInMemoryClients(LibraryManager.Configuration.GetClients())                
-                .AddDeveloperSigningCredential();
+                .AddSigningCredential(certificate);
 
 
             //External Login FB Step 1, poi per configurare appid --> https://developers.facebook.com/docs/facebook-login/
-            services.AddAuthentication().AddFacebook(config=>
+            /*services.AddAuthentication().AddFacebook(config=>
             {
                 config.AppId = "839658230062666";
                 config.AppSecret = "2e309b81510419e8db96494b6f91cd5f";
             
-            });
+            });*/
 
-            //IDServer step 4
-            /*services.AddAuthentication()
-                .AddJwtBearer("Bearer", config =>
-                {
-                    config.Authority = "https://localhost:44380/";
-                    //usare nome corretto in progetto booksbay c'è configuration getapi
-                    config.Audience = "ApiOne";
-                    config.TokenValidationParameters.RoleClaimType = "roles";
-                    config.TokenValidationParameters.NameClaimType = System.Security.Claims.ClaimTypes.Name;
-                });*/
-
-            services.AddHttpClient();
+            services.AddAuthentication().AddGoogle(config =>
+           {
+               config.ClientId = "1073258207424-2f18mkdfvdntsvhgh98dc1csiklbnubf.apps.googleusercontent.com";
+               config.ClientSecret = "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";
+           });
 
 
-            //services.AddControllers().AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LibraryManager", Version = "v1" });
