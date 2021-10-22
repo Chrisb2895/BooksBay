@@ -128,11 +128,25 @@ namespace LibraryManager.Controllers
             if (info == null)
                 return RedirectToAction("Login");
 
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToAction("Login");
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false,false);
 
             if (result.Succeeded)
             {
                 return Redirect(returnUrl);
+            }
+
+            if (result.RequiresTwoFactor)
+            {
+                bool hasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null;
+
+                if(!hasAuthenticator)
+                    return RedirectToPage("./EnableAuthenticator", new { ReturnUrl = returnUrl, RememberMe = false });
+
+                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = false });
             }
 
             var userName = info.Principal.FindFirst(ClaimTypes.Name.Replace(" ", "_")).Value;
