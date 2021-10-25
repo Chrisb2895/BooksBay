@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManager", "LibraryMa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooksBay", "BooksBay\BooksBay.csproj", "{BF4B5395-9E5B-4F8B-B48A-84B938611EFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{F5A161B4-6FD7-4F80-8180-2B4112993971}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{BF4B5395-9E5B-4F8B-B48A-84B938611EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF4B5395-9E5B-4F8B-B48A-84B938611EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF4B5395-9E5B-4F8B-B48A-84B938611EFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5A161B4-6FD7-4F80-8180-2B4112993971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5A161B4-6FD7-4F80-8180-2B4112993971}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5A161B4-6FD7-4F80-8180-2B4112993971}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5A161B4-6FD7-4F80-8180-2B4112993971}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -128,9 +128,10 @@ namespace LibraryManager.Controllers
             if (info == null)
                 return RedirectToAction("Login");
 
-            var user = await _userManager.GetUserAsync(User);
+            /*var user = await _userManager.GetUserAsync(User);
             if (user == null)
-                return RedirectToAction("Login");
+                return RedirectToAction("Login");*/
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
 
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false,false);
 

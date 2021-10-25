@@ -1,49 +1,42 @@
 using BooksBay.Helpers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace BooksBay
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+        private readonly string _API_Endpoint;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            _API_Endpoint = Configuration.GetValue<string>("WebAPI_Endpoint");
         }
-
-        public IConfiguration Configuration { get; }
-
+      
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddSingleton<IConfiguration>(Configuration);
 
-            services.AddAuthentication();
             //IDServer step 6
             services.AddAuthentication(config =>
            {
                config.DefaultScheme = "Cookie";
                config.DefaultChallengeScheme = "oidc";
 
-
            })
                 .AddCookie("Cookie")
                 .AddOpenIdConnect("oidc", config =>
                 {
-                    //questo punta al progetto IdentityServer
-                    config.Authority = "https://localhost:44380/";
+                    //questo punta al progetto LibraryManager
+                    config.Authority = _API_Endpoint;
                     config.ClientId = "client_id_mvc";
                     config.ClientSecret = "client_secret_mvc";
                     config.SaveTokens = true;
@@ -51,8 +44,7 @@ namespace BooksBay
                     config.SignedOutCallbackPath = "/Home/Index";
                     config.GetClaimsFromUserInfoEndpoint = true;
                     config.Scope.Add("openid");
-                    config.Scope.Add("profile");
-                    //config.Scope.Add("ApiOne");                 
+                    config.Scope.Add("profile");               
                     config.Scope.Add("offline_access");
 
                 }).AddJwtBearer(opt =>
