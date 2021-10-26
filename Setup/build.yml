@@ -1,0 +1,22 @@
+# Build Windows service
+# versione 1.1.0
+# Compila soluzione e la pubblica nella windows dir
+
+steps:
+- checkout: self
+- task: NuGetToolInstaller@1
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+- task: MSBuild@1
+  displayName: 'Compilazione Applicazione'
+  inputs:
+      solution: '$(solution)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      msbuildArguments: ' /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:publishUrl=$(build.artifactStagingDirectory)'
+
+        
+- publish: $(build.artifactstagingdirectory)
+  displayName: 'Pubblicazione artefatti'
+  artifact: WebApp

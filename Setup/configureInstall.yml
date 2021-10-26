@@ -1,0 +1,61 @@
+# Versione 1.1.0
+
+steps:
+    # Verifica componenti per DSC (da lanciare manualmente una volta sola)
+    #- task: PowerShell@2
+    #  displayName: "Verifica componenti Powershell per DSC"
+    #  inputs:
+    #    filePath: 'Setup\dsc_prepare.ps1'
+
+    - task: DeleteFiles@1
+      displayName: "Pulizia temp folder"
+      inputs:
+        SourceFolder: $(Pipeline.Workspace)\WebApp
+        Contents: '**/*' 
+
+    # Recupero artefatto generato
+    - download: current
+      displayName: "Dowload WebApp compilata"
+      artifact: WebApp
+
+    - task: CopyFiles@2
+      displayName: "Copia WebApp in workingFolder"
+      inputs:
+        SourceFolder: '$(Pipeline.Workspace)\WebApp\'
+        Contents: '**'
+        TargetFolder: 'TempDeployFolder\'
+        CleanTargetFolder: true
+
+
+    # Sostituzione segnaposto
+    - task: replacetokens@3
+      displayName: "Sostituzione dei segnaposto"
+      inputs:
+        targetFiles: '**/*.config,**/*.xml,**/*.ps1,**/*.json'
+        encoding: 'auto'
+        writeBOM: true
+        actionOnMissing: 'fail'
+        keepToken: false
+        tokenPrefix: '#{'
+        tokenSuffix: '}#'
+
+    # Preparazione rilascio
+    - task: PowerShell@2
+      displayName: "Preparazione rilascio"
+      inputs:
+        filePath: 'Setup\pre_install.ps1'
+    
+
+    - task: CopyFiles@2
+      displayName: "Copia file in $(TargetFolder)"
+      inputs:
+        SourceFolder: 'TempDeployFolder\'
+        Contents: '**'
+        TargetFolder: '$(TargetFolder)\'
+        CleanTargetFolder: true #Svuota la cartelle e la ricarica (elimina file eliminati)  
+        
+    # Applicazione DSC per installazione o aggiornamento webApp
+    - task: PowerShell@2
+      displayName: "DSC - Installazione WebApp"
+      inputs:
+        filePath: 'Setup\dsc_install.ps1'

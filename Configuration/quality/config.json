@@ -1,0 +1,8 @@
+{
+	"ENV": "QLT",
+	"TargetFolder": "C:\\DocFlow\\xxx\\xxx",
+	"LogFolder": "C:\\DocFlow\\Logs\\xxx",
+	"WorkFolder":"C:\\DocFlow\\Work\\xxx",
+
+	"NOTA-ATTENZIONE": "Non mettere qui dati sensibili (es password)"
+}

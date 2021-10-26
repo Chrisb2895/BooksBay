@@ -1,0 +1,36 @@
+{
+	"CoreFiles" : [
+		{  "origin": "Core/Bin", "filename": "ContentServerXXX.exe", "destination": "ContentServerCRP.exe"},
+		{  "origin": "Core/Bin", "filename": "ContentServerXXX.exe", "destination": "ContentServerS4P.exe"},
+        {  "origin": "Core/Bin", "filename": "ContentServerXXX.exe", "destination": "ContentServerS48.exe"},
+        {  "origin": "Core/Bin", "filename": "ContentServerXXX.exe", "destination": "ContentServerCR8.exe"},
+		{  "origin": "Core/Bin", "filename": "DartCertificate.dll"},
+        {  "origin": "Core/Bin", "filename": "DartSecure2.dll"},
+        {  "origin": "Core/Bin", "filename": "DartServer.dll"},
+        {  "origin": "Core/Bin", "filename": "DartSock.dll"},
+        {  "origin": "Core/Bin", "filename": "NTSVC.ocx"},
+        {  "origin": "Core/Bin", "filename": "SAPFusion.dll"},
+        {  "origin": "Core/DocFlow.SAP.Document", "filename": "Docflow.SAP.Document.dll"},
+        {  "origin": "Core/DocFlow.SAP.Document", "filename": "Docflow.SAP.Document.xml"}
+	],
+	"CoreFiles.comment": "Usato per copia dei file core",
+    "CustomFiles" : [
+		{  "origin": "WindowsService", "filename": "*"}
+	],
+    "copyfiles" : [
+         { "from": "./WindowsService", "to": "./PRD"}
+    ],
+	"copyfiles.comment": "Usato fare insallazione con script powershell",
+    "replace" : ["*.config","*.ini","*.xml"],
+	"replace.comment": "Usato per sostituzione segnaposto in insallazione con script powershell",
+	"AzureLibaries": [
+        {
+            "file": "..\\AzureLibaries\\DevVariables.json",
+            "org": "https://dev.azure.com/docflowcust",
+            "project": "Ubisoft",
+            "name": "DevVariables"
+        }
+    ],
+	"AzureLibaries.comment": "path dove recuperare le variabili di libreria Azure, usato da powershell"
+}
+

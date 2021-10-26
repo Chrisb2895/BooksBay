@@ -1,0 +1,126 @@
+# Pipeline per configuraione ed installazione singolo componente
+# Versione 1.1.0
+#
+# server di riferimento = ServerX (sostituire!)
+
+# Gruppi di variabili Azure utilizzate
+# DevVariables
+# QualityVariables
+# ProdVariables
+
+variables:
+- group: agentConfiguration
+
+# scatta sul commit sui rami indicati
+trigger:
+  branches:
+    include:
+    - main
+    - master
+    - quality
+    - development
+
+stages:
+## ---- Compilazione soluzione ----
+- stage: BuildSolution
+  displayName: '[VM] Compila soluzione'
+  pool:
+    vmImage: 'windows-latest'  
+  variables:
+    solution: '**/*.sln'
+    buildPlatform: 'Any CPU' 
+    buildConfiguration: 'Release'
+  jobs:
+  - deployment: BuildSolution
+    displayName: 'Compilazione della soluzione'
+    environment: BuildEnv
+    strategy: 
+      runOnce:
+        deploy:
+          steps:
+            - template: Setup/build.yml
+            #- template: Setup/uploadUniversalPackages.yml
+
+## ---- DEVELOPMENT ----
+- stage: InstallationUpdateDEV
+  displayName: '[DEV] Installa o aggiorna'
+  dependsOn: BuildSolution
+  condition: startsWith(variables['Build.SourceBranchName'], 'dev')
+  variables:
+  - group: DevVariables
+  pool: 
+    name: $(AgentPool.DEV)
+    demands: Agent.Name -equals $(Agent.Name.DEV.ServerX)
+  jobs:
+  - deployment: ConfigureAndUpdate
+    displayName: 'Configura e aggiorna installazione'
+    environment: Development
+    strategy: 
+      runOnce:
+        deploy:
+          steps:
+            - checkout: self
+              submodules: true
+            # Se si usano variabili in config.json - begin
+            - task: oneLuckiDevJson2Variable@1
+              inputs:
+                jsonFile: './Configuration/development/config.json'
+                shouldPrefixVariables: false
+            # Se si usano variabili in config.json - end
+            - template: Setup/configureInstall.yml
+
+## ---- QUALITY ----
+- stage: InstallationUpdateQLT
+  displayName: '[QLT] Installa o aggiorna'
+  dependsOn: InstallationUpdateDEV
+  condition: startsWith(variables['Build.SourceBranchName'], 'quality')
+  variables:
+  - group: QualityVariables
+  pool: 
+    name: $(AgentPool.QLT)
+    demands: Agent.Name -equals $(Agent.Name.QLT.ServerX)
+  jobs:
+  - deployment: ConfigureAndUpdate
+    displayName: 'Configura e aggiorna installazione'
+    environment: Quality
+    strategy: 
+      runOnce:
+        deploy:
+          steps:
+            - checkout: self
+              submodules: true
+            # Se si usano variabili in config.json - begin
+            - task: oneLuckiDevJson2Variable@1
+              inputs:
+                jsonFile: './Configuration/quality/config.json'
+                shouldPrefixVariables: false
+            # Se si usano variabili in config.json - end
+            - template: Setup/configureInstall.yml
+
+## ---- PRODUZIONE ----
+- stage: InstallationUpdatePRD
+  displayName: '[PRD] Installa o aggiorna'
+  dependsOn: InstallationUpdateQLT
+  condition: or(eq(variables['Build.SourceBranchName'], 'master'),eq(variables['Build.SourceBranchName'], 'main')) #Solo per i rami main e master
+  variables:
+  - group: ProdVariables
+  pool: 
+    name: $(AgentPool.PRD)
+    demands: Agent.Name -equals $(Agent.Name.PRD.ServerX)
+  jobs:
+  - deployment: ConfigureAndUpdate
+    displayName: 'Configura e aggiorna installazione'
+    environment: Produzione
+    strategy: 
+      runOnce:
+        deploy:
+          steps:
+            - checkout: self
+              submodules: true
+            # Se si usano variabili in config.json - begin
+            - task: oneLuckiDevJson2Variable@1
+              inputs:
+                jsonFile: './Configuration/main/config.json'
+                shouldPrefixVariables: false
+            # Se si usano variabili in config.json - end
+            - template: Setup/configureInstall.yml

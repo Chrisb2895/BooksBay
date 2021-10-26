@@ -1,0 +1,8 @@
+{
+    "WebAppName" : "BooksBay",
+    "ExternalWebAppName" : "BooksBay",
+    "TargetFolder": "C:\\inetpub\\wwwroot\\BooksBay",
+    "LogFolder": "E:\\Docflow\\Cliente\\Logs\\Progetto\\Componente",
+	"WorkFolder":"C:\\DocFlow\\Work\\xxx",
+	"NOTA-ATTENZIONE": "Non mettere qui dati sensibili (es password)"
+}
