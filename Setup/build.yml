@@ -9,14 +9,25 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 - task: MSBuild@1
-  displayName: 'Compilazione Applicazione'
+  displayName: 'Compilazione Web API LibraryManager'
   inputs:
-      solution: '$(solution)'
+      solution: '**/LibraryManager.csproj'
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-      msbuildArguments: ' /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:publishUrl=$(build.artifactStagingDirectory)'
+      msbuildArguments: ' /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:publishUrl=$(build.artifactStagingDirectory)/publish/LibMan'
+- task: MSBuild@1
+  displayName: 'Compilazione Web App BooksBay'
+  inputs:
+      solution: '**/BooksBay.csproj'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      msbuildArguments: ' /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:publishUrl=$(build.artifactStagingDirectory)/publish/BooksBay'
 
         
-- publish: $(build.artifactstagingdirectory)
-  displayName: 'Pubblicazione artefatti'
+- publish: $(build.artifactstagingdirectory)/publish/LibMan
+  displayName: 'Pubblicazione artefatto LibraryManager'
+  artifact: WebAPI
+
+- publish: $(build.artifactstagingdirectory)/publish/BooksBay
+  displayName: 'Pubblicazione artefatto BooksBay'
   artifact: WebApp

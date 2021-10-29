@@ -32,7 +32,7 @@ stages:
     buildConfiguration: 'Release'
   jobs:
   - deployment: BuildSolution
-    displayName: 'Compilazione della soluzione'
+    displayName: 'Compilazione dei 2 Progetti LibraryManager (API) e BooksBay(site)'
     environment: BuildEnv
     strategy: 
       runOnce:

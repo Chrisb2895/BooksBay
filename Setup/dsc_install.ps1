@@ -20,8 +20,8 @@
 
 # Gestione credenziali, commentare se non necessario
 # begin
-#$password = '#{ServiceAccountPassw}#' | ConvertTo-SecureString -asPlainText -Force
-#$username = '#{ServiceAccount}#'
+#$password = 'ServiceAccountPassw' | ConvertTo-SecureString -asPlainText -Force
+#$username = 'ServiceAccount'
 #[PSCredential] $credential = New-Object System.Management.Automation.PSCredential($username,$password)
 # end
 
@@ -44,11 +44,32 @@ Configuration WebAppInstallerDSC
         File Folder1
         {
              Type = 'Directory'
-             DestinationPath = '#{TargetFolder}#'
+             DestinationPath = '#{TargetFolder1}#'
              Ensure = "Present"
         }
+
+        File Folder2
+        {
+             Type = 'Directory'
+             DestinationPath = '#{TargetFolder2}#'
+             Ensure = "Present"
+        }
+
+        xWebAppPool AppPool1
+        {
+            Ensure                  = 'Present'
+            Name                    = '#{WebAPIName}#AppPool'
+            State                   = 'Started'
+			# Credenziali
+			#IdentityType 			= "SpecificUser"
+			#Credential 				= $credential
+            # Ad esempio Per eProcs
+            # maxProcesses            = 5
+            # Se gira con l'application pool identity serve questo
+            # loadUserProfile         = $true
+        }
 	
-		xWebAppPool AppPool
+		xWebAppPool AppPool2
         {
             Ensure                  = 'Present'
             Name                    = '#{WebAppName}#AppPool'
@@ -61,15 +82,34 @@ Configuration WebAppInstallerDSC
             # Se gira con l'application pool identity serve questo
             # loadUserProfile         = $true
         }
-		
-		xWebApplication WebApp
+
+        xWebApplication WebApp1
         {
-			DependsOn               = '[xWebAppPool]#{WebAppName}#AppPool'
+			DependsOn               = '[xWebAppPool1]#{WebAPIName}#AppPool'
+            Ensure                  = 'Present'
+            Name                    = '#{ExternalWebAPIName}#'
+            WebAppPool              = '#{WebAPIName}#AppPool'
+            Website                 = 'Default Web Site'
+            PhysicalPath            = '#{TargetFolder1}#'
+			# Esempio gestione autenticazione 
+            # AuthenticationInfo = MSFT_xWebApplicationAuthenticationInformation
+            # {
+			# 	Anonymous = $true
+			# 	Basic = $false
+			# 	Digest = $false
+			# 	Windows = $false
+            # }
+			
+        }
+		
+		xWebApplication WebApp2
+        {
+			DependsOn               = '[xWebAppPool2]#{WebAppName}#AppPool'
             Ensure                  = 'Present'
             Name                    = '#{ExternalWebAppName}#'
             WebAppPool              = '#{WebAppName}#AppPool'
             Website                 = 'Default Web Site'
-            PhysicalPath            = '#{TargetFolder}#'
+            PhysicalPath            = '#{TargetFolder2}#'
 			# Esempio gestione autenticazione 
             # AuthenticationInfo = MSFT_xWebApplicationAuthenticationInformation
             # {

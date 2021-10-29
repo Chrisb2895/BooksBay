@@ -6,17 +6,35 @@ steps:
     #  displayName: "Verifica componenti Powershell per DSC"
     #  inputs:
     #    filePath: 'Setup\dsc_prepare.ps1'
+    - task: DeleteFiles@1
+      displayName: "Pulizia temp publish webAPI folder"
+      inputs:
+        SourceFolder: $(Pipeline.Workspace)\WebAPI
+        Contents: '**/*' 
 
     - task: DeleteFiles@1
-      displayName: "Pulizia temp folder"
+      displayName: "Pulizia temp publish webapp folder"
       inputs:
         SourceFolder: $(Pipeline.Workspace)\WebApp
         Contents: '**/*' 
 
     # Recupero artefatto generato
     - download: current
+      displayName: "Dowload WebAPI compilata"
+      artifact: WebAPI
+
+    # Recupero artefatto generato
+    - download: current
       displayName: "Dowload WebApp compilata"
       artifact: WebApp
+
+    - task: CopyFiles@2
+      displayName: "Copia WebAPI in workingFolder"
+      inputs:
+        SourceFolder: '$(Pipeline.Workspace)\WebAPI\'
+        Contents: '**'
+        TargetFolder: 'TempDeployFolderAPI\'
+        CleanTargetFolder: true
 
     - task: CopyFiles@2
       displayName: "Copia WebApp in workingFolder"
@@ -47,15 +65,23 @@ steps:
     
 
     - task: CopyFiles@2
-      displayName: "Copia file in $(TargetFolder)"
+      displayName: "Copia webAPI compilata in $(TargetFolder1)"
+      inputs:
+        SourceFolder: 'TempDeployFolderAPI\'
+        Contents: '**'
+        TargetFolder: '$(TargetFolder1)\'
+        CleanTargetFolder: true #Svuota la cartelle e la ricarica (elimina file eliminati) 
+        
+    - task: CopyFiles@2
+      displayName: "Copia webApp compilata in $(TargetFolder2)"
       inputs:
         SourceFolder: 'TempDeployFolder\'
         Contents: '**'
-        TargetFolder: '$(TargetFolder)\'
-        CleanTargetFolder: true #Svuota la cartelle e la ricarica (elimina file eliminati)  
+        TargetFolder: '$(TargetFolder2)\'
+        CleanTargetFolder: true #Svuota la cartelle e la ricarica (elimina file eliminati)
         
     # Applicazione DSC per installazione o aggiornamento webApp
     - task: PowerShell@2
-      displayName: "DSC - Installazione WebApp"
+      displayName: "DSC - Installazione WebAPI e WebApp"
       inputs:
         filePath: 'Setup\dsc_install.ps1'
