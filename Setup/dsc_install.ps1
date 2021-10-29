@@ -20,9 +20,9 @@
 
 # Gestione credenziali, commentare se non necessario
 # begin
-$password = '#{ServiceAccountPassw}#' | ConvertTo-SecureString -asPlainText -Force
-$username = '#{ServiceAccount}#'
-[PSCredential] $credential = New-Object System.Management.Automation.PSCredential($username,$password)
+#$password = '#{ServiceAccountPassw}#' | ConvertTo-SecureString -asPlainText -Force
+#$username = '#{ServiceAccount}#'
+#[PSCredential] $credential = New-Object System.Management.Automation.PSCredential($username,$password)
 # end
 
 #Configurazione DSC temporanea per installazione della webb app
@@ -54,8 +54,8 @@ Configuration WebAppInstallerDSC
             Name                    = '#{WebAppName}#AppPool'
             State                   = 'Started'
 			# Credenziali
-			IdentityType 			= "SpecificUser"
-			Credential 				= $credential
+			#IdentityType 			= "SpecificUser"
+			#Credential 				= $credential
             # Ad esempio Per eProcs
             # maxProcesses            = 5
             # Se gira con l'application pool identity serve questo
@@ -90,7 +90,7 @@ $cd = @{
         @{
             NodeName = 'localhost'
 			# Gestione credenziali, commentare se non necessario
-            PSDscAllowPlainTextPassword = $true
+            #PSDscAllowPlainTextPassword = $true
         }
     )
 }
