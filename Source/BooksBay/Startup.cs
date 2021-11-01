@@ -1,10 +1,12 @@
 using BooksBay.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace BooksBay
 {
@@ -80,6 +82,23 @@ namespace BooksBay
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+
+            app.Use((context, next) =>
+            {
+                context.Response.GetTypedHeaders().CacheControl =
+                      new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                      {
+                          NoCache = true,
+                          NoStore = true,
+                          MustRevalidate = true
+                      };
+                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+
+                if (context.Request.Headers.TryGetValue("X-Forwarded-Prefix", out var value))
+                    context.Request.PathBase = value.First();
+
+                return next();
+            });
 
             app.UseRouting();
 

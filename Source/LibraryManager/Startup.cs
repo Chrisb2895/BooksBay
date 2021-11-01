@@ -131,6 +131,7 @@ namespace LibraryManager
                           NoStore = true,
                           MustRevalidate = true
                       };
+                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
 
                 if (context.Request.Headers.TryGetValue("X-Forwarded-Prefix", out var value))
                     context.Request.PathBase = value.First();
