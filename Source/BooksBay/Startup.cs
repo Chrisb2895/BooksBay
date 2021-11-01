@@ -1,13 +1,17 @@
 using BooksBay.Helpers;
+using LibraryManager.Classes.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
+using System.Net.Http.Headers;
 
 namespace BooksBay
 {
@@ -57,12 +61,29 @@ namespace BooksBay
                 });
 
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(config =>
+            {
+                config.Filters.Add(typeof(CustomHeaders));
+            });
+            services.AddScoped<CustomHeaders>();
             services.AddRazorPages();
 
             services.AddTransient<LibraryAPI>();
 
             services.AddHttpClient();
+
+            //OWASP SECURING
+            services.AddResponseCaching();
+            services.AddMvc(options =>
+            {
+                options.CacheProfiles.Add("default", new CacheProfile
+                {
+                    Duration = 30,
+                    Location = ResponseCacheLocation.Any,
+                    NoStore = true
+                });
+            });
+            //END OWASP SECURING
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,9 +103,27 @@ namespace BooksBay
             }
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions // for wwwroot files
+            {
+                OnPrepareResponse = (context) =>
+                {
+                    var headers = context.Context.Response.GetTypedHeaders();
+
+                    headers.CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+                    {
+                        Public = true,
+                        MaxAge = TimeSpan.FromDays(30)
+                    };
+
+                    headers.Headers.Remove("X-Powered-By");
+                }
+            });
+
+            app.UseRouting();
 
             //OWASP SECURING
+
+            app.UseResponseCaching();
             app.Use((context, next) =>
             {
                 context.Response.GetTypedHeaders().CacheControl =
@@ -106,12 +145,12 @@ namespace BooksBay
             {
                 HttpOnly = HttpOnlyPolicy.Always,
                 Secure = CookieSecurePolicy.Always,
-                MinimumSameSitePolicy = SameSiteMode.None
+                MinimumSameSitePolicy = SameSiteMode.Strict
             });
 
             //END OWASP SECURING
 
-            app.UseRouting();
+            
 
             //IDServer step 5
 

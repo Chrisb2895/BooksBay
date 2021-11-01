@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LibraryManager.ViewModels;
 using System.Security.Claims;
+using LibraryManager.Classes.Controllers;
 
 namespace LibraryManager.Controllers
 {
@@ -61,8 +62,10 @@ namespace LibraryManager.Controllers
 
         [HttpGet]
         [Route("/Auth/Login")]
+        [ServiceFilter(typeof(CustomHeaders))]
         public async Task<IActionResult> Login(string returnUrl)
         {
+            
             //External Login FB Step 2
             var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
 

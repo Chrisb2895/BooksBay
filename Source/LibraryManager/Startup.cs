@@ -1,9 +1,11 @@
+using LibraryManager.Classes.Controllers;
 using LibraryManager.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -102,8 +104,26 @@ namespace LibraryManager
             services.AddScoped<ILibraryRepo, SqlLibraryRepo>();
 
 
+            
+            services.AddControllersWithViews(config =>
+            {
+                config.Filters.Add(typeof(CustomHeaders));
+            }).AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
             services.AddRazorPages();
-            services.AddControllersWithViews().AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
+            services.AddScoped<CustomHeaders>();
+
+            //OWASP SECURING
+            services.AddResponseCaching();
+            services.AddMvc(options =>
+            {
+                options.CacheProfiles.Add("default", new CacheProfile
+                {
+                    Duration = 30,
+                    Location = ResponseCacheLocation.Any,
+                    NoStore = true
+                });
+            });
+            //END OWASP SECURING
 
         }
 
@@ -121,9 +141,29 @@ namespace LibraryManager
 
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles();
+            //OWASP SECURING
+            app.UseStaticFiles(new StaticFileOptions // for wwwroot files
+            {
+                OnPrepareResponse = (context) =>
+                {
+                    var headers = context.Context.Response.GetTypedHeaders();
+
+                    headers.CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+                    {
+                        Public = true,
+                        MaxAge = TimeSpan.FromDays(30)
+                    };
+
+                    headers.Headers.Remove("X-Powered-By");
+                }
+            });
+
+            app.UseRouting();
 
             //OWASP SECURING
+
+            app.UseResponseCaching();
+
             app.Use((context, next) =>
             {
                 context.Response.GetTypedHeaders().CacheControl =
@@ -145,12 +185,10 @@ namespace LibraryManager
             {
                 HttpOnly = HttpOnlyPolicy.Always,
                 Secure = CookieSecurePolicy.Always,
-                MinimumSameSitePolicy = SameSiteMode.None
+                MinimumSameSitePolicy = SameSiteMode.Strict
             });
 
             //END OWASP SECURING
-
-            app.UseRouting();
 
             //IDServer step 1
             app.UseIdentityServer();
