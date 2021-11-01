@@ -85,7 +85,7 @@ Configuration WebAppInstallerDSC
 
         xWebApplication WebApp1
         {
-			DependsOn               = '[xWebAppPool1]#{WebAPIName}#AppPool'
+			DependsOn               = '[xWebAppPool]AppPool1'
             Ensure                  = 'Present'
             Name                    = '#{ExternalWebAPIName}#'
             WebAppPool              = '#{WebAPIName}#AppPool'
@@ -104,7 +104,7 @@ Configuration WebAppInstallerDSC
 		
 		xWebApplication WebApp2
         {
-			DependsOn               = '[xWebAppPool2]#{WebAppName}#AppPool'
+			DependsOn               = '[xWebAppPool]AppPool2'
             Ensure                  = 'Present'
             Name                    = '#{ExternalWebAppName}#'
             WebAppPool              = '#{WebAppName}#AppPool'
