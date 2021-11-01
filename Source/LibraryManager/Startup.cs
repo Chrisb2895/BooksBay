@@ -1,6 +1,7 @@
 using LibraryManager.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
 namespace LibraryManager
@@ -119,6 +121,22 @@ namespace LibraryManager
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+
+            app.Use((context, next) =>
+            {
+                context.Response.GetTypedHeaders().CacheControl =
+                      new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                      {
+                          NoCache = true,
+                          NoStore = true,
+                          MustRevalidate = true
+                      };
+
+                if (context.Request.Headers.TryGetValue("X-Forwarded-Prefix", out var value))
+                    context.Request.PathBase = value.First();
+
+                return next();
+            });
 
             app.UseRouting();
 
