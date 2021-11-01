@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-6">
-      
+
         <form method="post">
             <h2>User Login</h2>
             <hr />
@@ -46,11 +46,14 @@
         <form asp-controller="Auth" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h2>Sign In With</h2>
             <hr />
-            @foreach (var provider in Model.ExternalProviders)
+            @if (Model.ExternalProviders != null)
             {
-                <button name="provider" type="submit" value="@provider.Name" class="btn btn-primary">
-                    @provider.Name
-                </button>
+                @foreach (var provider in Model.ExternalProviders)
+                {
+                    <button name="provider" type="submit" value="@provider.Name" class="btn btn-primary">
+                        @provider.Name
+                    </button>
+                }
             }
 
         </form>

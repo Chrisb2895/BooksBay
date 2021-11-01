@@ -1,5 +1,6 @@
 using LibraryManager.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -122,6 +123,7 @@ namespace LibraryManager
 
             app.UseStaticFiles();
 
+            //OWASP SECURING
             app.Use((context, next) =>
             {
                 context.Response.GetTypedHeaders().CacheControl =
@@ -138,6 +140,15 @@ namespace LibraryManager
 
                 return next();
             });
+
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always,
+                MinimumSameSitePolicy = SameSiteMode.None
+            });
+
+            //END OWASP SECURING
 
             app.UseRouting();
 
