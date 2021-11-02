@@ -65,7 +65,7 @@ namespace LibraryManager.Controllers
         [ServiceFilter(typeof(CustomHeaders))]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            
+            System.Threading.Thread.Sleep(5000);
             //External Login FB Step 2
             var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
 

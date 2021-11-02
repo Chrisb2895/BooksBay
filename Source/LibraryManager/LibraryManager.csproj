@@ -44,6 +44,7 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
+    <Folder Include="wwwroot\lib\vara\" />
   </ItemGroup>
 
   <ItemGroup>
