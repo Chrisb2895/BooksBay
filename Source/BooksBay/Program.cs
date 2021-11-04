@@ -14,7 +14,7 @@ using System.IO;
 
 namespace BooksBay
 {
-    public class Program
+    public static class Program
     {
         private static ILog log = LogManager.GetLogger(typeof(Program));
         public static void Main(string[] args)

@@ -13,7 +13,7 @@
     <script src="~/lib/vara/vara.min.js" ></script>
     <script src="~/js/site.js" asp-append-version="true" defer></script>
 </head>
-<body id="layout-body" onload="SitePreLoadAnimation()">
+<body id="layout-body" class="body-preload" onload="SitePreLoadAnimation()">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -65,7 +65,7 @@
 
         </div>
 
-        <main role="main" class="pb-3">
+        <main role="main" class="hidden pb-3">
             @RenderBody()
         </main>
     </div>

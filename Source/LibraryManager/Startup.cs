@@ -107,10 +107,14 @@ namespace LibraryManager
             
             services.AddControllersWithViews(config =>
             {
-                config.Filters.Add(typeof(CustomHeaders));
-            }).AddNewtonsoftJson(s => { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
+                
+            }).AddNewtonsoftJson(s => { 
+
+                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); 
+            
+            });
             services.AddRazorPages();
-            services.AddScoped<CustomHeaders>();
+
 
             //OWASP SECURING
             services.AddResponseCaching();

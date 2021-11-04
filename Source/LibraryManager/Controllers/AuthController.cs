@@ -62,10 +62,9 @@ namespace LibraryManager.Controllers
 
         [HttpGet]
         [Route("/Auth/Login")]
-        [ServiceFilter(typeof(CustomHeaders))]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            System.Threading.Thread.Sleep(5000);
+            
             //External Login FB Step 2
             var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
 
@@ -92,7 +91,7 @@ namespace LibraryManager.Controllers
                 }
                 else if (result.IsLockedOut)
                 {
-
+                    //to complete in future
                 }
                 ModelState.AddModelError("", "Invalid login attempt");
             }
@@ -131,9 +130,6 @@ namespace LibraryManager.Controllers
             if (info == null)
                 return RedirectToAction("Login");
 
-            /*var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return RedirectToAction("Login");*/
             var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
 
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false,false);

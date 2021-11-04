@@ -27,11 +27,7 @@ namespace LibraryManager.Data
             optionsBuilder.EnableDetailedErrors();
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            //builder.Seed();
-        }
+
 
         public DbSet<Library>  Libraries { get; set; }
     }

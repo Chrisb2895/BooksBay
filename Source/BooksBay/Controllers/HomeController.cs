@@ -35,27 +35,6 @@ namespace BooksBay.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var idToken = await HttpContext.GetTokenAsync("id_token");
-            var refreshToken = await HttpContext.GetTokenAsync("refresh_token");
-
-            //retrieve access token
-            var serverClient = _httpClientFactory.CreateClient();
-
-            var discoveryDocument = await serverClient.GetDiscoveryDocumentAsync(_API_Endpoint);
-
-            var tokenResponse = await serverClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-            {
-
-
-                Address = discoveryDocument.TokenEndpoint,
-
-                ClientId = "client_id_mvc",
-                ClientSecret = "client_secret_mvc",
-                Scope = "ApiOne"
-
-            });
-
             await RefreshAccessToken();
            
             var identity = (ClaimsIdentity)User.Identity;

@@ -4,8 +4,6 @@
 // Write your JavaScript code.
 
 function SitePreLoadAnimation() {
-    $('main').hide();
-    $('#layout-body').addClass("body-preload");
 
     let preLoadPromise = new Promise(function (myResolve, myReject) {
         // "Producing Code" (May take some time)
@@ -20,14 +18,9 @@ function SitePreLoadAnimation() {
         function (value) { /* code if successful */
 
             setTimeout(function () {
-
-                $('#layout-body').removeClass("body-preload");
-
-                $('main').show();
-
-
+                $('#layout-body').removeClass('body-preload');
+                $('#layout-body').addClass('body-load');
             }, 5000);
-            
 
         },
         function (error) { /* code if some error */ }
@@ -37,7 +30,7 @@ function SitePreLoadAnimation() {
         console.error(error);
     });
 
-    
+
 }
 
 function DoPreLoadAnimation() {
@@ -81,7 +74,7 @@ function DoPreLoadAnimation() {
                 o.container.style.opacity = 0;
             }
 
-        });       
+        });
 
     });
 

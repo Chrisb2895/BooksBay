@@ -63,9 +63,9 @@ namespace BooksBay
 
             services.AddControllersWithViews(config =>
             {
-                config.Filters.Add(typeof(CustomHeaders));
+                
             });
-            services.AddScoped<CustomHeaders>();
+
             services.AddRazorPages();
 
             services.AddTransient<LibraryAPI>();
