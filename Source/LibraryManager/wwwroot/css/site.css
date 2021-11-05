@@ -75,26 +75,27 @@ body {
 
 .body-preload {
     background-color: black;
-    
+    -webkit-animation: loadbody;
+    animation-delay: 5s;
+    animation-duration: 3s;
+    animation-fill-mode: forwards;
+    background-size: cover;
+    background-image: none;
+    background-size: contain;
+    background-position: center;
 }
 
 @-webkit-keyframes loadbody {
     from {
-        background: none;
+        background-image: none;
     }
 
     to {
-        background: url(../images/login-bg.jpg) no-repeat center center fixed;
+        background-image: url(../images/login-bg.jpg);
     }
 }
 
-.body-load {
-    -webkit-animation: loadbody;
-    animation-delay: 5s;
-    animation-duration: 3s;
-    background: none;
-    background-size: cover;
-}
+
 
 
 

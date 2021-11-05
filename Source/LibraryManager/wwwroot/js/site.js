@@ -17,10 +17,7 @@ function SitePreLoadAnimation() {
     preLoadPromise.then(
         function (value) { /* code if successful */
 
-            setTimeout(function () {
-                $('#layout-body').removeClass('body-preload');
-                $('#layout-body').addClass('body-load');
-            }, 5000);
+            
 
         },
         function (error) { /* code if some error */ }

@@ -30,12 +30,7 @@ namespace LibraryManager
         {
             Configuration = configuration;
             Env = env;
-        }
-
-        //SOLUTION THINGS TO ADJUST:
-        //1) PUT ALL HARDCODED STRING IN APPSETTING.JSON
-        //2) LIBRARY MANAGER AUTH CONTROLLER, CONFIGURE ROUTE WITHOUT NEED TO REPEAT CONTROLLER NAME
-
+        }      
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
