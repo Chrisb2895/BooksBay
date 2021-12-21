@@ -71,6 +71,8 @@ function DoPreLoadAnimation() {
                 o.container.style.opacity = 0;
             }
 
+
+
         });
 
     });
