@@ -11,7 +11,7 @@ function SitePreLoadAnimation() {
         setTimeout(() => {
 
             resolve('preLoadFinished');
-        }, 3000);
+        }, 4000);
 
     });
 
@@ -20,8 +20,13 @@ function SitePreLoadAnimation() {
 
             console.log("preLoadFinished playing video");
             $('#preLoadContainer').hide();
-            $('#blenderVideoContainer video source')[0].src = "../videos/BookOpen30001-0250.mp4";
+            $('#blenderVideoContainer').show();
+            //$('#blenderVideoContainer video source')[0].src = "../videos/BookOpen30001-0250.mp4";
             $('#blenderVideoContainer video')[0].play();
+            setTimeout(() => {
+
+                $('#blenderVideoContainer video')[0].pause();
+            }, 1600);
             
 
         },
