@@ -5,18 +5,23 @@
 
 function SitePreLoadAnimation() {
 
-    let preLoadPromise = new Promise(function (myResolve, myReject) {
-        // "Producing Code" (May take some time)
+    let preLoadPromise = new Promise((resolve, reject) => {
 
         DoPreLoadAnimation();
+        setTimeout(() => {
 
-        myResolve(); // when successful
-        myReject();  // when error
+            resolve('preLoadFinished');
+        }, 3000);
+
     });
 
     preLoadPromise.then(
         function (value) { /* code if successful */
 
+            console.log("preLoadFinished playing video");
+            $('#preLoadContainer').hide();
+            $('#blenderVideoContainer video source')[0].src = "../videos/BookOpen30001-0250.mp4";
+            $('#blenderVideoContainer video')[0].play();
             
 
         },
@@ -27,6 +32,8 @@ function SitePreLoadAnimation() {
         console.error(error);
     });
 
+
+    
 
 }
 
@@ -45,15 +52,16 @@ function DoPreLoadAnimation() {
         "../lib/vara/fonts/Satisfy/SatisfySL.json",
         [{
             text: "Welcome to Books' Bay!",
-            y: 150,
-            fromCurrentPosition: { y: false },
+            y: 0,
+            fromCurrentPosition: { y: true },
             duration: 3000
         }],
         {
             strokeWidth: 2,
             color: "#fff",
             fontSize: fontSize,
-            textAlign: "center"
+            textAlign: "center",
+            verticalAlign: "top"
         }
 
     );
@@ -70,7 +78,7 @@ function DoPreLoadAnimation() {
                 o.container.style.transition = "opacity 1s 1s";
                 o.container.style.opacity = 0;
             }
-
+            
 
 
         });
