@@ -5,20 +5,20 @@
 
 function SitePreLoadAnimation() {
 
-    let preLoadPromise = new Promise((resolve, reject) => {
+    let writeAnimationPromise = new Promise((resolve, reject) => {
 
-        DoPreLoadAnimation();
+        WritingSiteNameAnimation();
         setTimeout(() => {
 
-            resolve('preLoadFinished');
+            resolve('WriteAnimationFinished');
         }, 4000);
 
     });
 
-    preLoadPromise.then(
+    writeAnimationPromise.then(
         function (value) { /* code if successful */
 
-            console.log("preLoadFinished playing video");
+            console.log("writeAnimation finished, start playing video");
             $('#preLoadContainer').hide();
             $('#blenderVideoContainer').show();
             
@@ -27,8 +27,10 @@ function SitePreLoadAnimation() {
 
                 $('#blenderVideoContainer video')[0].pause();
 
-                //showing RenderBody of layout cshtml
+                //showing RenderBody of layout cshtml login form
                 $('#main').show();
+
+
             }, 1600);
 
             
@@ -38,7 +40,7 @@ function SitePreLoadAnimation() {
         function (error) { /* code if some error */ }
     );
 
-    preLoadPromise.catch((error) => {
+    writeAnimationPromise.catch((error) => {
         console.error(error);
     });
 
@@ -47,7 +49,7 @@ function SitePreLoadAnimation() {
 
 }
 
-function DoPreLoadAnimation() {
+function WritingSiteNameAnimation() {
 
     var fontSize = 72;
 
