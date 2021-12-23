@@ -21,12 +21,17 @@ function SitePreLoadAnimation() {
             console.log("preLoadFinished playing video");
             $('#preLoadContainer').hide();
             $('#blenderVideoContainer').show();
-            //$('#blenderVideoContainer video source')[0].src = "../videos/BookOpen30001-0250.mp4";
+            
             $('#blenderVideoContainer video')[0].play();
             setTimeout(() => {
 
                 $('#blenderVideoContainer video')[0].pause();
+
+                //showing RenderBody of layout cshtml
+                $('#main').show();
             }, 1600);
+
+            
             
 
         },

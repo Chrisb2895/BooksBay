@@ -64,17 +64,20 @@
         <div id="preLoadContainer" >
            
         </div>
-        <div id="blenderVideoContainer" class="hidden">
+        
+
+        <main role="main" class="pb-3">
+            <div id="blenderVideoContainer" class="hidden">
                 <video width="1200" height="700" muted="muted" >
-                      <source src="../videos/BookOpen30001-0250.mp4" type="video/mp4">
+                      <source src="../videos/BookOpen40001-0250.mp4" type="video/mp4">
                       
                     Your browser does not support the video tag.
                     </video>
 
-        </div>
-
-        <main role="main" class="hidden pb-3">
-            @RenderBody()
+            </div>
+            <div id="main" class="hidden">
+                @RenderBody()
+            </div>
         </main>
     </div>
 
