@@ -19,7 +19,7 @@ function SitePreLoadAnimation() {
         function (value) { /* code if successful */
 
             console.log("writeAnimation finished, start playing video");
-            $('#preLoadContainer').hide();
+            $('#writeAnimationContainer').hide();
             $('#blenderVideoContainer').show();
             
             $('#blenderVideoContainer video')[0].play();
@@ -60,7 +60,7 @@ function WritingSiteNameAnimation() {
 
     var vara = new Vara(
 
-        "#preLoadContainer",
+        "#writeAnimationContainer",
         "../lib/vara/fonts/Satisfy/SatisfySL.json",
         [{
             text: "Welcome to Books' Bay!",
