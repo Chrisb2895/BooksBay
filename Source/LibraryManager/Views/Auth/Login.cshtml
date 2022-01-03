@@ -1,61 +1,69 @@
 ﻿@model LoginViewModel
 
 @{
-    ViewBag.Title = "User Login";
+	ViewBag.Title = "User Login";
 }
 
 
 
-<div class="row">
-    <div class="col-md-6">
+<div class="login-body">
+	<div class="login-main">
+		<input type="checkbox" id="chk" aria-hidden="true">
 
-        <form method="post">
-            <h2>User Login</h2>
-            <hr />
-            <input type="hidden" asp-for="ReturnUrl" />
-            <div asp-validation-summary="All" class="text-danger"></div>
+		<div class="login-signup">
+			<form method="post">
+				<label class="login-input" for="chk" aria-hidden="true">Sign up</label>
+				<input class="login-input" type="text" name="txt" placeholder="User name" required="">
+				<input class="login-input" type="email" name="email" placeholder="Email" required="">
+				<input class="login-input" type="password" name="pswd" placeholder="Password" required="">
+				<button class="login-button" >Sign up</button>
+			</form>
+		</div>
 
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
+		<div class="login">
+			<form method="post">
+				<input type="hidden" asp-for="ReturnUrl" />
+				<div asp-validation-summary="All" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+				<label class="login-label" for="chk" aria-hidden="true">Login</label>
+				<input asp-for="Email" type="email" name="email" placeholder="Email" required="" class="login-input">
+				<span asp-validation-for="Email" class="text-danger"></span>
 
-            <div class="form-group">
-                <div class="checkbox">
-                    <label asp-for="RememberMe">
-                        <input asp-for="RememberMe" />
-                        @Html.DisplayNameFor(m => m.RememberMe)
-                    </label>
-                </div>
-            </div>
+				<input asp-for="Password" type="password" name="pswd" placeholder="Password" required="" class="login-input">
+				<span asp-validation-for="Password" class="text-danger"></span>
 
-            <button type="submit" class="btn btn-primary">Login</button>
+				<div class="checkbox">
+					<label asp-for="RememberMe">
+						<input asp-for="RememberMe" />
+						@Html.DisplayNameFor(m => m.RememberMe)
+					</label>
+				</div>
 
-        </form>
-    </div>
+				<button type="submit" class="login-button">Login</button>
 
-    <div class="col-md-6">
-        @*//External Login FB-Google Step 3*@
-        <form asp-controller="Auth" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Sign In With</h2>
-            <hr />
-            @if (Model.ExternalProviders != null)
-            {
-                @foreach (var provider in Model.ExternalProviders)
-                {
-                    <button name="provider" type="submit" value="@provider.Name" class="btn btn-primary">
-                        @provider.Name
-                    </button>
-                }
-            }
+			</form>
 
-        </form>
-    </div>
+			@*//External Login FB-Google Step 3*@
+			<form asp-controller="Auth" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+				<h2>Sign In With</h2>
+				<hr />
+				@if (Model.ExternalProviders != null)
+				{
+					@foreach (var provider in Model.ExternalProviders)
+					{
+						<button name="provider" type="submit" value="@provider.Name" class="login-button">
+							@provider.Name
+						</button>
+					}
+				}
+
+			</form>
+
+
+		</div>
+
+
+	</div>
+
+
 </div>

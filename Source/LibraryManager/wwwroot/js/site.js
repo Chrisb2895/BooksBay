@@ -54,9 +54,9 @@ function WritingSiteNameAnimation() {
     var fontSize = 72;
 
     if (window.screen.width > 700)
-        fontSize = 32;
+        fontSize = 64;
     else if (window.screen.width < 1200)
-        fontSize = 57;
+        fontSize = 100;
 
     var vara = new Vara(
 
@@ -64,7 +64,7 @@ function WritingSiteNameAnimation() {
         "../lib/vara/fonts/Satisfy/SatisfySL.json",
         [{
             text: "Welcome to Books' Bay!",
-            y: 0,
+            y: 270,
             fromCurrentPosition: { y: true },
             duration: 3000
         }],
