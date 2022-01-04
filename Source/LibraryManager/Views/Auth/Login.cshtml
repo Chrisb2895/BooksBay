@@ -12,7 +12,7 @@
 
 		<div class="login-signup">
 			<form method="post">
-				<label class="login-input" for="chk" aria-hidden="true">Sign up</label>
+				<label class="login-label" for="chk" aria-hidden="true">Sign up</label>
 				<input class="login-input" type="text" name="txt" placeholder="User name" required="">
 				<input class="login-input" type="email" name="email" placeholder="Email" required="">
 				<input class="login-input" type="password" name="pswd" placeholder="Password" required="">
@@ -33,7 +33,7 @@
 				<span asp-validation-for="Password" class="text-danger"></span>
 
 				<div class="checkbox">
-					<label asp-for="RememberMe">
+					<label class="login-label" asp-for="RememberMe">
 						<input asp-for="RememberMe" />
 						@Html.DisplayNameFor(m => m.RememberMe)
 					</label>
@@ -44,15 +44,15 @@
 			</form>
 
 			@*//External Login FB-Google Step 3*@
-			<form asp-controller="Auth" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-				<h2>Sign In With</h2>
-				<hr />
+			<form asp-controller="Auth" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">			
 				@if (Model.ExternalProviders != null)
 				{
 					@foreach (var provider in Model.ExternalProviders)
 					{
 						<button name="provider" type="submit" value="@provider.Name" class="login-button">
-							@provider.Name
+							<img width="20px" style={{ marginBottom: "3px", marginRight: "5px" }} alt="Google sign-in"
+								 src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+						Login with @provider.Name
 						</button>
 					}
 				}

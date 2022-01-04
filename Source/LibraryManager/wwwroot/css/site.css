@@ -134,8 +134,9 @@ body {
 
 .login-main {
     width: 350px;
-    height: 500px;
-    background: red;
+    height: 550px;
+    margin-right: 120px;
+    margin-bottom: 240px;
     overflow: hidden;
     background: url("") no-repeat center/ cover;
     border-radius: 10px;
@@ -157,7 +158,8 @@ body {
     font-size: 2.3em;
     justify-content: center;
     display: flex;
-    margin: 60px;
+    margin: 50px;
+    padding-top: 2px ;
     font-weight: bold;
     cursor: pointer;
     transition: .5s ease-in-out;
@@ -183,7 +185,7 @@ body {
     justify-content: center;
     display: block;
     color: #fff;
-    background: #573b8a;
+    background: #B99C6B;
     font-size: 1em;
     font-weight: bold;
     margin-top: 20px;
@@ -195,7 +197,7 @@ body {
 }
 
     .login-button:hover {
-        background: #6d44b8;
+        background: #D5C4A1;
     }
 
 .login {
@@ -207,7 +209,7 @@ body {
 }
 
     .login label {
-        color: #573b8a;
+        color: #B99C6B;
         transform: scale(.6);
     }
 
