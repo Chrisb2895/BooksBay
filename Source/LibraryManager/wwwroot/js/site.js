@@ -70,7 +70,7 @@ function WritingSiteNameAnimation() {
         }],
         {
             strokeWidth: 2,
-            color: "#fff",
+            color: "#000",
             fontSize: fontSize,
             textAlign: "center",
             verticalAlign: "top"
