@@ -125,7 +125,7 @@ body {
     width: 350px;
     height: 440px;
     margin-right: 60px;
-    margin-bottom: 90px;
+    margin-bottom: 100px;
     overflow: hidden;
     background: url("") no-repeat center/ cover;
     border-radius: 10px;
@@ -152,6 +152,17 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: .5s ease-in-out;
+}
+
+.login-label-sm {
+    color: #fff;
+    font-size: 0.8em;
+    justify-content: center;
+    margin-left: 70px;
+}
+
+.checkbox {
+    margin: 0 auto;
 }
 
 .login-input {
