@@ -184,7 +184,9 @@ namespace LibraryManager
             {
                 HttpOnly = HttpOnlyPolicy.Always,
                 Secure = CookieSecurePolicy.Always,
-                MinimumSameSitePolicy = SameSiteMode.Strict
+                //MinimumSameSitePolicy = SameSiteMode.Strict
+                //TO PRD NOTES: this comment up here should run in production but for dev and debug with local host
+                MinimumSameSitePolicy = SameSiteMode.Lax
             });
 
             //END OWASP SECURING

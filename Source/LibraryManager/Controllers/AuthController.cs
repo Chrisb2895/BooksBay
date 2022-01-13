@@ -65,7 +65,7 @@ namespace LibraryManager.Controllers
         public async Task<IActionResult> Login(string returnUrl)
         {
             
-            //External Login FB Step 2
+            //External Login Google Step 2
             var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
 
             return View(new LoginViewModel
