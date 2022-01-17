@@ -8,25 +8,37 @@ function SitePreLoadAnimation() {
     setTimeout(() => {
 
         $('#blenderVideoContainer video')[0].pause();
-
+        $('#login-cont').show();
         $('#blenderVideoContainer').show();
 
-        $('#blenderVideoContainer video')[0].play();
         setTimeout(() => {
+            //TO-DO: far scomparire login form e poi play
+            $('#blenderVideoContainer video')[0].play();
 
-            $('#blenderVideoContainer video')[0].pause();
+            setTimeout(() => {
 
-            //showing RenderBody of layout cshtml login form
-            $('#main').show();
-
-
-        }, 1600);
-
-        //showing RenderBody of layout cshtml login form
-        $('#main').show();
+                $('#blenderVideoContainer video')[0].pause();
+                //showing RenderBody of layout cshtml login form
+                $('#main').show();
 
 
-    }, 1600);
+
+            }, 1600);
+
+
+        }, 2000);
+        
+
+    }, 1400);
+
+    
+
+   
+
+    
+   
+
+   
 
     
 

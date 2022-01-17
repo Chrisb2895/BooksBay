@@ -1,6 +1,6 @@
 ﻿@inject LibraryAPI _api;
 @*@inject SignInManager<IdentityUser> signInManager;*@
-@model BaseViewModel
+@model LoginViewModel
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,10 +13,9 @@
 	<link rel="stylesheet" href="~/css/GoogleFonts/GoogleFonts.css" />
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="~/lib/vara/vara.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true" defer></script>
 </head>
-<body id="layout-body" class="body-preload" onload="SitePreLoadAnimation()>
+<body id="layout-body" class="body-preload" onload="SitePreLoadAnimation()">
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 			<div class="container">
@@ -62,8 +61,13 @@
 			</video>
 
 		</div>
-		<div id="main" class="hidden">
+		<div id="login-cont" class="hidden">
 			@RenderBody()
+			<!-- Render Login partial-->
+		</div>
+		<div id="main" class="hidden">
+			<h2>Home Page</h2>
+			<!-- Render body to  Render Main Default View Index Home-->
 		</div>
 	</main>
 
