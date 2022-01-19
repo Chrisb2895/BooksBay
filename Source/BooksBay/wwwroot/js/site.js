@@ -12,7 +12,11 @@ function SitePreLoadAnimation() {
         $('#blenderVideoContainer').show();
 
         setTimeout(() => {
-            //TO-DO: far scomparire login form e poi play
+            // far scomparire login form e poi play
+            $('#login-cont').addClass("hide-fade-out");
+            //slower video speed (the speed is half of default which is 1 )
+            $('#blenderVideoContainer video')[0].playbackRate = 0.5;
+
             $('#blenderVideoContainer video')[0].play();
 
             setTimeout(() => {
@@ -23,7 +27,7 @@ function SitePreLoadAnimation() {
 
 
 
-            }, 1600);
+            }, 3200);
 
 
         }, 2000);
@@ -32,17 +36,11 @@ function SitePreLoadAnimation() {
     }, 1400);
 
     
+}
 
-   
+function StartGlowing(_this) {
 
-    
-   
-
-   
-
-    
-
-
-
+    console.log(_this);
+    $(_this).addClass("glowing-button");
 
 }

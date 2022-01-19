@@ -98,3 +98,10 @@ function WritingSiteNameAnimation() {
     });
 
 }
+
+function StartGlowing(_this) {
+
+    console.log(_this);
+    $(_this).addClass("glowing-button");
+
+}
