@@ -136,7 +136,7 @@ namespace LibraryManager.Controllers
 
             if (result.Succeeded)
             {
-                return Redirect(returnUrl);
+                return View("LoginResult", new LoginResultViewModel(true, returnUrl));
             }
 
             if (result.RequiresTwoFactor)
@@ -151,13 +151,14 @@ namespace LibraryManager.Controllers
 
             var userName = info.Principal.FindFirst(ClaimTypes.Name.Replace(" ", "_")).Value;
 
-            return View("ExternalRegister", new ExternalRegisterViewModel
+            return View("LoginResult", new LoginResultViewModel(false, Url.Action("ExternalRegister")));
+            /*return View("ExternalRegister", new ExternalRegisterViewModel
             {
 
                 Email = userName,
                 ReturnUrl = returnUrl
 
-            });
+            });*/
         }
 
         [HttpPost]
