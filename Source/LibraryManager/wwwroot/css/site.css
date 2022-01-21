@@ -246,6 +246,12 @@ body {
     animation: glowing 1300ms infinite;
 }
 
+.hide-fade-out {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.33s, opacity 0.33s linear;
+}
+
 
 
 /*Login styles end */

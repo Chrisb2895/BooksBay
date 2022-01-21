@@ -15,7 +15,7 @@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true" defer></script>
 </head>
-<body id="layout-body" class="body-preload" onload="SitePreLoadAnimation()">
+<body id="layout-body" class="body-preload" >
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 			<div class="container">
@@ -53,22 +53,17 @@
 	</header>
 
 	<main role="main" >
-		<div id="blenderVideoContainer" class="hidden">
-			<video width="1200" height="750" muted="muted" style=" margin-left: 320px;">
-				<source src="../videos/BookOpen50001-0250.mp4" type="video/mp4">
+		
 
-				Your browser does not support the video tag.
-			</video>
-
-		</div>
+		<h1>Home Page</h1>
+		<!-- Render body to  Render Main Default View Index Home-->
 		<div id="login-cont" class="hidden">
 			@RenderBody()
 			<!-- Render Login partial-->
 		</div>
-		<div id="main" class="hidden">
-			<h2>Home Page</h2>
-			<!-- Render body to  Render Main Default View Index Home-->
-		</div>
+		
+			
+		
 	</main>
 
 

@@ -73,8 +73,27 @@
 				function loginCallback(success, returnUrl) {
 					if (returnUrl) {
 						//before loading home page of booksbay project (home index) should finish animation current login view, so:
+						setTimeout(() => {
+							// far scomparire login form e poi play
+							$('#main').addClass("hide-fade-out");
+							//slower video speed (the speed is half of default which is 1 )
+							$('#blenderVideoContainer video')[0].playbackRate = 0.5;
 
-						window.location.href = returnUrl;
+							$('#blenderVideoContainer video')[0].play();
+
+							setTimeout(() => {
+
+								$('#blenderVideoContainer video')[0].pause();
+								//showing RenderBody of layout cshtml login form
+								window.location.href = returnUrl;
+
+
+
+							}, 3200);
+
+
+						}, 2000);
+						
 					} else {
 						console.log("unhandled redirect after externalLoginCallBack (auth controller)");
 					}
