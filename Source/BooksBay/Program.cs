@@ -15,12 +15,6 @@ using System.IO;
 namespace BooksBay
 {
 
-    /*SOLUTION TO DOS THINGS TO ADJUST:
-    1) LIBRARY MANAGER AUTH CONTROLLER, CONFIGURE ROUTE WITHOUT NEED TO REPEAT CONTROLLER NAME
-    2) SECURE SECRETS STRINGS
-    3)
-    */
-
     public static class Program
     {
         private static ILog log = LogManager.GetLogger(typeof(Program));
