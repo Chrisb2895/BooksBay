@@ -40,7 +40,7 @@ namespace BooksBay.Controllers
             var identity = (ClaimsIdentity)User.Identity;
             IEnumerable<Claim> claims = identity.Claims;
             if (identity.IsAuthenticated)             
-                return View(new LoginViewModel { CurrentLoggedUser = claims.FirstOrDefault(cl=> cl.Type == "name").Value });
+                return View(new BaseViewModel { CurrentLoggedUser = claims.FirstOrDefault(cl=> cl.Type == "name").Value });
 
             return View();
         }
