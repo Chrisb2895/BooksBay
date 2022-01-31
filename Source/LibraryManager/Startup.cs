@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -36,9 +37,22 @@ namespace LibraryManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IConfiguration>(Configuration);
+            var connection = "";
 
-            var connString = Configuration.GetConnectionString("LibraryConn");
-            services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(connString); });
+            if(Env.IsProduction())
+            {
+                var connString = Configuration.GetConnectionString("LibraryConn");
+                //Decrypt
+            }
+
+            if (Env.IsDevelopment())
+            {
+                var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
+                //Getting from secret.json to avoid publish password on github code repository online
+                conStrBuilder.Password = Configuration["DbPassword"];
+                connection = conStrBuilder.ConnectionString;
+            }
+            services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(connection); });
 
             //IDServer step 2
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
