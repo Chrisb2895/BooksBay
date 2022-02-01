@@ -2,6 +2,7 @@ using LibraryManager.Classes.Controllers;
 using LibraryManager.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -27,32 +28,36 @@ namespace LibraryManager
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Env { get; }
 
+        public EphemeralDataProtectionProvider dataProtectionProvider;
+        public IDataProtector _protector;
+
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             Env = env;
+            dataProtectionProvider = new EphemeralDataProtectionProvider();
+            _protector = dataProtectionProvider.CreateProtector("Crypto");
         }      
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IConfiguration>(Configuration);
-            var connection = "";
-
-            if(Env.IsProduction())
+            var connString = "";
+            if (Env.IsProduction())
             {
-                var connString = Configuration.GetConnectionString("LibraryConn");
+                 connString = Configuration.GetConnectionString("LibraryConn");
                 //Decrypt
             }
-
             if (Env.IsDevelopment())
             {
                 var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
                 //Getting from secret.json to avoid publish password on github code repository online
-                conStrBuilder.Password = Configuration["DbPassword"];
-                connection = conStrBuilder.ConnectionString;
+                conStrBuilder.Password = _protector.Unprotect(Configuration["DbPassword"]);
+                connString = conStrBuilder.ConnectionString;
             }
-            services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(connection); });
+
+            services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(connString); });
 
             //IDServer step 2
             services.AddIdentity<IdentityUser, IdentityRole>(options =>

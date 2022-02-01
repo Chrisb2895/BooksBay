@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManager.Helpers
 {
-    public class PagedList<T> : List<T>
+    public class PagedListHelper<T> : List<T>
     {
 
         public int CurrentPage { get; private set; }
@@ -20,7 +20,7 @@ namespace LibraryManager.Helpers
 
         public bool HasNext => CurrentPage < TotalPages;
 
-        public PagedList(List<T> items, int count, int pageNumber, int pageSize)
+        public PagedListHelper(List<T> items, int count, int pageNumber, int pageSize)
         {
             TotalCount = count;
             PageSize = pageSize;
@@ -30,13 +30,13 @@ namespace LibraryManager.Helpers
             AddRange(items);
         }
 
-        public static PagedList<T> ToPagedList(IQueryable<T> source, int pageNumber, int pageSize)
+        public static PagedListHelper<T> ToPagedList(IQueryable<T> source, int pageNumber, int pageSize)
         {
             var count = source.Count();
             var items = source.Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-            return new PagedList<T>(items, count, pageNumber, pageSize);
+            return new PagedListHelper<T>(items, count, pageNumber, pageSize);
         }
 
     }

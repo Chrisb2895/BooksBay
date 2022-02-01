@@ -37,9 +37,9 @@ namespace LibraryManager.Data
             return _context.Libraries.ToList();
         }
 
-        public PagedList<Library> GetLibraries(LibraryParameters libParam)
+        public PagedListHelper<Library> GetLibraries(LibraryParameters libParam)
         {
-            return PagedList<Library>.ToPagedList(_context.Libraries.OrderBy(l => l.Id),
+            return PagedListHelper<Library>.ToPagedList(_context.Libraries.OrderBy(l => l.Id),
                 libParam.PageNumber, libParam.PageSize);
         }
 

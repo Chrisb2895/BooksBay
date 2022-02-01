@@ -13,7 +13,7 @@ namespace LibraryManager.Data
 
         IEnumerable<Library> GetLibraries();
 
-        PagedList<Library> GetLibraries(LibraryParameters libParam);
+        PagedListHelper<Library> GetLibraries(LibraryParameters libParam);
 
         Library GetLibrariesById(int id);
 

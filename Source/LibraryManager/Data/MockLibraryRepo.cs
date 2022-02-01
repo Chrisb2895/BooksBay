@@ -58,7 +58,7 @@ namespace LibraryManager.Data
             throw new NotImplementedException();
         }
 
-        PagedList<Library> ILibraryRepo.GetLibraries(LibraryParameters libParam)
+        PagedListHelper<Library> ILibraryRepo.GetLibraries(LibraryParameters libParam)
         {
             throw new NotImplementedException();
         }

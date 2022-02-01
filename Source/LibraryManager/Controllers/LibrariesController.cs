@@ -10,8 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LibraryManager.Helpers;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace LibraryManager.Controllers
+
+
 {
     // api/Libraries
     [Route("api/[controller]")]
@@ -21,12 +25,16 @@ namespace LibraryManager.Controllers
         private readonly ILibraryRepo _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<LibrariesController> _logger;
+        public EphemeralDataProtectionProvider dataProtectionProvider;
+        public IDataProtector _protector;
 
         public LibrariesController(ILibraryRepo repository, IMapper mapper, ILogger<LibrariesController> logger)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+            dataProtectionProvider = new EphemeralDataProtectionProvider();
+            _protector = dataProtectionProvider.CreateProtector("Crypto");
         }
 
         //GET api/libraries
@@ -35,7 +43,7 @@ namespace LibraryManager.Controllers
         {
             _logger.LogDebug("Libraries Controlller GetAllLibraries Method Start");
             var libraryItems = _repository.GetLibraries();
-   
+
             if (libraryItems != null)
                 return Ok(_mapper.Map<IEnumerable<LibraryReadDTO>>(libraryItems));
 
@@ -49,7 +57,7 @@ namespace LibraryManager.Controllers
         {
             _logger.LogDebug("Libraries Controlller GetAllLibrariesPaged Method Start");
             var libraryItems = _repository.GetLibraries(libParams);
-           
+
             if (libraryItems != null)
             {
                 var metadata = new
@@ -75,7 +83,7 @@ namespace LibraryManager.Controllers
         }
 
         //GET api/libraries/{id}
-        [HttpGet("{id}",Name = "GetLibraryByID")]
+        [HttpGet("{id}", Name = "GetLibraryByID")]
         public ActionResult<LibraryReadDTO> GetLibraryByID(int id)
         {
             var libraryItem = _repository.GetLibrariesById(id);
@@ -97,12 +105,12 @@ namespace LibraryManager.Controllers
 
 
             return CreatedAtRoute(nameof(GetLibraryByID), new { Id = libraryReadDTO.Id, libraryReadDTO });
-            
+
         }
 
         //PUT api/libraries/{id}
         [HttpPut("{id}")]
-        public ActionResult<LibraryReadDTO> UpdateLibrary(int id,LibraryUpdateDTO lib)
+        public ActionResult<LibraryReadDTO> UpdateLibrary(int id, LibraryUpdateDTO lib)
         {
             var librarymodel = _repository.GetLibrariesById(id);
             if (librarymodel == null)
@@ -150,6 +158,25 @@ namespace LibraryManager.Controllers
             _repository.SaveChanges();
 
             return NoContent();
+        }
+
+        //GET api/libraries/{input}
+        [HttpGet("GetCrytedString/{input}")]
+        public ActionResult<string> GetCrytedString(string input)
+        {
+            return Ok(GetCrypted(input));
+        }
+
+        [NonAction]
+        public string GetCrypted(string fromS)
+        {
+            return _protector.Protect(fromS);
+        }
+
+        [NonAction]
+        public string GetUnCrypted(string fromS)
+        {
+            return _protector.Protect(fromS);
         }
 
     }
