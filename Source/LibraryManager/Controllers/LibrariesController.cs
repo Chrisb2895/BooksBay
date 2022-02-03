@@ -167,6 +167,13 @@ namespace LibraryManager.Controllers
             return Ok(GetCrypted(input));
         }
 
+        //GET api/libraries/{input}
+        [HttpGet("GetUnCrytedString/{input}")]
+        public ActionResult<string> GetUnCrytedString(string input)
+        {
+            return Ok(GetUnCrypted(input));
+        }
+
         [NonAction]
         public string GetCrypted(string fromS)
         {

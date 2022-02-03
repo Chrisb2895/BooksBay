@@ -28,20 +28,25 @@ namespace LibraryManager
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Env { get; }
 
-        public EphemeralDataProtectionProvider dataProtectionProvider;
-        public IDataProtector _protector;
-
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             Env = env;
-            dataProtectionProvider = new EphemeralDataProtectionProvider();
-            _protector = dataProtectionProvider.CreateProtector("Crypto");
+
         }      
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices( IServiceCollection services)
         {
+            services.AddDataProtection().UseEphemeralDataProtectionProvider().SetApplicationName("LibraryManager");
+            services.AddSingleton<Helpers.CryptoHelper>();
+            //Build an intermediate service provider
+            //var sp = services.BuildServiceProvider();
+            //var appService = app.ApplicationServices;
+            //Resolve the services from the service provider
+            //var datapro = sp.GetService<IDataProtectionProvider>();
+            //IDataProtector protector = datapro.CreateProtector("LibraryManager");
+
             services.AddSingleton<IConfiguration>(Configuration);
             var connString = "";
             if (Env.IsProduction())
@@ -53,11 +58,14 @@ namespace LibraryManager
             {
                 var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
                 //Getting from secret.json to avoid publish password on github code repository online
-                conStrBuilder.Password = _protector.Unprotect(Configuration["DbPassword"]);
+                //conStrBuilder.Password = protector.Unprotect(Configuration["DbPassword"]);
                 connString = conStrBuilder.ConnectionString;
             }
 
-            services.AddDbContext<LibraryContext>(opt => { opt.UseSqlServer(connString); });
+            services.AddDbContext<LibraryContext>(opt => {
+                
+                opt.UseSqlServer(connString); 
+            });
 
             //IDServer step 2
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -116,8 +124,6 @@ namespace LibraryManager
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<ILibraryRepo, SqlLibraryRepo>();
-
-
             
             services.AddControllersWithViews(config =>
             {

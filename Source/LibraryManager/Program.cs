@@ -1,5 +1,6 @@
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
+using LibraryManager.CustomProviders;
 using log4net;
 using log4net.Appender;
 using log4net.Repository;
@@ -21,20 +22,20 @@ namespace LibraryManager
 {
     public static class Program
     {
-        private static  ILog log = LogManager.GetLogger(typeof(Program));
+        private static ILog log = LogManager.GetLogger(typeof(Program));
 
         public static void Main(string[] args)
         {
             try
             {
-          
+
                 XmlDocument log4netConfig = new XmlDocument();
                 log4netConfig.Load(File.OpenRead("log4net.config"));
                 var repo = LogManager.CreateRepository(
-                    Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));          
-                log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);               
+                    Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
+                log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
                 log.Warn("Application - Main is invoked");
-
+                
                 var host = CreateHostBuilder(args).Build();
 
                 using (var scope = host.Services.CreateScope())
@@ -72,28 +73,36 @@ namespace LibraryManager
                         context.SaveChanges();
                     }*/
                 }
+                
 
-
-                    host.Run();
+                host.Run();
 
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                log.ErrorFormat("Errore in LibraryManager WebAPI Program: {0}  \r\n {1}", ex.Message, ex.StackTrace);
+                log.ErrorFormat("Errore in LibraryManager WebAPI Program: {0}  \r\n {1} \n\r InnerEx: {2}", ex.Message, ex.StackTrace);
             }
-          
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureAppConfiguration(configurationBuilder =>
+                    configurationBuilder.AddJsonFile("appsettings.json")
+                                        .AddEncryptedProvider()
+
+
+
+                        );
                     webBuilder.UseStartup<Startup>().ConfigureLogging((hostingContext, logging) =>
                     {
                         logging.AddLog4Net();
 
                     });
+                    
 
 
                 });
