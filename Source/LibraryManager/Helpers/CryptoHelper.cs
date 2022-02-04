@@ -4,14 +4,12 @@ namespace LibraryManager.Helpers
 {
     public class CryptoHelper
     {
-        EphemeralDataProtectionProvider _dataProtectionProvider;
         IDataProtector _protector;
 
         // the 'provider' parameter is provided by DI
-        public CryptoHelper()
+        public CryptoHelper(IDataProtectionProvider provider)
         {
-            _dataProtectionProvider = new EphemeralDataProtectionProvider();
-            _protector = _dataProtectionProvider.CreateProtector("Crypto");
+            _protector = provider.CreateProtector("LibraryManager");
         }
 
         public void RunSample()
@@ -28,10 +26,6 @@ namespace LibraryManager.Helpers
             Console.WriteLine($"Unprotect returned: {unprotectedPayload}");*/
         }
 
-        public IDataProtector CreateProtector(string name)
-        {
-            return _protector;
-        }
 
         public  string GetCrypted(string fromS)
         {

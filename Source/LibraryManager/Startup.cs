@@ -1,4 +1,5 @@
 using LibraryManager.Classes.Controllers;
+using LibraryManager.CustomProviders;
 using LibraryManager.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -33,38 +34,47 @@ namespace LibraryManager
             Configuration = configuration;
             Env = env;
 
-        }      
+            var builder = new ConfigurationBuilder()
+                                .SetBasePath(env.ContentRootPath)
+                                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                                
+            Configuration = builder.Build();
+
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices( IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataProtection().UseEphemeralDataProtectionProvider().SetApplicationName("LibraryManager");
-            services.AddSingleton<Helpers.CryptoHelper>();
-            //Build an intermediate service provider
-            //var sp = services.BuildServiceProvider();
-            //var appService = app.ApplicationServices;
-            //Resolve the services from the service provider
-            //var datapro = sp.GetService<IDataProtectionProvider>();
-            //IDataProtector protector = datapro.CreateProtector("LibraryManager");
-
+            services.AddDataProtection().SetApplicationName("LibraryManager");
             services.AddSingleton<IConfiguration>(Configuration);
-            var connString = "";
+            //services.AddSingleton<Helpers.CryptoHelper>();
+            var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
+
+            /*var instance = ActivatorUtilities.CreateInstance<Helpers.CryptoHelper>(services.BuildServiceProvider());
+            conStrBuilder.Password = instance.GetUnCrypted(conStrBuilder.Password);*/
+            // Configure protected config settings
+            services.AddProtectedConfiguration();
+            services.ConfigureProtected<string>(Configuration.GetSection("MyProtectedSettings"));
+
+
+
+            var connString = "";          
+            connString = conStrBuilder.ConnectionString;
+
             if (Env.IsProduction())
             {
-                 connString = Configuration.GetConnectionString("LibraryConn");
-                //Decrypt
+
             }
             if (Env.IsDevelopment())
             {
-                var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
-                //Getting from secret.json to avoid publish password on github code repository online
-                //conStrBuilder.Password = protector.Unprotect(Configuration["DbPassword"]);
-                connString = conStrBuilder.ConnectionString;
+
             }
 
-            services.AddDbContext<LibraryContext>(opt => {
-                
-                opt.UseSqlServer(connString); 
+            services.AddDbContext<LibraryContext>(opt =>
+            {
+
+                opt.UseSqlServer(connString);
             });
 
             //IDServer step 2
@@ -124,14 +134,15 @@ namespace LibraryManager
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<ILibraryRepo, SqlLibraryRepo>();
-            
+
             services.AddControllersWithViews(config =>
             {
-                
-            }).AddNewtonsoftJson(s => { 
 
-                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); 
-            
+            }).AddNewtonsoftJson(s =>
+            {
+
+                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
             });
             services.AddRazorPages();
 

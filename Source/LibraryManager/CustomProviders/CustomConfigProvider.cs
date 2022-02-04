@@ -1,52 +1,71 @@
 ﻿using LibraryManager.Helpers;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace LibraryManager.CustomProviders
 {
-    public class CustomConfigProvider : ConfigurationProvider, IConfigurationSource
+     class ProtectedConfigurationSection : IConfigurationSection
     {
-        public CustomConfigProvider()
+        private readonly IDataProtectionProvider _dataProtectionProvider;
+        private readonly IConfigurationSection _section;
+        private readonly Lazy<IDataProtector> _protector;
+
+        public ProtectedConfigurationSection(
+            IDataProtectionProvider dataProtectionProvider,
+            IConfigurationSection section)
         {
+            _dataProtectionProvider = dataProtectionProvider;
+            _section = section;
+
+            _protector = new Lazy<IDataProtector>(() => dataProtectionProvider.CreateProtector(section.Path));
         }
 
-        public override void Load()
+        public IConfigurationSection GetSection(string key)
         {
-            Data = UnencryptMyConfiguration(base.Data);
+            return new ProtectedConfigurationSection(_dataProtectionProvider, _section.GetSection(key));
         }
 
-        private IDictionary<string, string> UnencryptMyConfiguration(IDictionary<string, string> bData)
+        public IEnumerable<IConfigurationSection> GetChildren()
         {
-            // do whatever you need to do here, for example load the file and unencrypt key by key
-            //Like:
-            var configValues = new Dictionary<string, string>();
-            string encConn = "";
-            CryptoHelper crypt = new CryptoHelper();
-            if (bData.TryGetValue("LibraryConn", out encConn))
-            {
-                var conStrBuilder = new SqlConnectionStringBuilder(encConn);
-                conStrBuilder.Password = crypt.GetUnCrypted(conStrBuilder.Password);
-                configValues.Add("LibraryConn", conStrBuilder.ConnectionString);
-
-
-            }
-            return configValues;
+            return _section.GetChildren()
+                .Select(x => new ProtectedConfigurationSection(_dataProtectionProvider, x));
         }
 
-        private IDictionary<string, string> CreateAndSaveDefaultValues(IDictionary<string, string> defaultDictionary)
+        public IChangeToken GetReloadToken()
         {
-            var configValues = new Dictionary<string, string>
-            {
-                {"key1", "encryptedValue1"},
-                {"key2", "encryptedValue2"}
-            };
-            return configValues;
+            return _section.GetReloadToken();
         }
 
-        public IConfigurationProvider Build(IConfigurationBuilder builder)
+        public string this[string key]
         {
-            return new CustomConfigProvider();
+            get => GetProtectedValue(_section[key]);
+            set => _section[key] = _protector.Value.Protect(value);
         }
+
+        public string Key => _section.Key;
+        public string Path => _section.Path;
+
+        public string Value
+        {
+            get => GetProtectedValue(_section.Value);
+            set => _section.Value = _protector.Value.Protect(value);
+        }
+
+        private string GetProtectedValue(string value)
+        {
+            if (value == null)
+                return null;
+
+            return _protector.Value.Unprotect(value);
+        }
+
+     
     }
+}
 }

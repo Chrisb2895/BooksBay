@@ -40,6 +40,7 @@ namespace LibraryManager
 
                 using (var scope = host.Services.CreateScope())
                 {
+
                     //IdentityServer configure step
 
                     /*scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
@@ -81,7 +82,7 @@ namespace LibraryManager
             }
             catch (Exception ex)
             {
-                log.ErrorFormat("Errore in LibraryManager WebAPI Program: {0}  \r\n {1} \n\r InnerEx: {2}", ex.Message, ex.StackTrace);
+                log.ErrorFormat("Errore in LibraryManager WebAPI Program: {0}  \r\n {1} \n\r InnerEx: {2}", ex.Message, ex.StackTrace,ex.InnerException);
             }
 
         }
@@ -90,13 +91,7 @@ namespace LibraryManager
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureAppConfiguration(configurationBuilder =>
-                    configurationBuilder.AddJsonFile("appsettings.json")
-                                        .AddEncryptedProvider()
-
-
-
-                        );
+ 
                     webBuilder.UseStartup<Startup>().ConfigureLogging((hostingContext, logging) =>
                     {
                         logging.AddLog4Net();
