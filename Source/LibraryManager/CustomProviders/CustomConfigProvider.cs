@@ -10,62 +10,46 @@ using System.Linq;
 
 namespace LibraryManager.CustomProviders
 {
-     class ProtectedConfigurationSection : IConfigurationSection
+    public class CustomConfigProvider : ConfigurationProvider, IConfigurationSource
     {
-        private readonly IDataProtectionProvider _dataProtectionProvider;
-        private readonly IConfigurationSection _section;
-        private readonly Lazy<IDataProtector> _protector;
-
-        public ProtectedConfigurationSection(
-            IDataProtectionProvider dataProtectionProvider,
-            IConfigurationSection section)
+        IConfiguration _configuration;
+        public CustomConfigProvider(IConfiguration configuration)
         {
-            _dataProtectionProvider = dataProtectionProvider;
-            _section = section;
-
-            _protector = new Lazy<IDataProtector>(() => dataProtectionProvider.CreateProtector(section.Path));
+            _configuration = configuration;
         }
 
-        public IConfigurationSection GetSection(string key)
+        public override void Load()
         {
-            return new ProtectedConfigurationSection(_dataProtectionProvider, _section.GetSection(key));
+            Data = UnencryptMyConfiguration();
         }
 
-        public IEnumerable<IConfigurationSection> GetChildren()
+        private IDictionary<string, string> UnencryptMyConfiguration()
         {
-            return _section.GetChildren()
-                .Select(x => new ProtectedConfigurationSection(_dataProtectionProvider, x));
+            // do whatever you need to do here, for example load the file and unencrypt key by key
+            //Like:
+            var conn = _configuration.GetConnectionString("LibraryConn");
+            var configValues = new Dictionary<string, string>
+                   {
+                        {"key1", "unencryptedValue1"},
+                        {"key2", "unencryptedValue2"}
+                   };
+            return configValues;
         }
 
-        public IChangeToken GetReloadToken()
+        private IDictionary<string, string> CreateAndSaveDefaultValues(IDictionary<string, string> defaultDictionary)
         {
-            return _section.GetReloadToken();
+            var configValues = new Dictionary<string, string>
+        {
+            {"key1", "encryptedValue1"},
+            {"key2", "encryptedValue2"}
+        };
+            return configValues;
         }
 
-        public string this[string key]
+        public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            get => GetProtectedValue(_section[key]);
-            set => _section[key] = _protector.Value.Protect(value);
+            return new CustomConfigProvider(_configuration);
         }
-
-        public string Key => _section.Key;
-        public string Path => _section.Path;
-
-        public string Value
-        {
-            get => GetProtectedValue(_section.Value);
-            set => _section.Value = _protector.Value.Protect(value);
-        }
-
-        private string GetProtectedValue(string value)
-        {
-            if (value == null)
-                return null;
-
-            return _protector.Value.Unprotect(value);
-        }
-
-     
     }
 }
-}
+
