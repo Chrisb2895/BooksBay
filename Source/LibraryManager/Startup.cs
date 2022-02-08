@@ -42,37 +42,21 @@ namespace LibraryManager
 
 
             Configuration = builder.Build();
-            var test = "ciao";
+            
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataProtection().SetApplicationName("LibraryManager");
+            //services.AddDataProtection().SetApplicationName("LibraryManager");
             services.AddSingleton<IConfiguration>(Configuration);
-            //services.AddSingleton<Helpers.CryptoHelper>();
             var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
-            var bProv = services.BuildServiceProvider();
-            var instance = ActivatorUtilities.CreateInstance<Helpers.CryptoHelper>(bProv, bProv.GetDataProtectionProvider());
-            conStrBuilder.Password = instance.GetUnCrypted(conStrBuilder.Password);
-            // Configure protected config settings
-                      
 
             var connString = "";          
             connString = conStrBuilder.ConnectionString;
 
-            if (Env.IsProduction())
-            {
-
-            }
-            if (Env.IsDevelopment())
-            {
-
-            }
-
             services.AddDbContext<LibraryContext>(opt =>
             {
-
                 opt.UseSqlServer(connString);
             });
 

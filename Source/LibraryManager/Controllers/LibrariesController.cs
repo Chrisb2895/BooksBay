@@ -12,6 +12,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using LibraryManager.Helpers;
 using Microsoft.AspNetCore.DataProtection;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
+using System.Text;
+using System.IO;
+using System.Web;
 
 namespace LibraryManager.Controllers
 
@@ -25,16 +30,14 @@ namespace LibraryManager.Controllers
         private readonly ILibraryRepo _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<LibrariesController> _logger;
-        public EphemeralDataProtectionProvider dataProtectionProvider;
-        public IDataProtector _protector;
+
 
         public LibrariesController(ILibraryRepo repository, IMapper mapper, ILogger<LibrariesController> logger)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
-            dataProtectionProvider = new EphemeralDataProtectionProvider();
-            _protector = dataProtectionProvider.CreateProtector("Crypto");
+
         }
 
         //GET api/libraries
@@ -177,13 +180,32 @@ namespace LibraryManager.Controllers
         [NonAction]
         public string GetCrypted(string fromS)
         {
-            return _protector.Protect(fromS);
+            X509Certificate2 cert; byte[] data;
+            var certPath = Path.Combine(@"C:\Users\BilottaC\source\repos\LibraryManager\Source\LibraryManager", "libManager.pfx");
+            cert = new X509Certificate2(certPath, "XCertificate");
+            data = Encoding.UTF8.GetBytes(fromS);
+            // GetRSAPublicKey returns an object with an independent lifetime, so it should be
+            // handled via a using statement.
+            using (RSA rsa = cert.GetRSAPublicKey())
+            {
+                // OAEP allows for multiple hashing algorithms, what was formermly just "OAEP" is
+                // now OAEP-SHA1.
+                return HttpUtility.UrlEncode(System.Text.Encoding.UTF8.GetString(rsa.Encrypt(data, RSAEncryptionPadding.OaepSHA1)), System.Text.Encoding.UTF8);
+            }
+
         }
 
         [NonAction]
         public string GetUnCrypted(string fromS)
         {
-            return _protector.Protect(fromS);
+            X509Certificate2 cert; byte[] data;
+            var certPath = Path.Combine(@"C:\Users\BilottaC\source\repos\LibraryManager\Source\LibraryManager", "libManager.pfx");
+            cert = new X509Certificate2(certPath, "XCertificate");
+            data = Encoding.UTF8.GetBytes(fromS);
+            using (RSA rsa = cert.GetRSAPrivateKey())
+            {
+                return System.Text.Encoding.UTF8.GetString(rsa.Decrypt(data, RSAEncryptionPadding.OaepSHA1));
+            }
         }
 
     }
