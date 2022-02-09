@@ -26,11 +26,11 @@ namespace LibraryManager.CustomProviders
         private IDictionary<string, string> UnencryptMyConfiguration()
         {
             // do whatever you need to do here, for example load the file and unencrypt key by key
-            //Like:
-            var conn = _configuration.GetConnectionString("LibraryConn");
+            //Like:           
+            var decr = CryptoHelper.GetUnCrypted(_configuration["DbPassword"], _configuration["MasterPWD"]);           
             var configValues = new Dictionary<string, string>
                    {
-                        {"key1", "unencryptedValue1"},
+                        {"dbPWD", decr},
                         {"key2", "unencryptedValue2"}
                    };
             return configValues;

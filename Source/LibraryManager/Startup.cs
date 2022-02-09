@@ -1,6 +1,7 @@
 using LibraryManager.Classes.Controllers;
 using LibraryManager.CustomProviders;
 using LibraryManager.Data;
+using LibraryManager.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
@@ -33,7 +34,7 @@ namespace LibraryManager
         {
             Configuration = configuration;
             Env = env;
-
+            
             var builder = new ConfigurationBuilder()
                                 .SetBasePath(env.ContentRootPath)
                                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -51,7 +52,7 @@ namespace LibraryManager
             //services.AddDataProtection().SetApplicationName("LibraryManager");
             services.AddSingleton<IConfiguration>(Configuration);
             var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
-
+            conStrBuilder.Password = Configuration.GetValue<string>("dbPWD");
             var connString = "";          
             connString = conStrBuilder.ConnectionString;
 
