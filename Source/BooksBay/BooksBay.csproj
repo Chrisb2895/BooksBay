@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LibraryManager\LibraryManager.csproj" />
+    <ProjectReference Include="..\LibraryManager\LibraryManagerAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
