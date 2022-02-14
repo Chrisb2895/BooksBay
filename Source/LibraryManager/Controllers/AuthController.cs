@@ -47,7 +47,7 @@ namespace LibraryManager.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, false);
-                    return Redirect(vm.ReturnUrl);
+                    return LocalRedirect(vm.ReturnUrl);
                 }
 
                 foreach (IdentityError error in result.Errors)
@@ -87,7 +87,7 @@ namespace LibraryManager.Controllers
                 var result = await _signInManager.PasswordSignInAsync(vm.Email, vm.Password, vm.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    return Redirect(vm.ReturnUrl);
+                    return LocalRedirect(vm.ReturnUrl);
                 }
                 else if (result.IsLockedOut)
                 {
@@ -108,7 +108,7 @@ namespace LibraryManager.Controllers
             if (string.IsNullOrEmpty(logoutRequest.PostLogoutRedirectUri))
                 return RedirectToAction("Index", "Home");
 
-            return Redirect(logoutRequest.PostLogoutRedirectUri);
+            return LocalRedirect(logoutRequest.PostLogoutRedirectUri);
 
         }
 
@@ -126,6 +126,10 @@ namespace LibraryManager.Controllers
         [Route("/Auth/ExternalLoginCallback")]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
         {
+            //Security check against open redirects threats
+            if (!Url.IsLocalUrl(returnUrl))
+                returnUrl = "";
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
                 return RedirectToAction("Login");
@@ -181,7 +185,7 @@ namespace LibraryManager.Controllers
                 {
                      await _signInManager.SignInAsync(user, false);
 
-                    return Redirect(vm.ReturnUrl);
+                    return LocalRedirect(vm.ReturnUrl);
 
                 }
             }
