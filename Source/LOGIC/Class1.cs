@@ -1,4 +1,4 @@
-﻿namespace DAL
+﻿namespace LOGIC
 {
     public class Class1
     {
