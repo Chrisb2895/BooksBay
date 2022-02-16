@@ -4,11 +4,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace DAL.DataContext
 {
     internal class DatabaseContext : DbContext
     {
+        public static OptionsBuild Options = new OptionsBuild();
+        public DbSet<Library> Libraries { get; set; }
+
+        public static readonly ILoggerFactory _LoggerFactory = LoggerFactory.Create(builder => builder.AddLog4Net());
+
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        {
+
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLoggerFactory(_LoggerFactory.AddLog4Net());
+            optionsBuilder.EnableSensitiveDataLogging();
+            optionsBuilder.EnableDetailedErrors();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Library>().ToTable("Library");
+        }
+
+
         public class OptionsBuild
         {
             public AppConfiguration Settings { get; private set; }
