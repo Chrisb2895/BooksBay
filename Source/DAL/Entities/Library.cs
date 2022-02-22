@@ -28,5 +28,7 @@ namespace DAL.Entities
 
         public string Library_ModifiedBy { get; set; }
 
+        public bool Enabled { get; set; }
+
     }
 }
