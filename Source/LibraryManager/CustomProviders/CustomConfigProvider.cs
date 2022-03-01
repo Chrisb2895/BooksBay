@@ -7,12 +7,13 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
 namespace LibraryManager.CustomProviders
 {
     public class CustomConfigProvider : ConfigurationProvider, IConfigurationSource
     {
-        IConfiguration _configuration;
+        public readonly IConfiguration _configuration;
         public CustomConfigProvider(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -27,24 +28,16 @@ namespace LibraryManager.CustomProviders
         {
             // do whatever you need to do here, for example load the file and unencrypt key by key
             //Like:           
-            var decr = CryptoHelper.GetUnCrypted(_configuration["DbPassword"], _configuration["MasterPWD"]);           
+            var decr = CryptoHelper.GetUnCrypted(Encoding.Default.GetString(Convert.FromBase64String(_configuration["DbPassword"])), _configuration["MasterPWD"]);           
             var configValues = new Dictionary<string, string>
                    {
                         {"dbPWD", decr},
-                        {"key2", "unencryptedValue2"}
+                        {"MasterPWD", _configuration["MasterPWD"]}
                    };
             return configValues;
         }
 
-        private IDictionary<string, string> CreateAndSaveDefaultValues(IDictionary<string, string> defaultDictionary)
-        {
-            var configValues = new Dictionary<string, string>
-        {
-            {"key1", "encryptedValue1"},
-            {"key2", "encryptedValue2"}
-        };
-            return configValues;
-        }
+        
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {

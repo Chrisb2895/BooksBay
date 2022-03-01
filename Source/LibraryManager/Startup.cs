@@ -50,7 +50,13 @@ namespace LibraryManager
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddDataProtection().SetApplicationName("LibraryManager");
+
+            //This line code below allows Classes to Access Configuration with DI
             services.AddSingleton<IConfiguration>(Configuration);
+
+            //This line code below allows Controllers to Access Classes Data
+            services.AddTransient<CustomConfigProvider>();
+
             var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
             conStrBuilder.Password = Configuration.GetValue<string>("dbPWD");
             var connString = "";          
