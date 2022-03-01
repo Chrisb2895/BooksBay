@@ -19,6 +19,13 @@ namespace LibraryManager.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
+        [HttpGet]
+        [Route("Index")]
+        public IActionResult Index ()
+        {
+            return View();
+        }
+
         
     }
 }

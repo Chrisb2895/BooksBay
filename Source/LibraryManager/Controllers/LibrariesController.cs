@@ -198,14 +198,7 @@ namespace LibraryManager.Controllers
         [NonAction]
         public string GetUnCrypted(string fromS)
         {
-            X509Certificate2 cert; byte[] data;
-            var certPath = Path.Combine(@"C:\Users\BilottaC\source\repos\LibraryManager\Source\LibraryManager", "libManager.pfx");
-            cert = new X509Certificate2(certPath, "XCertificate");
-            data = Encoding.UTF8.GetBytes(fromS);
-            using (RSA rsa = cert.GetRSAPrivateKey())
-            {
-                return System.Text.Encoding.UTF8.GetString(rsa.Decrypt(data, RSAEncryptionPadding.OaepSHA1));
-            }
+            return CryptoHelper.GetUnCrypted(fromS, "X509_5uper5afe!");
         }
 
     }
