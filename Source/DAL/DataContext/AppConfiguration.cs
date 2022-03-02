@@ -18,7 +18,7 @@ namespace DAL.DataContext
             string path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
             configurationBuilder.AddJsonFile(path, false);
             IConfigurationRoot root = configurationBuilder.Build();
-            IConfigurationSection appSettings = root.GetSection("ConnectionStrings:DefaultConnection");
+            IConfigurationSection appSettings = root.GetSection("ConnectionStrings:LibraryConn");
             SqlConnectionString = appSettings.Value;
         }
 

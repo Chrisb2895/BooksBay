@@ -30,7 +30,7 @@ namespace DAL.DataContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Library>().ToTable("Library");
+            modelBuilder.Entity<Library>().ToTable("Libraries");
             modelBuilder.Entity<Library>().Property(lib=> lib.Library_CreationDate).IsRequired(true)
                 .HasDefaultValue(DateTime.UtcNow);
             modelBuilder.Entity<Library>().Property(lib => lib.Library_ModifiedDate).IsRequired(true)
