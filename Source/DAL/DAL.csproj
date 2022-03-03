@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Functions\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
