@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    internal interface ICRUD
+    public interface ICRUD
     {
         Task<T> Create<T>(T entity) where T : class;
 

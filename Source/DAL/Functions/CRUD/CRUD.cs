@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Functions.CRUD
 {
-    internal class CRUD : ICRUD
+    public class CRUD : ICRUD
     {
         public CRUD()
         {
