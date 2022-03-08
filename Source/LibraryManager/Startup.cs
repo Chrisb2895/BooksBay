@@ -2,6 +2,8 @@ using LibraryManager.Classes.Controllers;
 using LibraryManager.CustomProviders;
 using LibraryManager.Data;
 using LibraryManager.Helpers;
+using LOGIC.Services.Implementation;
+using LOGIC.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
@@ -55,7 +57,11 @@ namespace LibraryManager
             services.AddSingleton<IConfiguration>(Configuration);
 
             //This line code below allows Controllers to Access Classes Data
+            //CustomConfigProvider allows apps secrets to be Encrypted
             services.AddTransient<CustomConfigProvider>();
+
+            //Access to DAL and Logic, direct access to Database should be deprecated and removed
+            services.AddScoped<ILibraryService, LibraryService>();
 
             var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
             conStrBuilder.Password = Configuration.GetValue<string>("dbPWD");

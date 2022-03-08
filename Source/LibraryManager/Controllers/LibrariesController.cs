@@ -11,11 +11,11 @@ using System.Collections.Generic;
 using LibraryManager.Helpers;
 using System.Text;
 using LibraryManager.CustomProviders;
+using LOGIC.Services.Interfaces;
 
 namespace LibraryManager.Controllers
-
-
 {
+
     // api/Libraries
     [Route("api/[controller]")]
     [ApiController]
@@ -25,15 +25,15 @@ namespace LibraryManager.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger<LibrariesController> _logger;
         private readonly CustomConfigProvider _configProvider;
+        private ILibraryService _LibraryService;
 
-
-        public LibrariesController(ILibraryRepo repository, IMapper mapper, ILogger<LibrariesController> logger, CustomConfigProvider configuration)
+        public LibrariesController(ILibraryRepo repository, IMapper mapper, ILogger<LibrariesController> logger, CustomConfigProvider configuration, ILibraryService libraryService)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
             _configProvider = configuration;
-
+            _LibraryService = libraryService;
         }
 
         //GET api/libraries

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LOGIC.Services.Models.Library
 {
-    internal class LibraryResultSet
+    public class LibraryResultSet
     {
         public int Id { get; set; }
 

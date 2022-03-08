@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LOGIC.Services.Implementation
 {
-    internal class LibraryService : ILibraryService
+    public class LibraryService : ILibraryService
     {
         private ICRUD _CRUD = new CRUD();
 
@@ -22,7 +22,8 @@ namespace LOGIC.Services.Implementation
             try
             {
                 Library library = new Library();
-
+                // we are using crud class to add library because we only need to add 1 entity/record in 1 table
+                //if things were more complex and we needed to add 2 entities which have a relationship then we should use LibraryOperations class instead
                 library = await _CRUD.Create<Library>(lib);
 
                 LibraryResultSet libAdded = new LibraryResultSet

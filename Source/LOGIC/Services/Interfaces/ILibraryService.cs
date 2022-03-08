@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LOGIC.Services.Interfaces
 {
-    internal interface ILibraryService
+    public interface ILibraryService
     {
         public Task<GenericResultSet<LibraryResultSet>> AddSingleLibrary(Library lib);
 
