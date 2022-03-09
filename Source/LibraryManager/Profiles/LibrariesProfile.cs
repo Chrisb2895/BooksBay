@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DAL.Entities;
 using LibraryManager.DTOS;
 using LibraryManager.Models;
 using System;

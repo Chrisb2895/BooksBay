@@ -1,4 +1,5 @@
-﻿using LibraryManager.Helpers;
+﻿using DAL.Entities;
+using LibraryManager.Helpers;
 using LibraryManager.Models;
 using System;
 using System.Collections.Generic;
