@@ -74,7 +74,29 @@ namespace LOGIC.Services.Implementation
             return result;
         }
 
-        public async Task<GenericResultSet<LibraryResultSet>> UpdateLibrary(Library lib,long libID)
+        public async Task<GenericResultSet<LibraryResultSet>> GetLibraryByID(int libID)
+        {
+            GenericResultSet<LibraryResultSet> result = new GenericResultSet<LibraryResultSet>();
+            var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
+            var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
+            try
+            {
+                Library lib = await _CRUD.Read<Library>(libID);
+                result.ResultSet = new LibraryResultSet { Id = lib.Id, Name = lib.Name };
+                result.UserMessage = $"The supplied library {lib.Name} was returned successfully ";
+                result.InternalMessage = $"{fullName} executed successfully";
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.UserMessage = $"There was an error retrieving the {libID} library, please try again";
+                result.InternalMessage = $"ERROR: {fullName} : {ex.Message}";
+            }
+            return result;
+        }
+
+        public async Task<GenericResultSet<LibraryResultSet>> UpdateLibrary(Library lib,int libID)
         {
             GenericResultSet<LibraryResultSet> result = new GenericResultSet<LibraryResultSet>();
             var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();

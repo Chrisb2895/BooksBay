@@ -15,6 +15,8 @@ namespace LOGIC.Services.Interfaces
 
         public Task<GenericResultSet<List<LibraryResultSet>>> GetAllLibraries();
 
-        public Task<GenericResultSet<LibraryResultSet>> UpdateLibrary(Library lib,long libID);
+        public Task<GenericResultSet<LibraryResultSet>> GetLibraryByID(int libID);
+
+        public Task<GenericResultSet<LibraryResultSet>> UpdateLibrary(Library lib,int libID);
     }
 }

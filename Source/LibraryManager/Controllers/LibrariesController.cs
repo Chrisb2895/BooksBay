@@ -12,6 +12,8 @@ using LibraryManager.Helpers;
 using System.Text;
 using LibraryManager.CustomProviders;
 using LOGIC.Services.Interfaces;
+using System.Threading.Tasks;
+using DAL.Entities;
 
 namespace LibraryManager.Controllers
 {
@@ -27,7 +29,8 @@ namespace LibraryManager.Controllers
         private readonly CustomConfigProvider _configProvider;
         private ILibraryService _LibraryService;
 
-        public LibrariesController(ILibraryRepo repository, IMapper mapper, ILogger<LibrariesController> logger, CustomConfigProvider configuration, ILibraryService libraryService)
+        public LibrariesController(ILibraryRepo repository, IMapper mapper, ILogger<LibrariesController> logger, 
+                                    CustomConfigProvider configuration, ILibraryService libraryService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -40,7 +43,7 @@ namespace LibraryManager.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<LibraryReadDTO>> GetAllLibraries()
         {
-            _logger.LogDebug("Libraries Controlller GetAllLibraries Method Start");
+            //_logger.LogDebug("Libraries Controlller GetAllLibraries Method Start");
             var libraryItems = _repository.GetLibraries();
 
             if (libraryItems != null)
@@ -83,27 +86,32 @@ namespace LibraryManager.Controllers
 
         //GET api/libraries/{id}
         [HttpGet("{id}", Name = "GetLibraryByID")]
-        public ActionResult<LibraryReadDTO> GetLibraryByID(int id)
+        public async Task<IActionResult> GetLibraryByID(int id)
         {
-            var libraryItem = _repository.GetLibrariesById(id);
-            if (libraryItem != null)
-                return Ok(_mapper.Map<LibraryReadDTO>(libraryItem));
-
-            return NotFound();
+            var result = await _LibraryService.GetLibraryByID(id);
+            if (result.Success)
+            {
+                var libraryReadDTO = _mapper.Map<LibraryReadDTO>(result.ResultSet);
+                return Ok(libraryReadDTO);
+            }
+            else
+                return StatusCode(500, result);  
         }
 
         //POST api/libraries
         [HttpPost]
-        public ActionResult<LibraryReadDTO> CreateLibrary(LibraryCreateDTO lib)
+        public async Task<IActionResult> CreateLibrary(LibraryCreateDTO lib)
         {
             var librarymodel = _mapper.Map<Library>(lib);
-            _repository.CreateLibrary(librarymodel);
-            _repository.SaveChanges();
+            var result = await _LibraryService.AddSingleLibrary(librarymodel);
 
-            var libraryReadDTO = _mapper.Map<LibraryReadDTO>(librarymodel);
-
-
-            return CreatedAtRoute(nameof(GetLibraryByID), new { Id = libraryReadDTO.Id, libraryReadDTO });
+            if (result.Success)
+            {
+                var libraryReadDTO = _mapper.Map<LibraryReadDTO>(result.ResultSet);
+                return CreatedAtRoute(nameof(GetLibraryByID), new { Id = libraryReadDTO.Id, libraryReadDTO });
+            }
+            else
+                return StatusCode(500, result);                    
 
         }
 
