@@ -1,12 +1,8 @@
-using LibraryManager.Classes.Controllers;
 using LibraryManager.CustomProviders;
-using LibraryManager.Data;
-using LibraryManager.Helpers;
 using LOGIC.Services.Implementation;
 using LOGIC.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +32,7 @@ namespace LibraryManager
         {
             Configuration = configuration;
             Env = env;
-            
+
             var builder = new ConfigurationBuilder()
                                 .SetBasePath(env.ContentRootPath)
                                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -45,7 +41,7 @@ namespace LibraryManager
 
 
             Configuration = builder.Build();
-            
+
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -65,7 +61,7 @@ namespace LibraryManager
 
             var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
             conStrBuilder.Password = Configuration.GetValue<string>("dbPWD");
-            var connString = "";          
+            var connString = "";
             connString = conStrBuilder.ConnectionString;
 
             services.AddDbContext<LibraryContext>(opt =>
@@ -128,8 +124,6 @@ namespace LibraryManager
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            services.AddScoped<ILibraryRepo, SqlLibraryRepo>();
 
             services.AddControllersWithViews(config =>
             {

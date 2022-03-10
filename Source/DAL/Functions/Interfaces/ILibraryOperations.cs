@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Functions.Interfaces
 {
-    internal interface ILibraryOperations
+    public interface ILibraryOperations
     {
         public Task<Library> AddLibrary(Library library);
     }

@@ -1,6 +1,8 @@
 ﻿using DAL;
 using DAL.Entities;
 using DAL.Functions.CRUD;
+using DAL.Functions.Interfaces;
+using DAL.Functions.Specific;
 using LOGIC.Services.Interfaces;
 using LOGIC.Services.Models;
 using LOGIC.Services.Models.Library;
@@ -13,6 +15,7 @@ namespace LOGIC.Services.Implementation
     public class LibraryService : ILibraryService
     {
         private ICRUD _CRUD = new CRUD();
+        private ILibraryOperations _op = new LibraryOperations();
 
         public async Task<GenericResultSet<LibraryResultSet>> AddSingleLibrary(Library lib)
         {
@@ -73,7 +76,7 @@ namespace LOGIC.Services.Implementation
             }
             return result;
         }
-
+        
         public async Task<GenericResultSet<LibraryResultSet>> GetLibraryByID(int libID)
         {
             GenericResultSet<LibraryResultSet> result = new GenericResultSet<LibraryResultSet>();
@@ -122,6 +125,34 @@ namespace LOGIC.Services.Implementation
             {
                 result.Exception = ex;
                 result.UserMessage = "There was an error updating library, please try again";
+                result.InternalMessage = $"ERROR: {fullName} : {ex.Message}";
+            }
+            return result;
+        }
+
+        public async Task<GenericResultSet<PagedListHelper<LibraryResultSet>>> GetLibraries(PagedListParameters libParams)
+        {
+            GenericResultSet<PagedListHelper<LibraryResultSet>> result = new GenericResultSet<PagedListHelper<LibraryResultSet>>();
+            var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
+            var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
+            try
+            {
+                List<Library> libraries = await _CRUD.ReadAll<Library>();
+
+                result.ResultSet = new PagedListHelper<LibraryResultSet>();
+                libraries.ForEach(lib => {
+                    result.ResultSet.Add(new LibraryResultSet { Id = lib.Id, Name = lib.Name });
+                });
+
+
+                result.UserMessage = $"All libraries returned successfully ";
+                result.InternalMessage = $"{fullName} executed successfully";
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.UserMessage = "There was an error retrieving all libraries, please try again";
                 result.InternalMessage = $"ERROR: {fullName} : {ex.Message}";
             }
             return result;

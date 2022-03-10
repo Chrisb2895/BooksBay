@@ -1,6 +1,7 @@
 ﻿using DAL.DataContext;
 using DAL.Entities;
 using DAL.Functions.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Functions.Specific
 {
-    internal class LibraryOperations : ILibraryOperations
+    public class LibraryOperations : ILibraryOperations
     {
         public async Task<Library> AddLibrary(Library library)
         {
@@ -36,10 +37,28 @@ namespace DAL.Functions.Specific
                     }
                 }
             }
-            catch 
+            catch
             {
-                
-                throw ;
+
+                throw;
+            }
+        }
+
+        public async Task<PagedListHelper<Library>> Read<Library>(PagedListParameters pagedListParameters)
+        {
+            try
+            {
+                using (var context = new DatabaseContext(DatabaseContext.Options.DatabaseOptions))
+                {
+                    var allLib = await context.Libraries.ToListAsync();
+                    PagedListHelper<Library> result =  PagedListHelper<Library>.ToPagedList((IQueryable<Library>)allLib.OrderBy(l => l.Id),
+                            pagedListParameters.PageNumber, pagedListParameters.PageSize);
+                    return result;
+                }
+            }
+            catch
+            {
+                throw;
             }
         }
     }

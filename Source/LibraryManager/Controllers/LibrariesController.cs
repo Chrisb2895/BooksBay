@@ -1,19 +1,17 @@
 ﻿using AutoMapper;
-using LibraryManager.Data;
+using DAL.Entities;
+using LibraryManager.CustomProviders;
 using LibraryManager.DTOS;
-using LibraryManager.Models;
+using LibraryManager.Helpers;
+using LOGIC.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using LibraryManager.Helpers;
 using System.Text;
-using LibraryManager.CustomProviders;
-using LOGIC.Services.Interfaces;
 using System.Threading.Tasks;
-using DAL.Entities;
 
 namespace LibraryManager.Controllers
 {
@@ -23,16 +21,14 @@ namespace LibraryManager.Controllers
     [ApiController]
     public class LibrariesController : Controller
     {
-        private readonly ILibraryRepo _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<LibrariesController> _logger;
         private readonly CustomConfigProvider _configProvider;
         private ILibraryService _LibraryService;
 
-        public LibrariesController(ILibraryRepo repository, IMapper mapper, ILogger<LibrariesController> logger, 
+        public LibrariesController(IMapper mapper, ILogger<LibrariesController> logger,
                                     CustomConfigProvider configuration, ILibraryService libraryService)
         {
-            _repository = repository;
             _mapper = mapper;
             _logger = logger;
             _configProvider = configuration;
@@ -41,15 +37,17 @@ namespace LibraryManager.Controllers
 
         //GET api/libraries
         [HttpGet]
-        public ActionResult<IEnumerable<LibraryReadDTO>> GetAllLibraries()
+        public async Task<IActionResult> GetAllLibraries()
         {
-            //_logger.LogDebug("Libraries Controlller GetAllLibraries Method Start");
-            var libraryItems = _repository.GetLibraries();
+            var result = await _LibraryService.GetAllLibraries();
+            if (result.Success)
+            {
+                var libraryReadDTO = _mapper.Map<IEnumerable<LibraryReadDTO>>(result.ResultSet);
+                return Ok(libraryReadDTO);
+            }
+            else
+                return StatusCode(500, result);
 
-            if (libraryItems != null)
-                return Ok(_mapper.Map<IEnumerable<LibraryReadDTO>>(libraryItems));
-
-            return NotFound();
         }
 
         //GET api/libraries/librariesPaged
@@ -95,7 +93,7 @@ namespace LibraryManager.Controllers
                 return Ok(libraryReadDTO);
             }
             else
-                return StatusCode(500, result);  
+                return StatusCode(500, result);
         }
 
         //POST api/libraries
@@ -111,7 +109,7 @@ namespace LibraryManager.Controllers
                 return CreatedAtRoute(nameof(GetLibraryByID), new { Id = libraryReadDTO.Id, libraryReadDTO });
             }
             else
-                return StatusCode(500, result);                    
+                return StatusCode(500, result);
 
         }
 

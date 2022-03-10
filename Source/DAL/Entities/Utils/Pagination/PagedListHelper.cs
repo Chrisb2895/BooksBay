@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace LibraryManager.Helpers
+namespace DAL.Entities
 {
     public class PagedListHelper<T> : List<T>
     {

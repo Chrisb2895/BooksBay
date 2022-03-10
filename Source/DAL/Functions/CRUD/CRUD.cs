@@ -1,7 +1,9 @@
 ﻿using DAL.DataContext;
+using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DAL.Functions.CRUD
@@ -60,6 +62,8 @@ namespace DAL.Functions.CRUD
                 throw;
             }
         }
+
+        
 
         public async Task<T> Update<T>(T entityToUpdate, long entityID) where T : class
         {
