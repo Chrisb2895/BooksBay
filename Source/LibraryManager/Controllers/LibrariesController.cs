@@ -53,33 +53,24 @@ namespace LibraryManager.Controllers
         //GET api/libraries/librariesPaged
         [HttpGet]
         [Route("libraries/librariesPaged")]
-        public ActionResult<IEnumerable<LibraryReadDTO>> GetAllLibrariesPaged([FromQuery] LibraryParameters libParams)
+        public async Task<IActionResult> GetAllLibrariesPaged([FromQuery] int page, [FromQuery] int pageSize)
         {
-            _logger.LogDebug("Libraries Controlller GetAllLibrariesPaged Method Start");
-            var libraryItems = _repository.GetLibraries(libParams);
-
-            if (libraryItems != null)
+            var result = await _LibraryService.GetPagedLibraries(page, pageSize);
+            if (result.Success)
             {
                 var metadata = new
                 {
-                    libraryItems.TotalCount,
-                    libraryItems.PageSize,
-                    libraryItems.CurrentPage,
-                    libraryItems.HasNext,
-                    libraryItems.HasPrevious,
-
+                    page,
+                    pageSize
                 };
 
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-                _logger.LogInformation($"Returned {libraryItems.TotalCount} libraries from db");
-
-
-                return Ok(_mapper.Map<IEnumerable<LibraryReadDTO>>(libraryItems));
-
+                var libraryReadDTO = _mapper.Map<IEnumerable<LibraryReadDTO>>(result.ResultSet);
+                return Ok(libraryReadDTO);
             }
+            else
+                return StatusCode(500, result);
 
-            return NotFound();
         }
 
         //GET api/libraries/{id}

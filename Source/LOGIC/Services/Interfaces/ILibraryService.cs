@@ -15,7 +15,7 @@ namespace LOGIC.Services.Interfaces
 
         public Task<GenericResultSet<List<LibraryResultSet>>> GetAllLibraries();
 
-        public Task<GenericResultSet<PagedListHelper<LibraryResultSet>>> GetLibraries(PagedListParameters libParams);
+        public Task<GenericResultSet<List<LibraryResultSet>>> GetPagedLibraries(int page, int pageSize);
 
         public Task<GenericResultSet<LibraryResultSet>> GetLibraryByID(int libID);
 

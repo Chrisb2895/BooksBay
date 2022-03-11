@@ -44,22 +44,6 @@ namespace DAL.Functions.Specific
             }
         }
 
-        public async Task<PagedListHelper<Library>> Read<Library>(PagedListParameters pagedListParameters)
-        {
-            try
-            {
-                using (var context = new DatabaseContext(DatabaseContext.Options.DatabaseOptions))
-                {
-                    var allLib = await context.Libraries.ToListAsync();
-                    PagedListHelper<Library> result =  PagedListHelper<Library>.ToPagedList((IQueryable<Library>)allLib.OrderBy(l => l.Id),
-                            pagedListParameters.PageNumber, pagedListParameters.PageSize);
-                    return result;
-                }
-            }
-            catch
-            {
-                throw;
-            }
-        }
+        
     }
 }

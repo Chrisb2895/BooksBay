@@ -1,5 +1,7 @@
 ﻿using DAL.DataContext;
 using DAL.Entities;
+using DAL.Entities.Utils.ExtensionsMethods;
+using DAL.Entities.Utils.Pagination;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -108,6 +110,20 @@ namespace DAL.Functions.CRUD
             }
         }
 
-
+        public async Task<List<T>> ReadPaged<T>( int page, int pageSize) where T : class
+        {
+            try
+            {
+                using (var context = new DatabaseContext(DatabaseContext.Options.DatabaseOptions))
+                {
+                    PagedResult<T> result = await context.Set<T>().GetPaged(page, pageSize);
+                    return (List<T>)result.Results;
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
