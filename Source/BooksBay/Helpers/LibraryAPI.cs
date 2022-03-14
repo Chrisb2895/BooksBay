@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using APIModels = LibraryManager.Models;
 
 namespace BooksBay.Helpers
 {
@@ -28,10 +23,7 @@ namespace BooksBay.Helpers
             return client;
         }
 
-       
-
-        
-        private async Task<TResult> PostAsync<TResult>(string requestUri,object postData)
+        private async Task<TResult> PostAsync<TResult>(string requestUri, object postData)
         {
             HttpClient cli = this.Initial();
 
@@ -41,7 +33,7 @@ namespace BooksBay.Helpers
             {
                 var results = await res.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<TResult>(results);
-               
+
             }
 
             return default(TResult);

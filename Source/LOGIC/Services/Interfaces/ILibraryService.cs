@@ -20,5 +20,7 @@ namespace LOGIC.Services.Interfaces
         public Task<GenericResultSet<LibraryResultSet>> GetLibraryByID(int libID);
 
         public Task<GenericResultSet<LibraryResultSet>> UpdateLibrary(Library lib,int libID);
+
+        public Task<GenericResultSet<LibraryResultSet>> DeleteLibrary( int libID);
     }
 }

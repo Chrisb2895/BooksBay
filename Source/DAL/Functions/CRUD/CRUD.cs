@@ -64,9 +64,7 @@ namespace DAL.Functions.CRUD
                 throw;
             }
         }
-
-        
-
+     
         public async Task<T> Update<T>(T entityToUpdate, long entityID) where T : class
         {
             try

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DataContext
 {
-    internal class AppConfiguration
+    public class AppConfiguration
     {
         public string SqlConnectionString { get; private set; }
 

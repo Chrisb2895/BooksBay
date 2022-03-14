@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DataContext
 {
-    internal class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContext>
+    public class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContext>
     {
         public DatabaseContext CreateDbContext(string[] args)
         {

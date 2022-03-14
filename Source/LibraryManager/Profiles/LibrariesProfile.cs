@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using DAL.Entities;
 using LibraryManager.DTOS;
-using LibraryManager.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LibraryManager.Profiles
 {
@@ -14,7 +9,7 @@ namespace LibraryManager.Profiles
         public LibrariesProfile()
         {
             //reading Source -> Target
-            CreateMap<Library,LibraryReadDTO>();
+            CreateMap<Library, LibraryReadDTO>();
 
             //creating 
             CreateMap<LibraryCreateDTO, Library>();

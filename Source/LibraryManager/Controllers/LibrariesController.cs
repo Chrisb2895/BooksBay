@@ -106,54 +106,70 @@ namespace LibraryManager.Controllers
 
         //PUT api/libraries/{id}
         [HttpPut("{id}")]
-        public ActionResult<LibraryReadDTO> UpdateLibrary(int id, LibraryUpdateDTO lib)
+        public async Task<IActionResult> UpdateLibrary(int id, LibraryUpdateDTO lib)
         {
-            var librarymodel = _repository.GetLibrariesById(id);
-            if (librarymodel == null)
-                return NotFound();
 
-            _mapper.Map(lib, librarymodel);
+            var result = await _LibraryService.GetLibraryByID(id);
 
-            _repository.UpdateLibrary(librarymodel);
+            if (result.Success)
+            {
+                //TODOCODE: gestione del notFound
+                var librarymodel = _mapper.Map<Library>(result.ResultSet);
+                _mapper.Map(lib, librarymodel);
+                var updateResult = await _LibraryService.UpdateLibrary(librarymodel, id);
 
-            _repository.SaveChanges();
+                if (updateResult.Success)
+                    return Ok(updateResult);
+                else
+                    return StatusCode(500, updateResult);
+            }
+            else
+                return StatusCode(500, result);
 
-            return NoContent();
         }
 
         //PATCH api/libraries/{id}
         [HttpPatch("{id}")]
-        public ActionResult<LibraryReadDTO> PartialLibraryUpdate(int id, JsonPatchDocument<LibraryUpdateDTO> patchDoc)
+        public async Task<IActionResult> PartialLibraryUpdate(int id, JsonPatchDocument<LibraryUpdateDTO> patchDoc)
         {
-            var librarymodel = _repository.GetLibrariesById(id);
-            if (librarymodel == null)
-                return NotFound();
+            var result = await _LibraryService.GetLibraryByID(id);
 
-            var libraryToPatch = _mapper.Map<LibraryUpdateDTO>(librarymodel);
-            patchDoc.ApplyTo(libraryToPatch, ModelState);
-            if (!TryValidateModel(libraryToPatch))
-                return ValidationProblem(ModelState);
+            if (result.Success)
+            {
+                //TODOCODE: gestione del notFound
+                var librarymodel = _mapper.Map<Library>(result.ResultSet);
+                var libraryToPatch = _mapper.Map<LibraryUpdateDTO>(librarymodel);
+                patchDoc.ApplyTo(libraryToPatch, ModelState);
+                if (!TryValidateModel(libraryToPatch))
+                    return ValidationProblem(ModelState);
 
-            _mapper.Map(libraryToPatch, librarymodel);
+                _mapper.Map(libraryToPatch, librarymodel);
+                var updateResult = await _LibraryService.UpdateLibrary(librarymodel, id);
 
-            _repository.SaveChanges();
+                if (updateResult.Success)
+                    return Ok(updateResult);
+                else
+                    return StatusCode(500, updateResult);
+            }
+            else
+                return StatusCode(500, result);
 
-            return NoContent();
         }
 
         //DELETE api/libraries/{id}
         [HttpDelete("{id}")]
-        public ActionResult DeleteLibrary(int id)
+        public async Task<IActionResult> DeleteLibrary(int id)
         {
-            var librarymodel = _repository.GetLibrariesById(id);
-            if (librarymodel == null)
-                return NotFound();
+            var result = await _LibraryService.DeleteLibrary(id);
 
-            _repository.DeleteLibrary(librarymodel);
+            if (result.Success)
+            {
+                //TODOCODE: gestione del notFound               
+                return Ok(result);
 
-            _repository.SaveChanges();
-
-            return NoContent();
+            }
+            else
+                return StatusCode(500, result);
         }
 
         //GET api/libraries/{input}

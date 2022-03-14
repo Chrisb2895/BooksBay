@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DAL.DataContext
 {
-    internal class DatabaseContext : DbContext
+    public class DatabaseContext : DbContext
     {
         public static OptionsBuild Options = new OptionsBuild();
         public DbSet<Library> Libraries { get; set; }

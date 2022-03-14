@@ -1,3 +1,4 @@
+using DAL.DataContext;
 using LibraryManager.CustomProviders;
 using LOGIC.Services.Implementation;
 using LOGIC.Services.Interfaces;
@@ -64,17 +65,13 @@ namespace LibraryManager
             var connString = "";
             connString = conStrBuilder.ConnectionString;
 
-            services.AddDbContext<LibraryContext>(opt =>
-            {
-                opt.UseSqlServer(connString);
-            });
 
             //IDServer step 2
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
-            }).AddEntityFrameworkStores<LibraryContext>()
+            }).AddEntityFrameworkStores<DatabaseContext>()
             .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(config =>
