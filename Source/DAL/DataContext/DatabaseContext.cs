@@ -1,15 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Entities;
+﻿using DAL.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace DAL.DataContext
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext
     {
         public static OptionsBuild Options = new OptionsBuild();
         public DbSet<Library> Libraries { get; set; }
@@ -30,14 +27,15 @@ namespace DAL.DataContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Library>().ToTable("Libraries");
-            modelBuilder.Entity<Library>().Property(lib=> lib.Library_CreationDate).IsRequired(true)
+            modelBuilder.Entity<Library>().Property(lib => lib.Library_CreationDate).IsRequired(true)
                 .HasDefaultValue(DateTime.UtcNow);
             modelBuilder.Entity<Library>().Property(lib => lib.Library_ModifiedDate).IsRequired(true)
                 .HasDefaultValue(DateTime.UtcNow);
             modelBuilder.Entity<Library>().Property(lib => lib.Enabled).IsRequired(true)
                 .HasDefaultValue(true);
-       
+
         }
 
 
@@ -56,7 +54,7 @@ namespace DAL.DataContext
                 DatabaseOptions = OptionsBuilder.Options;
             }
 
-            
+
         }
     }
 }

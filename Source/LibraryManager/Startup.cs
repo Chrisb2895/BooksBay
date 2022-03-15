@@ -65,6 +65,10 @@ namespace LibraryManager
             var connString = "";
             connString = conStrBuilder.ConnectionString;
 
+            services.AddDbContext<DatabaseContext>(opt =>
+            {
+                opt.UseSqlServer(connString);
+            });
 
             //IDServer step 2
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
