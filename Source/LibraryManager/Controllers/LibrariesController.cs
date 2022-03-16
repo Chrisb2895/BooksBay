@@ -189,14 +189,14 @@ namespace LibraryManager.Controllers
         [NonAction]
         public string GetCrypted(string fromS)
         {
-            return CryptoHelper.GetCrypted(Encoding.UTF8.GetString(Convert.FromBase64String(fromS)), _configProvider._configuration["MasterPWD"]);
+            return CryptoHelper.GetCrypted(Encoding.Default.GetString(Convert.FromBase64String(fromS)), _configProvider._configuration["MasterPWD"]);
 
         }
 
         [NonAction]
         public string GetUnCrypted(string fromS)
         {
-            return CryptoHelper.GetUnCrypted(Encoding.UTF8.GetString(Convert.FromBase64String(fromS)), _configProvider._configuration["MasterPWD"]);
+            return CryptoHelper.GetUnCrypted(Encoding.Default.GetString(Convert.FromBase64String(fromS)), _configProvider._configuration["MasterPWD"]);
         }
 
     }

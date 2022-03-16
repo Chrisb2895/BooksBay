@@ -34,14 +34,14 @@ namespace LibraryManager
             Configuration = configuration;
             Env = env;
 
-            var builder = new ConfigurationBuilder()
+            var cBuilder = new ConfigurationBuilder()
                                 .SetBasePath(env.ContentRootPath)
                                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                                 .AddEncryptedProvider(Configuration);
 
 
-            Configuration = builder.Build();
+            Configuration = cBuilder.Build();
 
         }
 
@@ -113,10 +113,11 @@ namespace LibraryManager
             
             });*/
 
+            //https://console.cloud.google.com/apis/dashboard?hl=IT&ref=https:%2F%2Fwww.google.com%2F&pli=1&project=books-bay-web-site-sts
             services.AddAuthentication().AddGoogle(config =>
            {
                config.ClientId = Configuration.GetSection("ExternalGoogleAuthInfos").GetValue<string>("ClientId");
-               config.ClientSecret = Configuration.GetSection("ExternalGoogleAuthInfos").GetValue<string>("ClientSecret");
+               config.ClientSecret = Configuration.GetValue<string>("ggClientSecret");
            });
 
             services.AddSwaggerGen(c =>

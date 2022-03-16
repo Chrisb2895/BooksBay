@@ -21,6 +21,7 @@ namespace LibraryManager.CustomProviders
 
         public override void Load()
         {
+            base.Load();
             Data = UnencryptMyConfiguration();
         }
 
@@ -28,10 +29,14 @@ namespace LibraryManager.CustomProviders
         {
             // do whatever you need to do here, for example load the file and unencrypt key by key
             //Like:           
-            var decr = CryptoHelper.GetUnCrypted(Encoding.Default.GetString(Convert.FromBase64String(_configuration["DbPassword"])), _configuration["MasterPWD"]);           
+            var decrDBPwd = CryptoHelper.GetUnCrypted(Encoding.Default.GetString(Convert.FromBase64String(_configuration["DbPassword"])), _configuration["MasterPWD"]);
+            var decrClientSecret = CryptoHelper.GetUnCrypted(Encoding.Default.GetString(Convert.FromBase64String(_configuration["ExternalGoogleAuthInfos:ClientSecret"])), _configuration["MasterPWD"]);
+            var decrAppSecret = CryptoHelper.GetUnCrypted(Encoding.Default.GetString(Convert.FromBase64String(_configuration["ExternalFacebookAuthInfos:AppSecret"])), _configuration["MasterPWD"]);
             var configValues = new Dictionary<string, string>
                    {
-                        {"dbPWD", decr},
+                        {"dbPWD", decrDBPwd},
+                        {"ggClientSecret", decrClientSecret},
+                        {"fbAppSecret", decrAppSecret},
                         {"MasterPWD", _configuration["MasterPWD"]}
                    };
             return configValues;
