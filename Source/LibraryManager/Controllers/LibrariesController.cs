@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DAL.CustomProviders;
 using DAL.Entities;
 using LibraryManager.CustomProviders;
 using LibraryManager.DTOS;
@@ -52,7 +53,7 @@ namespace LibraryManager.Controllers
 
         //GET api/libraries/librariesPaged
         [HttpGet]
-        [Route("libraries/librariesPaged")]
+        [Route("librariesPaged")]
         public async Task<IActionResult> GetAllLibrariesPaged([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = await _LibraryService.GetPagedLibraries(page, pageSize);

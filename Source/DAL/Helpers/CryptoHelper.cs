@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace LibraryManager.Helpers
+namespace DAL.Helpers
 {
     public class CryptoHelper
     {

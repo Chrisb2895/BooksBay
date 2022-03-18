@@ -1,4 +1,4 @@
-﻿namespace LibraryManager.CustomProviders
+﻿namespace DAL.CustomProviders
 {
     public class ConnectionStrings
     {
@@ -6,7 +6,7 @@
 
         public ConnectionStrings()
         {
-            
+
         }
     }
 }

@@ -1,15 +1,9 @@
-﻿using LibraryManager.Helpers;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Primitives;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Text;
 
-namespace LibraryManager.CustomProviders
+namespace DAL.CustomProviders
 {
     public class CustomConfigProvider : ConfigurationProvider, IConfigurationSource
     {
@@ -42,7 +36,7 @@ namespace LibraryManager.CustomProviders
             return configValues;
         }
 
-        
+
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {

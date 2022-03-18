@@ -12,9 +12,9 @@ namespace LOGIC.Services.Models
 
         public string UserMessage { get; set; }
 
-        internal string InternalMessage { get; set; }
+        public string InternalMessage { get; set; }
 
-        internal Exception Exception { get; set; }
+        public  Exception Exception { get; set; }
 
         public StandardObjectResult ()
         {
