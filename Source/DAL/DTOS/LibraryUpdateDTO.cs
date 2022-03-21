@@ -4,12 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LibraryManager.DTOS
+namespace DAL.DTOS
 {
-    public class LibraryCreateDTO
+    public class LibraryUpdateDTO
     {
-
-
         [Required]
         [MaxLength(60)]
         public string Name { get; set; }
@@ -18,6 +16,5 @@ namespace LibraryManager.DTOS
         public string City { get; set; }
 
         public DateTime BuiltDate { get; set; }
-
     }
 }

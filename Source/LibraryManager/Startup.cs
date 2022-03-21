@@ -1,6 +1,6 @@
 using DAL.CustomProviders;
 using DAL.DataContext;
-using LibraryManager.CustomProviders;
+using DAL.StaticClasses;
 using LOGIC.Services.Implementation;
 using LOGIC.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -41,8 +41,8 @@ namespace LibraryManager
                                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                                 .AddEncryptedProvider(Configuration);
 
-
             Configuration = cBuilder.Build();
+            AppData.Configuration = Configuration;
 
         }
 

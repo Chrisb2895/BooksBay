@@ -42,7 +42,6 @@ namespace DAL.DataContext
         public class OptionsBuild
         {
             public AppConfiguration Settings { get; private set; }
-
             public DbContextOptionsBuilder<DatabaseContext> OptionsBuilder { get; private set; }
             public DbContextOptions<DatabaseContext> DatabaseOptions { get; private set; }
 

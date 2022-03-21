@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using DAL.DTOS;
 using DAL.Entities;
-using LibraryManager.DTOS;
 
-namespace LibraryManager.Profiles
+
+namespace DAL.Profiles
 {
     public class LibrariesProfile : Profile
     {

@@ -1,21 +1,11 @@
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Mappers;
-using LibraryManager.CustomProviders;
 using log4net;
-using log4net.Appender;
-using log4net.Repository;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace LibraryManager
@@ -35,7 +25,7 @@ namespace LibraryManager
                     Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
                 log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
                 log.Warn("Application - Main is invoked");
-                
+
                 var host = CreateHostBuilder(args).Build();
 
                 using (var scope = host.Services.CreateScope())
@@ -74,7 +64,7 @@ namespace LibraryManager
                         context.SaveChanges();
                     }*/
                 }
-                
+
 
                 host.Run();
 
@@ -82,7 +72,7 @@ namespace LibraryManager
             }
             catch (Exception ex)
             {
-                log.ErrorFormat("Errore in LibraryManager WebAPI Program: {0}  \r\n {1} \n\r InnerEx: {2}", ex.Message, ex.StackTrace,ex.InnerException);
+                log.ErrorFormat("Errore in LibraryManager WebAPI Program: {0}  \r\n {1} \n\r InnerEx: {2}", ex.Message, ex.StackTrace, ex.InnerException);
             }
 
         }
@@ -91,13 +81,13 @@ namespace LibraryManager
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
- 
+
                     webBuilder.UseStartup<Startup>().ConfigureLogging((hostingContext, logging) =>
                     {
                         logging.AddLog4Net();
 
                     });
-                    
+
 
 
                 });

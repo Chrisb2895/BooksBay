@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using DAL.CustomProviders;
+using DAL.DTOS;
 using DAL.Entities;
-using LibraryManager.CustomProviders;
-using LibraryManager.DTOS;
-using LibraryManager.Helpers;
+using DAL.Helpers;
 using LOGIC.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
