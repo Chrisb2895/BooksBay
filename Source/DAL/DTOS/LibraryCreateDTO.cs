@@ -14,14 +14,10 @@ namespace DAL.DTOS
         [MaxLength(60)]
         public string City { get; set; }
 
-        [Required]
-        public DateTime BuiltDate { get; set; }
+        public DateTime? BuiltDate { get; set; }
 
         [Required]
         public string Library_CreatedBy { get; set; }
-
-        [Required]
-        public string Library_ModifiedBy { get; set; }
 
 
     }

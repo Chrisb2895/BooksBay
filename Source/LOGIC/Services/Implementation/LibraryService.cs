@@ -5,7 +5,6 @@ using DAL.Functions.Interfaces;
 using DAL.Functions.Specific;
 using LOGIC.Services.Interfaces;
 using LOGIC.Services.Models;
-using LOGIC.Services.Models.Library;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,9 +16,9 @@ namespace LOGIC.Services.Implementation
         private ICRUD _CRUD = new CRUD();
         private ILibraryOperations _op = new LibraryOperations();
 
-        public async Task<GenericResultSet<LibraryResultSet>> AddSingleLibrary(Library lib)
+        public async Task<GenericResultSet<Library>> AddSingleLibrary(Library lib)
         {
-            GenericResultSet<LibraryResultSet> result = new GenericResultSet<LibraryResultSet>();
+            GenericResultSet<Library> result = new GenericResultSet<Library>();
             var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
             var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
             try
@@ -29,12 +28,12 @@ namespace LOGIC.Services.Implementation
                 //if things were more complex and we needed to add 2 entities which have a relationship then we should use LibraryOperations class instead
                 library = await _CRUD.Create<Library>(lib);
 
-                LibraryResultSet libAdded = new LibraryResultSet
+                Library libAdded = new Library
                 {
                     Id = library.Id,
                     Name = library.Name
                 };
-                
+
                 result.UserMessage = $"The supplied library {libAdded.Name} was added successfully ";
                 result.InternalMessage = $"{fullName} executed successfully";
                 result.ResultSet = libAdded;
@@ -49,14 +48,14 @@ namespace LOGIC.Services.Implementation
             return result;
         }
 
-        public async Task<GenericResultSet<LibraryResultSet>> DeleteLibrary(int libID)
+        public async Task<GenericResultSet<Library>> DeleteLibrary(int libID)
         {
-            GenericResultSet<LibraryResultSet> result = new GenericResultSet<LibraryResultSet>();
+            GenericResultSet<Library> result = new GenericResultSet<Library>();
             var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
             var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
             try
             {
-                bool resultDelete = await _CRUD.Delete<Library>(libID);               
+                bool resultDelete = await _CRUD.Delete<Library>(libID);
                 result.UserMessage = $"The supplied library {libID} was deleted successfully ";
                 result.InternalMessage = $"{fullName} executed successfully";
                 result.Success = resultDelete;
@@ -70,21 +69,22 @@ namespace LOGIC.Services.Implementation
             return result;
         }
 
-        public async Task<GenericResultSet<List<LibraryResultSet>>> GetAllLibraries()
+        public async Task<GenericResultSet<List<Library>>> GetAllLibraries()
         {
-            GenericResultSet<List<LibraryResultSet>> result = new GenericResultSet<List<LibraryResultSet>>();
+            GenericResultSet<List<Library>> result = new GenericResultSet<List<Library>>();
             var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
             var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
             try
             {
                 List<Library> libraries = await _CRUD.ReadAll<Library>();
 
-                result.ResultSet = new List<LibraryResultSet>();
-                libraries.ForEach(lib => { 
-                                            result.ResultSet.Add(new LibraryResultSet { Id = lib.Id, Name = lib.Name }); 
-                                        });
+                result.ResultSet = new List<Library>();
+                libraries.ForEach(lib =>
+                {
+                    result.ResultSet.Add(new Library { Id = lib.Id, Name = lib.Name });
+                });
 
-               
+
                 result.UserMessage = $"All libraries returned successfully ";
                 result.InternalMessage = $"{fullName} executed successfully";
                 result.Success = true;
@@ -97,16 +97,16 @@ namespace LOGIC.Services.Implementation
             }
             return result;
         }
-        
-        public async Task<GenericResultSet<LibraryResultSet>> GetLibraryByID(int libID)
+
+        public async Task<GenericResultSet<Library>> GetLibraryByID(int libID)
         {
-            GenericResultSet<LibraryResultSet> result = new GenericResultSet<LibraryResultSet>();
+            GenericResultSet<Library> result = new GenericResultSet<Library>();
             var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
             var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
             try
             {
                 Library lib = await _CRUD.Read<Library>(libID);
-                result.ResultSet = new LibraryResultSet { Id = lib.Id, Name = lib.Name };
+                result.ResultSet = new Library { Id = lib.Id, Name = lib.Name };
                 result.UserMessage = $"The supplied library {lib.Name} was returned successfully ";
                 result.InternalMessage = $"{fullName} executed successfully";
                 result.Success = true;
@@ -120,18 +120,19 @@ namespace LOGIC.Services.Implementation
             return result;
         }
 
-        public async Task<GenericResultSet<List<LibraryResultSet>>> GetPagedLibraries(int page, int pageSize)
+        public async Task<GenericResultSet<List<Library>>> GetPagedLibraries(int page, int pageSize)
         {
-            GenericResultSet<List<LibraryResultSet>> result = new GenericResultSet<List<LibraryResultSet>>();
+            GenericResultSet<List<Library>> result = new GenericResultSet<List<Library>>();
             var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
             var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
             try
             {
                 List<Library> libraries = await _CRUD.ReadPaged<Library>(page, pageSize);
 
-                result.ResultSet = new List<LibraryResultSet>();
-                libraries.ForEach(lib => {
-                    result.ResultSet.Add(new LibraryResultSet { Id = lib.Id, Name = lib.Name });
+                result.ResultSet = new List<Library>();
+                libraries.ForEach(lib =>
+                {
+                    result.ResultSet.Add(new Library { Id = lib.Id, Name = lib.Name });
                 });
 
 
@@ -148,18 +149,18 @@ namespace LOGIC.Services.Implementation
             return result;
         }
 
-        public async Task<GenericResultSet<LibraryResultSet>> UpdateLibrary(Library lib,int libID)
+        public async Task<GenericResultSet<Library>> UpdateLibrary(Library lib, int libID)
         {
-            GenericResultSet<LibraryResultSet> result = new GenericResultSet<LibraryResultSet>();
+            GenericResultSet<Library> result = new GenericResultSet<Library>();
             var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
             var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
             try
             {
                 Library library = new Library();
 
-                library = await _CRUD.Update<Library>(lib,libID);
+                library = await _CRUD.Update<Library>(lib, libID);
 
-                LibraryResultSet libUpdated= new LibraryResultSet
+                Library libUpdated = new Library
                 {
                     Id = library.Id,
                     Name = library.Name
@@ -179,6 +180,6 @@ namespace LOGIC.Services.Implementation
             return result;
         }
 
-        
+
     }
 }

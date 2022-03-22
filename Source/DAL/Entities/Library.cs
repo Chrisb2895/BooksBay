@@ -8,25 +8,25 @@ namespace DAL.Entities
         [Key]
         public int Id { get; set; }
 
-        [Required]
         [MaxLength(60)]
+        [Required]
         public string Name { get; set; }
 
-        [Required]
         [MaxLength(60)]
+        [Required]
         public string City { get; set; }
 
-        [Required]
-        public DateTime BuiltDate { get; set; }
+        public DateTime? BuiltDate { get; set; }
 
+        [Required]
         public DateTime Library_CreationDate { get; set; }
 
         public DateTime Library_ModifiedDate { get; set; }
 
         [Required]
         public string Library_CreatedBy { get; set; }
-        [Required]
-        public string Library_ModifiedBy { get; set; }
+
+        public string? Library_ModifiedBy { get; set; }
 
         public bool Enabled { get; set; }
 
