@@ -1,6 +1,7 @@
 using DAL.CustomProviders;
 using DAL.DataContext;
 using DAL.StaticClasses;
+using log4net;
 using LOGIC.Services.Implementation;
 using LOGIC.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +31,8 @@ namespace LibraryManager
 
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Env { get; }
+
+        private static ILog log = LogManager.GetLogger(typeof(Startup));
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
@@ -150,13 +154,15 @@ namespace LibraryManager
                     Location = ResponseCacheLocation.Any,
                     NoStore = true
                 });
+
+                options.SuppressAsyncSuffixInActionNames = false;
             });
             //END OWASP SECURING
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IActionDescriptorCollectionProvider actionProvider)
         {
             loggerFactory.AddLog4Net();
 
@@ -230,6 +236,13 @@ namespace LibraryManager
                 endpoints.MapControllers();
 
             });
+
+            log.Info( "Available routes:");
+            var routes = actionProvider.ActionDescriptors.Items.Where(x => x.AttributeRouteInfo != null);
+            foreach (var route in routes)
+            {
+                log.Info( $" Name: {route.AttributeRouteInfo.Name} Template : {route.AttributeRouteInfo.Template}");
+            }
 
 
         }

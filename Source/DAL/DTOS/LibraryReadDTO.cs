@@ -13,6 +13,8 @@ namespace DAL.DTOS
 
         public string City { get; set; }
 
-        
+        public DateTime? BuiltDate { get; set; }
+
+
     }
 }

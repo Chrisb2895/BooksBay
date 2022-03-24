@@ -31,7 +31,9 @@ namespace LOGIC.Services.Implementation
                 Library libAdded = new Library
                 {
                     Id = library.Id,
-                    Name = library.Name
+                    Name = library.Name,
+                    City = library.City,
+                    BuiltDate = library.BuiltDate
                 };
 
                 result.UserMessage = $"The supplied library {libAdded.Name} was added successfully ";

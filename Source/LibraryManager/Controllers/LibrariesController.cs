@@ -37,7 +37,7 @@ namespace LibraryManager.Controllers
 
         //GET api/libraries
         [HttpGet]
-        public async Task<IActionResult> GetAllLibraries()
+        public async Task<IActionResult> GetAllLibrariesAsync()
         {
             var result = await _LibraryService.GetAllLibraries();
             if (result.Success)
@@ -53,7 +53,7 @@ namespace LibraryManager.Controllers
         //GET api/libraries/librariesPaged
         [HttpGet]
         [Route("librariesPaged")]
-        public async Task<IActionResult> GetAllLibrariesPaged([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<IActionResult> GetAllLibrariesPagedAsync([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = await _LibraryService.GetPagedLibraries(page, pageSize);
             if (result.Success)
@@ -74,8 +74,8 @@ namespace LibraryManager.Controllers
         }
 
         //GET api/libraries/{id}
-        [HttpGet("{id}", Name = "GetLibraryByID")]
-        public async Task<IActionResult> GetLibraryByID(int id)
+        [HttpGet("{id}", Name = "GetLibraryByIDAsync")]
+        public async Task<IActionResult> GetLibraryByIDAsync(int id)
         {
             var result = await _LibraryService.GetLibraryByID(id);
             if (result.Success)
@@ -89,7 +89,7 @@ namespace LibraryManager.Controllers
 
         //POST api/libraries
         [HttpPost]
-        public async Task<IActionResult> CreateLibrary(LibraryCreateDTO lib)
+        public async Task<IActionResult> CreateLibraryAsync(LibraryCreateDTO lib)
         {
             var librarymodel = _mapper.Map<Library>(lib);
             var result = await _LibraryService.AddSingleLibrary(librarymodel);
@@ -97,7 +97,7 @@ namespace LibraryManager.Controllers
             if (result.Success)
             {
                 var libraryReadDTO = _mapper.Map<LibraryReadDTO>(result.ResultSet);
-                return CreatedAtRoute(nameof(GetLibraryByID), new { Id = libraryReadDTO.Id, libraryReadDTO });
+                return CreatedAtRoute(nameof(GetLibraryByIDAsync), new { Id = libraryReadDTO.Id, libraryReadDTO });
             }
             else
                 return StatusCode(500, result);
@@ -106,7 +106,7 @@ namespace LibraryManager.Controllers
 
         //PUT api/libraries/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLibrary(int id, LibraryUpdateDTO lib)
+        public async Task<IActionResult> UpdateLibraryAsync(int id, LibraryUpdateDTO lib)
         {
 
             var result = await _LibraryService.GetLibraryByID(id);
@@ -130,7 +130,7 @@ namespace LibraryManager.Controllers
 
         //PATCH api/libraries/{id}
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PartialLibraryUpdate(int id, JsonPatchDocument<LibraryUpdateDTO> patchDoc)
+        public async Task<IActionResult> PartialLibraryUpdateAsync(int id, JsonPatchDocument<LibraryUpdateDTO> patchDoc)
         {
             var result = await _LibraryService.GetLibraryByID(id);
 
@@ -158,7 +158,7 @@ namespace LibraryManager.Controllers
 
         //DELETE api/libraries/{id}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLibrary(int id)
+        public async Task<IActionResult> DeleteLibraryAsync(int id)
         {
             var result = await _LibraryService.DeleteLibrary(id);
 
