@@ -98,7 +98,7 @@ namespace LibraryManager.Controllers
             {
                 var libraryReadDTO = _mapper.Map<LibraryReadDTO>(result.ResultSet);
                 //_logger.LogDebug($"name of route: {nameof(GetLibraryByIDAsync)}");
-                return CreatedAtRoute(nameof(GetLibraryByIDAsync), new { id = libraryReadDTO.Id, libraryReadDTO });
+                return CreatedAtRoute(routeName: nameof(GetLibraryByIDAsync), routeValues: new { id = libraryReadDTO.Id },value: libraryReadDTO );
             }
             else
                 return StatusCode(500, result);
