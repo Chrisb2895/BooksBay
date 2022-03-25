@@ -108,7 +108,7 @@ namespace LOGIC.Services.Implementation
             try
             {
                 Library lib = await _CRUD.Read<Library>(libID);
-                result.ResultSet = new Library { Id = lib.Id, Name = lib.Name };
+                result.ResultSet = new Library { Id = lib.Id, Name = lib.Name, City = lib.City, BuiltDate = lib.BuiltDate };
                 result.UserMessage = $"The supplied library {lib.Name} was returned successfully ";
                 result.InternalMessage = $"{fullName} executed successfully";
                 result.Success = true;

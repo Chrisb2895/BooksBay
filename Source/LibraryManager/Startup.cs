@@ -155,9 +155,10 @@ namespace LibraryManager
                     NoStore = true
                 });
 
-                options.SuppressAsyncSuffixInActionNames = false;
             });
             //END OWASP SECURING
+
+            services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 
         }
 

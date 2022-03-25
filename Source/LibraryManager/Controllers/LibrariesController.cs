@@ -74,7 +74,7 @@ namespace LibraryManager.Controllers
         }
 
         //GET api/libraries/{id}
-        [HttpGet("{id}", Name = "GetLibraryByIDAsync")]
+        [HttpGet("{id}", Name = nameof(GetLibraryByIDAsync))]
         public async Task<IActionResult> GetLibraryByIDAsync(int id)
         {
             var result = await _LibraryService.GetLibraryByID(id);
@@ -97,7 +97,8 @@ namespace LibraryManager.Controllers
             if (result.Success)
             {
                 var libraryReadDTO = _mapper.Map<LibraryReadDTO>(result.ResultSet);
-                return CreatedAtRoute(nameof(GetLibraryByIDAsync), new { Id = libraryReadDTO.Id, libraryReadDTO });
+                //_logger.LogDebug($"name of route: {nameof(GetLibraryByIDAsync)}");
+                return CreatedAtRoute(nameof(GetLibraryByIDAsync), new { id = libraryReadDTO.Id, libraryReadDTO });
             }
             else
                 return StatusCode(500, result);

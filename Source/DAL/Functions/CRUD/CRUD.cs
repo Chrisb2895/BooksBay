@@ -33,7 +33,7 @@ namespace DAL.Functions.CRUD
             }
         }
 
-        public async Task<T> Read<T>(long entityID) where T : class
+        public async Task<T> Read<T>(object entityID) where T : class
         {
             try
             {
@@ -65,7 +65,7 @@ namespace DAL.Functions.CRUD
             }
         }
      
-        public async Task<T> Update<T>(T entityToUpdate, long entityID) where T : class
+        public async Task<T> Update<T>(T entityToUpdate, object entityID) where T : class
         {
             try
             {
@@ -86,7 +86,7 @@ namespace DAL.Functions.CRUD
             }
         }
 
-        public async Task<bool> Delete<T>(long entityID) where T : class
+        public async Task<bool> Delete<T>(object entityID) where T : class
         {
             try
             {
