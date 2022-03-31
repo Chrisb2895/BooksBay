@@ -39,31 +39,14 @@ namespace LibraryManager
             Configuration = configuration;
             Env = env;
 
-            var cBuilder = new ConfigurationBuilder()
-                                .SetBasePath(env.ContentRootPath)
-                                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                                .AddEncryptedProvider(Configuration);
-
-            Configuration = cBuilder.Build();
-            AppData.Configuration = Configuration;
-
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDataProtection().SetApplicationName("LibraryManager");
 
             //This line code below allows Classes to Access Configuration with DI
-            services.AddSingleton<IConfiguration>(Configuration);
-
-            //This line code below allows Controllers to Access Classes Data
-            //CustomConfigProvider allows apps secrets to be Encrypted
-            services.AddTransient<CustomConfigProvider>();
-
-            //Access to DAL and Logic, direct access to Database should be deprecated and removed
-            services.AddScoped<ILibraryService, LibraryService>();
+            //services.AddSingleton<IConfiguration>(Configuration);
 
             var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
             conStrBuilder.Password = Configuration.GetValue<string>("dbPWD");
@@ -74,6 +57,15 @@ namespace LibraryManager
             {
                 opt.UseSqlServer(connString);
             });
+
+            //This line code below allows Controllers to Access Classes Data
+            //CustomConfigProvider allows apps secrets to be Encrypted
+            services.AddSingleton<CustomConfigProvider>();
+
+            //Access to DAL and Logic, direct access to Database should be deprecated and removed
+            services.AddScoped<ILibraryService, LibraryService>();
+
+            #region IdentityServer Authentication Handler
 
             //IDServer step 2
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -120,10 +112,12 @@ namespace LibraryManager
 
             //https://console.cloud.google.com/apis/dashboard?hl=IT&ref=https:%2F%2Fwww.google.com%2F&pli=1&project=books-bay-web-site-sts
             services.AddAuthentication().AddGoogle(config =>
-           {
-               config.ClientId = Configuration.GetSection("ExternalGoogleAuthInfos").GetValue<string>("ClientId");
-               config.ClientSecret = Configuration.GetValue<string>("ggClientSecret");
-           });
+            {
+                   config.ClientId = Configuration.GetSection("ExternalGoogleAuthInfos").GetValue<string>("ClientId");
+                   config.ClientSecret = Configuration.GetValue<string>("ggClientSecret");
+            });
+
+            #endregion
 
             services.AddSwaggerGen(c =>
             {
@@ -141,6 +135,7 @@ namespace LibraryManager
                 s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
             });
+
             services.AddRazorPages();
 
 
@@ -157,8 +152,6 @@ namespace LibraryManager
 
             });
             //END OWASP SECURING
-
-            services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 
         }
 
@@ -238,12 +231,12 @@ namespace LibraryManager
 
             });
 
-            log.Info( "Available routes:");
+            /*log.Info( "Available routes:");
             var routes = actionProvider.ActionDescriptors.Items.Where(x => x.AttributeRouteInfo != null);
             foreach (var route in routes)
             {
                 log.Info( $" Name: {route.AttributeRouteInfo.Name} Template : {route.AttributeRouteInfo.Template}");
-            }
+            }*/
 
 
         }

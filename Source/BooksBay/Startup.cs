@@ -68,8 +68,6 @@ namespace BooksBay
 
             services.AddRazorPages();
 
-            services.AddTransient<LibraryAPI>();
-
             services.AddHttpClient();
 
             //OWASP SECURING

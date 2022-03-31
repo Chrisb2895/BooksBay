@@ -63,9 +63,11 @@ html {
     background-size: cover;
 }
 
+
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: unset !important;
 }
 .footer {
   position: absolute;

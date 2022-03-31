@@ -12,12 +12,6 @@ namespace DAL.DataContext
 
         public AppConfiguration()
         {
-            /*ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
-            configurationBuilder.AddJsonFile(path, false);
-            configurationBuilder.AddEncryptedProvider(AppData.Configuration);
-            IConfigurationRoot root = configurationBuilder.Build();
-            IConfigurationSection appSettings = root.GetSection("ConnectionStrings:LibraryConn");*/
             var conStrBuilder = new SqlConnectionStringBuilder(AppData.Configuration.GetConnectionString("LibraryConn"));
             conStrBuilder.Password = AppData.Configuration.GetValue<string>("dbPWD");
             var connString = "";

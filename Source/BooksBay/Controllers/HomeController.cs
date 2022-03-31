@@ -24,7 +24,7 @@ namespace BooksBay.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly string _API_Endpoint;
 
-        public HomeController(ILogger<HomeController> logger,IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
@@ -36,16 +36,39 @@ namespace BooksBay.Controllers
         {
 
             await RefreshAccessToken();
-           
             var identity = (ClaimsIdentity)User.Identity;
-            IEnumerable<Claim> claims = identity.Claims;
-            if (identity.IsAuthenticated)             
-                return View(new BaseViewModel { CurrentLoggedUser = claims.FirstOrDefault(cl=> cl.Type == "name").Value });
+            var loggedUser = GetLoggedUser();
+            if (identity.IsAuthenticated)
+                return View(new BaseViewModel { CurrentLoggedUser = loggedUser });
 
             return View();
         }
 
-        public async Task RefreshAccessToken()
+        [Authorize]
+        public IActionResult Administration()
+        {
+            var loggedUser = GetLoggedUser();
+            return View(new BaseViewModel { CurrentLoggedUser = loggedUser });
+        }
+
+
+        [HttpPost]
+        [Route("Account/Logout")]
+        public IActionResult Logout(RegisterViewModel model)
+        {
+            return SignOut("Cookie", "oidc");
+        }
+
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        #region Utils
+
+        private async Task RefreshAccessToken()
         {
             var serverClient = _httpClientFactory.CreateClient();
             var discoveryDocument = await serverClient.GetDiscoveryDocumentAsync(_API_Endpoint);
@@ -57,7 +80,7 @@ namespace BooksBay.Controllers
             {
                 Address = discoveryDocument.TokenEndpoint,
                 RefreshToken = refreshToken,
-                ClientId="client_id_mvc",
+                ClientId = "client_id_mvc",
                 ClientSecret = "client_secret_mvc"
             });
 
@@ -71,24 +94,14 @@ namespace BooksBay.Controllers
 
         }
 
-
-        [HttpPost]
-        [Route("Account/Logout")]
-        public IActionResult Logout(RegisterViewModel model)
+        private string GetLoggedUser()
         {
-            return SignOut("Cookie", "oidc");
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            var loggedUser = claims.FirstOrDefault(cl => cl.Type == "name").Value;
+            return loggedUser;
         }
 
-           
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        #endregion
     }
 }
