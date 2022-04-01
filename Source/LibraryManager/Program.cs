@@ -68,10 +68,11 @@ namespace LibraryManager
                 })
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                     config
+                     var encrConf = config
                         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true)
-                        .AddEncryptedProvider(hostingContext.Configuration).Build();
+                        .Build();
+                      config.AddEncryptedProvider(encrConf);
                     
                 });
 
