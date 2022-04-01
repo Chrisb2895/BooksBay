@@ -12,22 +12,23 @@ namespace DAL.Functions.CRUD
 {
     public class CRUD : ICRUD
     {
-        public CRUD()
+        private DatabaseContext _dbContext;
+        public CRUD(DatabaseContext dbContext)
         {
+            _dbContext = dbContext;
         }
 
         public async Task<T> Create<T>(T objectForDB) where T : class
         {
             try
             {
-                using (var context = new DatabaseContext(DatabaseContext.Options.DatabaseOptions))
-                {
-                    await context.AddAsync<T>(objectForDB);
-                    await context.SaveChangesAsync();
-                    return objectForDB;
-                }
+
+                await _dbContext.AddAsync<T>(objectForDB);
+                await _dbContext.SaveChangesAsync();
+                return objectForDB;
+
             }
-            catch 
+            catch
             {
                 throw;
             }
@@ -37,13 +38,11 @@ namespace DAL.Functions.CRUD
         {
             try
             {
-                using (var context = new DatabaseContext(DatabaseContext.Options.DatabaseOptions))
-                {
-                    T result = await context.FindAsync<T>(entityID);
-                    return result;
-                }
+                T result = await _dbContext.FindAsync<T>(entityID);
+                return result;
+
             }
-            catch 
+            catch
             {
                 throw;
             }
@@ -53,32 +52,30 @@ namespace DAL.Functions.CRUD
         {
             try
             {
-                using (var context = new DatabaseContext(DatabaseContext.Options.DatabaseOptions))
-                {
-                    List<T> result = await context.Set<T>().ToListAsync();
-                    return result;
-                }
+
+                List<T> result = await _dbContext.Set<T>().ToListAsync();
+                return result;
+
             }
             catch
             {
                 throw;
             }
         }
-     
+
         public async Task<T> Update<T>(T entityToUpdate, object entityID) where T : class
         {
             try
             {
-                using (var context = new DatabaseContext(DatabaseContext.Options.DatabaseOptions))
+
+                var objectFound = await _dbContext.FindAsync<T>(entityID);
+                if (objectFound != null)
                 {
-                    var objectFound = await context.FindAsync<T>(entityID);
-                    if(objectFound != null)
-                    {
-                        context.Entry(objectFound).CurrentValues.SetValues(entityToUpdate);
-                        await context.SaveChangesAsync();
-                    }
-                    return objectFound;
+                    _dbContext.Entry(objectFound).CurrentValues.SetValues(entityToUpdate);
+                    await _dbContext.SaveChangesAsync();
                 }
+                return objectFound;
+
             }
             catch
             {
@@ -90,17 +87,16 @@ namespace DAL.Functions.CRUD
         {
             try
             {
-                using (var context = new DatabaseContext(DatabaseContext.Options.DatabaseOptions))
+
+                var objectFound = await _dbContext.FindAsync<T>(entityID);
+                if (objectFound != null)
                 {
-                    var objectFound = await context.FindAsync<T>(entityID);
-                    if (objectFound != null)
-                    {
-                        context.Remove(objectFound);
-                        await context.SaveChangesAsync();
-                        return true;
-                    }
-                    return false;
+                    _dbContext.Remove(objectFound);
+                    await _dbContext.SaveChangesAsync();
+                    return true;
                 }
+                return false;
+
             }
             catch
             {
@@ -108,15 +104,14 @@ namespace DAL.Functions.CRUD
             }
         }
 
-        public async Task<List<T>> ReadPaged<T>( int page, int pageSize) where T : class
+        public async Task<List<T>> ReadPaged<T>(int page, int pageSize) where T : class
         {
             try
             {
-                using (var context = new DatabaseContext(DatabaseContext.Options.DatabaseOptions))
-                {
-                    PagedResult<T> result = await context.Set<T>().GetPaged(page, pageSize);
-                    return (List<T>)result.Results;
-                }
+
+                PagedResult<T> result = await _dbContext.Set<T>().GetPaged(page, pageSize);
+                return (List<T>)result.Results;
+
             }
             catch
             {

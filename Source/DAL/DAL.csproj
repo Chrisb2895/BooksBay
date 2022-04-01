@@ -25,4 +25,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="StaticClasses\" />
+  </ItemGroup>
+
 </Project>

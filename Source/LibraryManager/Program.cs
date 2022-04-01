@@ -1,5 +1,4 @@
 using DAL.CustomProviders;
-using DAL.StaticClasses;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using log4net;
@@ -29,7 +28,7 @@ namespace LibraryManager
                 XmlDocument log4netConfig = new XmlDocument();
                 log4netConfig.Load(File.OpenRead("log4net.config"));
 
-                var repo = LogManager.CreateRepository( Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
+                var repo = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
                 log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
 
                 log.Warn("Application - Main Started");
@@ -67,47 +66,47 @@ namespace LibraryManager
                     });
 
                 })
-                .ConfigureAppConfiguration((hostingContext, config) => {
-                
-                    var decryptedConfig = config
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                     config
                         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true)
                         .AddEncryptedProvider(hostingContext.Configuration).Build();
-                    AppData.Configuration = decryptedConfig;
+                    
                 });
 
         private static void AddConfigurationDataToDatabase(IServiceScope scope)
         {
             scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
-                    var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                    context.Database.Migrate();
-                    if (!context.Clients.Any())
-                    {
-                        foreach (var client in Configuration.GetClients())
-                        {
-                            context.Clients.Add(client.ToEntity());
-                        }
-                        context.SaveChanges();
-                    }
+            var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+            context.Database.Migrate();
+            if (!context.Clients.Any())
+            {
+                foreach (var client in Configuration.GetClients())
+                {
+                    context.Clients.Add(client.ToEntity());
+                }
+                context.SaveChanges();
+            }
 
-                    if (!context.IdentityResources.Any())
-                    {
-                        foreach (var resource in Configuration.GetIdentityResources())
-                        {
-                            context.IdentityResources.Add(resource.ToEntity());
-                        }
-                        context.SaveChanges();
-                    }
+            if (!context.IdentityResources.Any())
+            {
+                foreach (var resource in Configuration.GetIdentityResources())
+                {
+                    context.IdentityResources.Add(resource.ToEntity());
+                }
+                context.SaveChanges();
+            }
 
-                    if (!context.ApiScopes.Any())
-                    {
-                        foreach (var resource in Configuration.GetApis())
-                        {
-                            context.ApiResources.Add(resource.ToEntity());
-                        }
-                        context.SaveChanges();
-                    }
+            if (!context.ApiScopes.Any())
+            {
+                foreach (var resource in Configuration.GetApis())
+                {
+                    context.ApiResources.Add(resource.ToEntity());
+                }
+                context.SaveChanges();
+            }
         }
 
     }

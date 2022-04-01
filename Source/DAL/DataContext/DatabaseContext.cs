@@ -8,7 +8,6 @@ namespace DAL.DataContext
 {
     public class DatabaseContext : IdentityDbContext
     {
-        public static OptionsBuild Options = new OptionsBuild();
         public DbSet<Library> Libraries { get; set; }
 
         public static readonly ILoggerFactory _LoggerFactory = LoggerFactory.Create(builder => builder.AddLog4Net());
@@ -39,21 +38,6 @@ namespace DAL.DataContext
         }
 
 
-        public class OptionsBuild
-        {
-            public AppConfiguration Settings { get; private set; }
-            public DbContextOptionsBuilder<DatabaseContext> OptionsBuilder { get; private set; }
-            public DbContextOptions<DatabaseContext> DatabaseOptions { get; private set; }
-
-            public OptionsBuild()
-            {
-                Settings = new AppConfiguration();
-                OptionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-                OptionsBuilder.UseSqlServer(Settings.SqlConnectionString);
-                DatabaseOptions = OptionsBuilder.Options;
-            }
-
-
-        }
+        
     }
 }

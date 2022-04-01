@@ -1,6 +1,5 @@
 using DAL.CustomProviders;
 using DAL.DataContext;
-using DAL.StaticClasses;
 using log4net;
 using LOGIC.Services.Implementation;
 using LOGIC.Services.Interfaces;
@@ -45,8 +44,8 @@ namespace LibraryManager
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //This line code below allows Classes to Access Configuration with DI
-            //services.AddSingleton<IConfiguration>(Configuration);
+            //This line code below allows Classes to Access Configuration and access secrets.json with DI
+            services.AddSingleton<IConfiguration>(Configuration);
 
             var conStrBuilder = new SqlConnectionStringBuilder(Configuration.GetConnectionString("LibraryConn"));
             conStrBuilder.Password = Configuration.GetValue<string>("dbPWD");
@@ -113,8 +112,8 @@ namespace LibraryManager
             //https://console.cloud.google.com/apis/dashboard?hl=IT&ref=https:%2F%2Fwww.google.com%2F&pli=1&project=books-bay-web-site-sts
             services.AddAuthentication().AddGoogle(config =>
             {
-                   config.ClientId = Configuration.GetSection("ExternalGoogleAuthInfos").GetValue<string>("ClientId");
-                   config.ClientSecret = Configuration.GetValue<string>("ggClientSecret");
+                config.ClientId = Configuration.GetSection("ExternalGoogleAuthInfos").GetValue<string>("ClientId");
+                config.ClientSecret = Configuration.GetValue<string>("ggClientSecret");
             });
 
             #endregion

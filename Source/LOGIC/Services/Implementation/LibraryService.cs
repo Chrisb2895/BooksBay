@@ -1,4 +1,5 @@
 ﻿using DAL;
+using DAL.DataContext;
 using DAL.Entities;
 using DAL.Functions.CRUD;
 using DAL.Functions.Interfaces;
@@ -13,8 +14,16 @@ namespace LOGIC.Services.Implementation
 {
     public class LibraryService : ILibraryService
     {
-        private ICRUD _CRUD = new CRUD();
-        private ILibraryOperations _op = new LibraryOperations();
+        private ICRUD _CRUD;
+        private ILibraryOperations _op ;
+        private DatabaseContext _dbContext;
+
+        public LibraryService(DatabaseContext dbContext)
+        {
+            _dbContext=dbContext;
+            _CRUD = new CRUD(_dbContext);
+            _op = new LibraryOperations(_dbContext);
+        }
 
         public async Task<GenericResultSet<Library>> AddSingleLibrary(Library lib)
         {
