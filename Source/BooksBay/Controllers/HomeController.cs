@@ -1,34 +1,26 @@
 ﻿using BooksBay.Models;
 using BooksBay.ViewModels;
 using IdentityModel.Client;
+using LibraryManager.Classes.Controllers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BooksBay.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : CommonController
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly string _API_Endpoint;
 
-        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
+
+        public HomeController(ILogger<CommonController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration) : base(logger, httpClientFactory, configuration)
         {
-            _logger = logger;
-            _httpClientFactory = httpClientFactory;
-            _API_Endpoint = configuration.GetValue<string>("WebAPI_Endpoint");
+
         }
 
         [Authorize]
@@ -43,14 +35,6 @@ namespace BooksBay.Controllers
 
             return View();
         }
-
-        [Authorize]
-        public IActionResult Administration()
-        {
-            var loggedUser = GetLoggedUser();
-            return View(new BaseViewModel { CurrentLoggedUser = loggedUser });
-        }
-
 
         [HttpPost]
         [Route("Account/Logout")]
@@ -94,13 +78,7 @@ namespace BooksBay.Controllers
 
         }
 
-        private string GetLoggedUser()
-        {
-            var identity = (ClaimsIdentity)User.Identity;
-            IEnumerable<Claim> claims = identity.Claims;
-            var loggedUser = claims.FirstOrDefault(cl => cl.Type == "name").Value;
-            return loggedUser;
-        }
+
 
         #endregion
     }

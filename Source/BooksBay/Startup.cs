@@ -25,7 +25,7 @@ namespace BooksBay
             Configuration = configuration;
             _API_Endpoint = Configuration.GetValue<string>("WebAPI_Endpoint");
         }
-      
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -51,7 +51,7 @@ namespace BooksBay
                     config.SignedOutCallbackPath = "/Home/Index";
                     config.GetClaimsFromUserInfoEndpoint = true;
                     config.Scope.Add("openid");
-                    config.Scope.Add("profile");               
+                    config.Scope.Add("profile");
                     config.Scope.Add("offline_access");
 
                 }).AddJwtBearer(opt =>
@@ -63,7 +63,7 @@ namespace BooksBay
 
             services.AddControllersWithViews(config =>
             {
-                
+
             });
 
             services.AddRazorPages();
@@ -148,7 +148,7 @@ namespace BooksBay
 
             //END OWASP SECURING
 
-            
+
 
             //IDServer step 5
 
@@ -158,8 +158,13 @@ namespace BooksBay
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
             });
         }
