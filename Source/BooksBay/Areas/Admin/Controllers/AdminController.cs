@@ -8,6 +8,7 @@ using System.Net.Http;
 
 namespace BooksBay.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class AdminController : CommonController
     {
 
