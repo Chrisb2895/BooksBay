@@ -1,5 +1,5 @@
-﻿using BooksBay.ViewModels;
-using LibraryManager.Classes.Controllers;
+﻿using BooksBay.Controllers;
+using BooksBay.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

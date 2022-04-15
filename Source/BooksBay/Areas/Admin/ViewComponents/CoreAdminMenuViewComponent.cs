@@ -1,5 +1,5 @@
-﻿using BooksBay.Areas.Admin.Models;
-using BooksBay.Areas.Admin.ViewModels;
+﻿using BooksBay.Areas.Admin.ViewModels;
+using DAL.CoreAdminExtensions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 

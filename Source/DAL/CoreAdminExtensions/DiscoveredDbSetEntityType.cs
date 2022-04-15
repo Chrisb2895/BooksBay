@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BooksBay.Areas.Admin.Models
+namespace DAL.CoreAdminExtensions
 {
     public class DiscoveredDbSetEntityType
     {

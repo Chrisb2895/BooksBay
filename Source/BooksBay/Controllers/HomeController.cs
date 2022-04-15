@@ -1,7 +1,6 @@
 ﻿using BooksBay.Models;
 using BooksBay.ViewModels;
 using IdentityModel.Client;
-using LibraryManager.Classes.Controllers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

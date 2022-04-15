@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Security.Claims;
 
 
-namespace LibraryManager.Classes.Controllers
+namespace BooksBay.Controllers
 {
 
     public class CommonController : Controller

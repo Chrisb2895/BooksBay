@@ -1,18 +1,13 @@
 ﻿using IdentityServer4.Services;
+using LibraryManager.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LibraryManager.ViewModels;
 using System.Security.Claims;
-using LibraryManager.Classes.Controllers;
+using System.Threading.Tasks;
 
 namespace LibraryManager.Controllers
 {
-    //[Route("[controller]")]
-    //[System.Web.Http.RoutePrefix("/Auth")]
+    //This controller is used mvc like because ASP Net Identity ClaimsIdentity class is not completly serializable and so cant use API like.....
     public class AuthController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -64,7 +59,7 @@ namespace LibraryManager.Controllers
         [Route("/Auth/Login")]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            
+
             //External Login Google Step 2
             var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
 
@@ -136,7 +131,7 @@ namespace LibraryManager.Controllers
 
             var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
 
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false,false);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, false);
 
             if (result.Succeeded)
             {
@@ -147,7 +142,7 @@ namespace LibraryManager.Controllers
             {
                 bool hasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null;
 
-                if(!hasAuthenticator)
+                if (!hasAuthenticator)
                     return RedirectToPage("./EnableAuthenticator", new { ReturnUrl = returnUrl, RememberMe = false });
 
                 return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = false });
@@ -183,7 +178,7 @@ namespace LibraryManager.Controllers
 
                 if (result.Succeeded)
                 {
-                     await _signInManager.SignInAsync(user, false);
+                    await _signInManager.SignInAsync(user, false);
 
                     return LocalRedirect(vm.ReturnUrl);
 

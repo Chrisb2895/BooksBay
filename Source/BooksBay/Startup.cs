@@ -1,5 +1,3 @@
-using BooksBay.Helpers;
-using LibraryManager.Classes.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +9,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using System.Net.Http.Headers;
 
 namespace BooksBay
 {
@@ -82,6 +79,8 @@ namespace BooksBay
                 });
             });
             //END OWASP SECURING
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
