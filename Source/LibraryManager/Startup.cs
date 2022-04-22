@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -144,7 +145,7 @@ namespace LibraryManager
             {
                 options.CacheProfiles.Add("default", new CacheProfile
                 {
-                    Duration = 30,
+                    Duration = 3600,
                     Location = ResponseCacheLocation.Any,
                     NoStore = true
                 });
@@ -177,7 +178,7 @@ namespace LibraryManager
                 {
                     var headers = context.Context.Response.GetTypedHeaders();
 
-                    headers.CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+                    headers.CacheControl = new CacheControlHeaderValue
                     {
                         Public = true,
                         MaxAge = TimeSpan.FromDays(30)
@@ -196,11 +197,11 @@ namespace LibraryManager
             app.Use((context, next) =>
             {
                 context.Response.GetTypedHeaders().CacheControl =
-                      new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                      new CacheControlHeaderValue()
                       {
-                          NoCache = true,
-                          NoStore = true,
-                          MustRevalidate = true
+                          NoCache = false,
+                          NoStore = false,
+                          MustRevalidate = false
                       };
                 context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
 
@@ -216,7 +217,7 @@ namespace LibraryManager
                 Secure = CookieSecurePolicy.Always,
                 //MinimumSameSitePolicy = SameSiteMode.Strict
                 //TO PRD NOTES: this comment up here should run in production but for dev and debug with local host
-                MinimumSameSitePolicy = SameSiteMode.Lax
+                MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Lax
             });
 
             //END OWASP SECURING

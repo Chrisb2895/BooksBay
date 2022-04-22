@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
 
@@ -73,7 +74,7 @@ namespace BooksBay
             {
                 options.CacheProfiles.Add("default", new CacheProfile
                 {
-                    Duration = 30,
+                    Duration = 3600,
                     Location = ResponseCacheLocation.Any,
                     NoStore = true
                 });
@@ -106,7 +107,7 @@ namespace BooksBay
                 {
                     var headers = context.Context.Response.GetTypedHeaders();
 
-                    headers.CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+                    headers.CacheControl = new CacheControlHeaderValue
                     {
                         Public = true,
                         MaxAge = TimeSpan.FromDays(30)
@@ -124,11 +125,11 @@ namespace BooksBay
             app.Use((context, next) =>
             {
                 context.Response.GetTypedHeaders().CacheControl =
-                      new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                      new CacheControlHeaderValue()
                       {
-                          NoCache = true,
-                          NoStore = true,
-                          MustRevalidate = true
+                          NoCache = false,
+                          NoStore = false,
+                          MustRevalidate = false
                       };
                 context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
 
@@ -142,7 +143,7 @@ namespace BooksBay
             {
                 HttpOnly = HttpOnlyPolicy.Always,
                 Secure = CookieSecurePolicy.Always,
-                MinimumSameSitePolicy = SameSiteMode.Strict
+                MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Strict
             });
 
             //END OWASP SECURING

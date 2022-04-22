@@ -103,17 +103,23 @@ namespace Microsoft.Extensions.DependencyInjection
                     foreach (var dbSetProperty in service.ImplementationType.GetProperties())
                     {
                         // looking for DbSet<Entity>
-                        if (dbSetProperty.PropertyType.IsGenericType && dbSetProperty.PropertyType.Name.StartsWith("DbSet"))
+                        //Aggiunto questo if rispetto implementazione standard perchè le tabelle ereditate da IdentityDbContext non vengono gestite per ora e non
+                        //devono essere rese tutte accedibili e modificabili perchè non ha senso, sono tabelle gestite dal Framework "IdentityServer" implementato
+                        //per gestire autorizzazione con i protocolli di sicurezza migliori Oauth e oidc
+                        if (dbSetProperty.Name == "Libraries")
                         {
-                            if (!options.IgnoreEntityTypes.Contains(dbSetProperty.PropertyType.GenericTypeArguments.First()))
+                            if (dbSetProperty.PropertyType.IsGenericType && dbSetProperty.PropertyType.Name.StartsWith("DbSet"))
                             {
-                                discoveredServices.Add(new DiscoveredDbSetEntityType()
+                                if (!options.IgnoreEntityTypes.Contains(dbSetProperty.PropertyType.GenericTypeArguments.First()))
                                 {
-                                    DbContextType = service.ImplementationType,
-                                    DbSetType = dbSetProperty.PropertyType,
-                                    UnderlyingType = dbSetProperty.PropertyType.GenericTypeArguments.First(),
-                                    Name = dbSetProperty.Name
-                                });
+                                    discoveredServices.Add(new DiscoveredDbSetEntityType()
+                                    {
+                                        DbContextType = service.ImplementationType,
+                                        DbSetType = dbSetProperty.PropertyType,
+                                        UnderlyingType = dbSetProperty.PropertyType.GenericTypeArguments.First(),
+                                        Name = dbSetProperty.Name
+                                    });
+                                }
                             }
                         }
                     }
