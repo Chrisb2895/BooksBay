@@ -12,7 +12,7 @@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true" defer></script>
 </head>
-<body id="layout-body" >
+<body id="layout-body">
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
 			<div class="container">
@@ -28,7 +28,7 @@
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index" >Administration</a>
+							<a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">Administration</a>
 						</li>
 
 					</ul>
@@ -47,28 +47,30 @@
 				</div>
 			</div>
 		</nav>
-	</header>	
 
-	
-	 <!-- Sidebar -->
-    <nav id="sidebar-wrapper" class="sidebar-width d-md-block bg-light sidebar sidebar-wrapper">
-        <div class="sidebar-sticky pt-3">
-            @await Component.InvokeAsync("CoreAdminMenu")
-        </div>
-    </nav>
+		<!-- Sidebar -->
+		<nav id="sidebar-wrapper" class="sidebar-width d-md-block bg-light sidebar sidebar-wrapper">
+			<div class="sidebar-sticky pt-3">
+				@await Component.InvokeAsync("CoreAdminMenu")
+			</div>
+		</nav>
+	</header>
+
+
+
 	<!-- Content -->
-    <div class="d-flex" id="wrapper">
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <main role="main" class="px-md-4">
-                    
-                   @RenderBody()
+	<div class="d-flex" id="wrapper">
+		<div id="page-content-wrapper">
+			<div class="container-fluid">
+				<main role="main" class="px-md-4">
 
-                </main>
-            </div>
-        </div>
-    </div>
-	
+					@RenderBody()
+
+				</main>
+			</div>
+		</div>
+	</div>
+
 
 
 	<footer class="border-top footer text-muted">

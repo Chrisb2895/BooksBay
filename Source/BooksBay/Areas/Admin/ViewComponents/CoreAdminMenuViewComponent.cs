@@ -21,9 +21,7 @@ namespace BooksBay.Areas.Admin.ViewComponents
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
-            _API_Endpoint = configuration.GetValue<string>("WebAPI_Endpoint");
-
-            
+            _API_Endpoint = configuration.GetValue<string>("WebAPI_Endpoint");           
         }
 
         public IViewComponentResult Invoke()
