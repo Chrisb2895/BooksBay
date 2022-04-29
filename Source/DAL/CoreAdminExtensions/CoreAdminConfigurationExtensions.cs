@@ -102,12 +102,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     foreach (var dbSetProperty in service.ImplementationType.GetProperties())
                     {
-                        // looking for DbSet<Entity>
-                        //Aggiunto questo if rispetto implementazione standard perchè le tabelle ereditate da IdentityDbContext non vengono gestite per ora e non
-                        //devono essere rese tutte accedibili e modificabili perchè non ha senso, sono tabelle gestite dal Framework "IdentityServer" implementato
-                        //per gestire autorizzazione con i protocolli di sicurezza migliori Oauth e oidc
-                        if (dbSetProperty.Name == "Libraries")
-                        {
+                        
                             if (dbSetProperty.PropertyType.IsGenericType && dbSetProperty.PropertyType.Name.StartsWith("DbSet"))
                             {
                                 if (!options.IgnoreEntityTypes.Contains(dbSetProperty.PropertyType.GenericTypeArguments.First()))
@@ -121,7 +116,7 @@ namespace Microsoft.Extensions.DependencyInjection
                                     });
                                 }
                             }
-                        }
+                        
                     }
 
 

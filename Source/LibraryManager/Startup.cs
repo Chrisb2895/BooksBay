@@ -1,3 +1,4 @@
+using DAL.CoreAdminExtensions;
 using DAL.CustomProviders;
 using DAL.DataContext;
 using log4net;
@@ -19,6 +20,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -153,7 +155,7 @@ namespace LibraryManager
             });
             //END OWASP SECURING
 
-            services.AddCoreAdmin();
+            services.AddCoreAdmin(new CoreAdminOptions() { IgnoreEntityTypes = new List<Type>() { typeof(IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext) } });
 
         }
 
