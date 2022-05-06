@@ -150,6 +150,6 @@ catch (Exception ex)
     using (EventLog eventLog = new EventLog("Application"))
     {
         eventLog.Source = "Application";
-        eventLog.WriteEntry(String.Format("Web Application LibraryManagerAPI Start Exception {0} {1}", ex.Message, ex.StackTrace), EventLogEntryType.Error, 101, 1);
+        eventLog.WriteEntry(String.Format("Web Application BooksBay Start Exception {0} {1}", ex.Message, ex.StackTrace), EventLogEntryType.Error, 101, 1);
     }
 }
