@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Serialization;
 
 try
 {
@@ -35,7 +36,12 @@ try
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
     //should be only API but use it also as Web Site cause of IdentityServer (some classes are not deserializable with json.... so the login is handled by API)
-    builder.Services.AddControllersWithViews();
+    builder.Services.AddControllersWithViews().AddNewtonsoftJson(s =>
+    {
+
+        s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+    });
 
     #region IdentityServer Authentication Handler
 

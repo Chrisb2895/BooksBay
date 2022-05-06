@@ -1,0 +1,89 @@
+﻿@inject SignInManager<IdentityUser> signInManager;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - LibraryManager Home</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" />
+	<link rel="stylesheet" href="~/css/GoogleFonts/GoogleFonts.css" />
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/lib/vara/vara.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true" defer></script>
+</head>
+<body id="layout-body" class="body-preload" onload="SitePreLoadAnimation()">
+	<header class="hidden">
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LibraryManager</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+					<ul class="navbar-nav flex-grow-1">
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+						</li>
+
+					</ul>
+					<ul class="navbar-nav ml-auto">
+						@if (signInManager.IsSignedIn(User))
+						{
+							<li class="nav-item">
+								<form method="post" asp-action="logout" asp-controller="auth">
+									<button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
+										Logout @User.Identity.Name
+									</button>
+								</form>
+							</li>
+						}
+						else
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="auth" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="auth" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">Login</a>
+							</li>
+						}
+
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<main role="main" >
+		<div id="writeAnimationContainer">
+		</div>
+		<div id="blenderVideoContainer" class="hidden">
+			<video width="1200" height="750" muted="muted" style=" margin-left: 320px;">
+				<source src="../videos/BookOpen50001-0250.mp4" type="video/mp4">
+
+				Your browser does not support the video tag.
+			</video>
+
+		</div>
+		<div id="main" class="hidden">
+			@RenderBody()
+		</div>
+	</main>
+
+
+	<footer class="footer text-muted">
+		<div class="container">
+			&copy; 2021 - LibraryManager - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+		</div>
+	</footer>
+
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
