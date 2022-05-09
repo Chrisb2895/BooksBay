@@ -1,32 +1,80 @@
 ﻿using BooksBay.Models;
+using BooksBay.ViewModels;
+using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace BooksBay.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : CommonController
     {
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<CommonController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration) : base(logger, httpClientFactory, configuration)
         {
-            _logger = logger;
+
         }
 
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
+
+            await RefreshAccessToken();
+            var identity = (ClaimsIdentity)User.Identity;
+            var loggedUser = GetLoggedUser();
+            if (identity.IsAuthenticated)
+                return View(new BaseViewModel { CurrentLoggedUser = loggedUser });
+
             return View();
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        [Route("Account/Logout")]
+        public IActionResult Logout(RegisterViewModel model)
         {
-            return View();
+            return SignOut("Cookie", "oidc");
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        #region Utils
+
+        private async Task RefreshAccessToken()
+        {
+            var serverClient = _httpClientFactory.CreateClient();
+            var discoveryDocument = await serverClient.GetDiscoveryDocumentAsync(_API_Endpoint);
+
+            var refreshToken = await HttpContext.GetTokenAsync("refresh_token");
+            var refreshTokenClient = _httpClientFactory.CreateClient();
+
+            var tokenResponse = await refreshTokenClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+            {
+                Address = discoveryDocument.TokenEndpoint,
+                RefreshToken = refreshToken,
+                ClientId = "client_id_mvc",
+                ClientSecret = "client_secret_mvc"
+            });
+
+            var authInfo = await HttpContext.AuthenticateAsync("Cookie");
+
+            authInfo.Properties.UpdateTokenValue("access_token", tokenResponse.AccessToken);
+            authInfo.Properties.UpdateTokenValue("id_token", tokenResponse.IdentityToken);
+            authInfo.Properties.UpdateTokenValue("refresh_token", tokenResponse.RefreshToken);
+
+            await HttpContext.SignInAsync("Cookie", authInfo.Principal, authInfo.Properties);
+
+        }
+
+
+
+        #endregion
     }
 }
