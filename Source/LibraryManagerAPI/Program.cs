@@ -31,7 +31,7 @@ try
     {
         opt.UseSqlServer(connString);
     });
-
+    builder.Services.AddSingleton<CustomConfigProvider>();
     builder.Services.AddScoped<ILibraryService, LibraryService>();
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

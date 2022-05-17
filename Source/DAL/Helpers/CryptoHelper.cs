@@ -30,9 +30,10 @@ namespace DAL.Helpers
             using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
-                using (var symmetricKey = new RijndaelManaged())
+                using (var symmetricKey = Aes.Create("AesManaged"))
                 {
-                    symmetricKey.BlockSize = 128;
+                    symmetricKey.KeySize = 256;
+                    symmetricKey.BlockSize = Keysize;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, ivStringBytes))
@@ -83,9 +84,10 @@ namespace DAL.Helpers
             using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
-                using (var symmetricKey = new RijndaelManaged())
+                using (var symmetricKey = Aes.Create("AesManaged"))
                 {
-                    symmetricKey.BlockSize = 128;
+                    symmetricKey.KeySize = 256;
+                    symmetricKey.BlockSize = Keysize;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, ivStringBytes))
@@ -105,5 +107,49 @@ namespace DAL.Helpers
                 }
             }
         }
+
+
+        // Create a method to encrypt a text and save it to a specific file using a RSA algorithm public key   
+        public static string EncryptData(string publicKey, string text)
+        {
+            // Convert the text to an array of bytes   
+            UnicodeEncoding byteConverter = new UnicodeEncoding();
+            byte[] dataToEncrypt = byteConverter.GetBytes(text);
+
+            // Create a byte array to store the encrypted data in it   
+            byte[] encryptedData;
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                // Set the rsa pulic key   
+                rsa.FromXmlString(publicKey);
+
+                // Encrypt the data and store it in the encyptedData Array   
+                encryptedData = rsa.Encrypt(dataToEncrypt, false);
+            }
+            // Save the encypted data array into a file   
+            return Convert.ToBase64String(encryptedData);
+
+            
+        }
+
+        // Method to decrypt the data withing a specific file using a RSA algorithm private key   
+       public static string DecryptData(string privateKey, string text)
+        {
+            // Convert the text to an array of bytes   
+            UnicodeEncoding byteConverter = new UnicodeEncoding();
+            byte[] dataToDecrypt = Convert.FromBase64String(text);         
+
+            // Create an array to store the decrypted data in it   
+            byte[] decryptedData;
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                // Set the private key of the algorithm   
+                rsa.FromXmlString(privateKey);
+                decryptedData = rsa.Decrypt(dataToDecrypt, false);
+            }
+
+            return byteConverter.GetString(decryptedData);
+        }
+
     }
 }

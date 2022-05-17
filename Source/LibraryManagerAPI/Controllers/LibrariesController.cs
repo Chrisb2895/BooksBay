@@ -193,7 +193,7 @@ namespace LibraryManager.Controllers
         [NonAction]
         public string GetUnCrypted(string fromS)
         {
-            return CryptoHelper.GetUnCrypted(Encoding.Default.GetString(Convert.FromBase64String(fromS)), _configProvider._configuration["MasterPWD"]);
+            return CryptoHelper.GetUnCrypted(Encoding.UTF8.GetString(Convert.FromBase64String(fromS)), _configProvider._configuration["MasterPWD"]);
         }
 
     }

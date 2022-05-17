@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LOGIC", "LOGIC\LOGIC.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagerAPI", "LibraryManagerAPI\LibraryManagerAPI.csproj", "{8B19E2D4-C6AD-4561-AC7E-C6213A2E3AC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooksBay", "BooksBay\BooksBay.csproj", "{A3FF757A-B0F5-4F89-AD66-D18DC92733D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooksBay", "BooksBay\BooksBay.csproj", "{A3FF757A-B0F5-4F89-AD66-D18DC92733D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{EF0AC1B4-FC1E-4351-83B0-C8D5F915704A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A3FF757A-B0F5-4F89-AD66-D18DC92733D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3FF757A-B0F5-4F89-AD66-D18DC92733D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3FF757A-B0F5-4F89-AD66-D18DC92733D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF0AC1B4-FC1E-4351-83B0-C8D5F915704A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF0AC1B4-FC1E-4351-83B0-C8D5F915704A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF0AC1B4-FC1E-4351-83B0-C8D5F915704A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF0AC1B4-FC1E-4351-83B0-C8D5F915704A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
