@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,16 +14,20 @@ using System.Threading.Tasks;
 
 namespace DotNetEd.CoreAdmin.Controllers
 {
-
+    [Area("Admin")]
     public class CoreAdminDataController : Controller
     {
         private readonly IEnumerable<DiscoveredDbSetEntityType> dbSetEntities;
+        public readonly ILogger<CoreAdminDataController> _logger;
 
-        public CoreAdminDataController(IEnumerable<DiscoveredDbSetEntityType> dbSetEntities)
+
+        public CoreAdminDataController(ILogger<CoreAdminDataController> logger, IEnumerable<DiscoveredDbSetEntityType> dbSetEntities)
         {
+            _logger = logger;
             this.dbSetEntities = dbSetEntities;
         }
 
+    
 
         [HttpGet]
         public IActionResult Index(string id)

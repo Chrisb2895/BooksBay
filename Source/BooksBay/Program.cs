@@ -1,5 +1,9 @@
+using BooksBay.CoreAdminExtensions;
+using BooksBay.Helpers;
+using DAL.CoreAdminExtensions;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using System.Diagnostics;
 
@@ -9,9 +13,6 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     string _API_Endpoint = builder.Configuration.GetValue<string>("WebAPI_Endpoint");
-
-    // Add services to the container.
-    builder.Services.AddControllersWithViews();
 
     //IDServer step 6
     builder.Services.AddAuthentication(config =>
@@ -41,6 +42,12 @@ try
             opt.TokenValidationParameters.NameClaimType = System.Security.Claims.ClaimTypes.Name;
         });
 
+
+    // Add services to the container.
+    builder.Services.AddControllersWithViews();
+
+    builder.Services.AddRazorPages();
+
     builder.Services.AddHttpClient();
 
     //OWASP SECURING
@@ -58,7 +65,11 @@ try
 
     builder.Logging.AddLog4Net("log4net.config");
 
+    builder.Services.AddSingleton<CoreAdminDALWrapper>();
 
+    CoreAdminDALWrapper wrap = builder.Services.BuildServiceProvider().GetService<CoreAdminDALWrapper>();
+    wrap.GetEntities(builder.Services);
+  
 
 
     var app = builder.Build();
@@ -124,13 +135,13 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
 
-    app.MapControllerRoute(
+    /*app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 
     app.MapControllerRoute(
         name: "areas",
-        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");*/
 
     //area handle
     app.UseEndpoints(endpoints =>
@@ -145,6 +156,8 @@ try
 
         endpoints.MapRazorPages();
     });
+
+    app.UseMiddleware<ErrorLoggingMiddleware>();
 
     app.Run();
 

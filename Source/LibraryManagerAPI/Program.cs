@@ -111,7 +111,12 @@ try
     });
     //END OWASP SECURING
 
-    builder.Services.AddCoreAdmin(new CoreAdminOptions() { IgnoreEntityTypes = new List<Type>() { typeof(IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext) } });
+    builder.Services.AddCoreAdmin(new CoreAdminOptions() 
+    { IgnoreEntityTypes = new List<Type>() 
+        { typeof(IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext),
+          typeof(IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext)
+        } 
+    });
 
 
     var app = builder.Build();

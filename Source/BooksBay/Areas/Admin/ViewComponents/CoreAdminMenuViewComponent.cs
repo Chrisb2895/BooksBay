@@ -7,29 +7,22 @@ namespace BooksBay.Areas.Admin.ViewComponents
 {
     public class CoreAdminMenuViewComponent : ViewComponent
     {
-        private IEnumerable<DiscoveredDbSetEntityType> dbSetEntities;
+        private readonly IEnumerable<DiscoveredDbSetEntityType> dbSetEntities;
         public readonly ILogger<CoreAdminMenuViewComponent> _logger;
-        public readonly IHttpClientFactory _httpClientFactory;
-        public readonly string _API_Endpoint;
 
-        public CoreAdminMenuViewComponent(ILogger<CoreAdminMenuViewComponent> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration)
+
+        public CoreAdminMenuViewComponent(ILogger<CoreAdminMenuViewComponent> logger, IEnumerable<DiscoveredDbSetEntityType> dbSetEntities)
         {
             _logger = logger;
-            _httpClientFactory = httpClientFactory;
-            _API_Endpoint = configuration.GetValue<string>("WebAPI_Endpoint");
+            this.dbSetEntities = dbSetEntities;
         }
+
 
         public IViewComponentResult Invoke()
         {
-            var serverClient = _httpClientFactory.CreateClient();
-            var getDbResponse = serverClient.GetAsync(_API_Endpoint + "api/DatabaseGeneric");
-            if (getDbResponse.Result.IsSuccessStatusCode)
-            {
-                var jsonDbResult = getDbResponse.Result.Content.ReadAsStringAsync();
-                this.dbSetEntities = JsonConvert.DeserializeObject<IEnumerable<DiscoveredDbSetEntityType>>(jsonDbResult.Result);
-            }
+
             var viewModel = new MenuViewModel();
-            foreach (var dbSetEntity in this.dbSetEntities)
+            foreach (var dbSetEntity in dbSetEntities)
             {
                 viewModel.DbContextNames.Add(dbSetEntity.DbContextType.Name);
                 viewModel.DbSetNames.Add(dbSetEntity.Name);

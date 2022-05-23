@@ -101,7 +101,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
                         if (dbSetProperty.PropertyType.IsGenericType && dbSetProperty.PropertyType.Name.StartsWith("DbSet"))
                         {
-                            if (!options.IgnoreEntityTypes.Contains(dbSetProperty.PropertyType.GenericTypeArguments.First()))
+                            if (!options.IgnoreEntityTypes.Contains(service.ImplementationType) &&
+                                !options.IgnoreEntityTypes.Contains(dbSetProperty.PropertyType) &&
+                                !options.IgnoreEntityTypes.Contains(dbSetProperty.PropertyType.GenericTypeArguments.First()) )
                             {
                                 discoveredServices.Add(new DiscoveredDbSetEntityType()
                                 {
