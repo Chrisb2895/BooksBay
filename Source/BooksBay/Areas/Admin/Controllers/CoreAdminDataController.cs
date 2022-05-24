@@ -1,4 +1,6 @@
-﻿using BooksBay.Areas.Admin.ViewModels;
+﻿using BooksBay.Areas.Admin.Controllers;
+using BooksBay.Areas.Admin.ViewModels;
+using BooksBay.Common;
 using DAL.CoreAdminExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -15,19 +17,20 @@ using System.Threading.Tasks;
 namespace DotNetEd.CoreAdmin.Controllers
 {
     [Area("Admin")]
-    public class CoreAdminDataController : Controller
+    public class CoreAdminDataController : CoreAdminCommonController
     {
         private readonly IEnumerable<DiscoveredDbSetEntityType> dbSetEntities;
-        public readonly ILogger<CoreAdminDataController> _logger;
+ 
 
-
-        public CoreAdminDataController(ILogger<CoreAdminDataController> logger, IEnumerable<DiscoveredDbSetEntityType> dbSetEntities)
+        public CoreAdminDataController(ILogger<CoreAdminCommonController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration
+            , IEnumerable<DiscoveredDbSetEntityType> dbSetEntities):base(logger, httpClientFactory, configuration)
+            
         {
-            _logger = logger;
             this.dbSetEntities = dbSetEntities;
+
         }
 
-    
+        
 
         [HttpGet]
         public IActionResult Index(string id)

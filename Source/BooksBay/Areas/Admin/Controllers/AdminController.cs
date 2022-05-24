@@ -1,10 +1,7 @@
-﻿using BooksBay.Controllers;
+﻿using BooksBay.Common;
 using BooksBay.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System.Net.Http;
 
 namespace BooksBay.Areas.Admin.Controllers
 {
