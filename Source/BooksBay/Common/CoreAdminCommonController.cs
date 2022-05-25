@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace BooksBay.Common
 {
@@ -33,6 +34,22 @@ namespace BooksBay.Common
                 return JsonConvert.DeserializeObject<T>(jsonDbResult);
             }
             return default(T);
+        }
+
+        [NonAction]
+        public async Task<TResult> PostAsync<TResult>(string methodName, object postData)
+        {
+            var serverClient = _httpClientFactory.CreateClient();
+            var stringContent = new StringContent(JsonConvert.SerializeObject(postData), UnicodeEncoding.UTF8, "application/json");
+            HttpResponseMessage res = await serverClient.PostAsync(_API_Endpoint + methodName, stringContent);
+            if (res.IsSuccessStatusCode)
+            {
+                var results = await res.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<TResult>(results);
+
+            }
+
+            return default(TResult);
         }
     }
 }

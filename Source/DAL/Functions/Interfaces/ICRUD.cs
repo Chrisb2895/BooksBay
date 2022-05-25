@@ -13,5 +13,7 @@
         Task<T> Update<T>(T entityToUpdate, object entityID) where T : class;
 
         Task<bool> Delete<T>(object entityID) where T : class;
+
+        IQueryable<object> Set(Type type);
     }
 }

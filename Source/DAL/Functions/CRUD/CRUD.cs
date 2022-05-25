@@ -2,6 +2,7 @@
 using DAL.Entities.Utils.ExtensionsMethods;
 using DAL.Entities.Utils.Pagination;
 using Microsoft.EntityFrameworkCore;
+using DAL.CoreAdminExtensions;
 
 namespace DAL.Functions.CRUD
 {
@@ -97,6 +98,19 @@ namespace DAL.Functions.CRUD
             {
                 PagedResult<T> result = await _dbContext.Set<T>().GetPaged(page, pageSize);
                 return (List<T>)result.Results;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IQueryable<object> Set(Type type) 
+        {
+            try
+            {
+                return (IQueryable<object>)(DbContext)_dbContext.Set(type);
+                
             }
             catch
             {

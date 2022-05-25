@@ -47,7 +47,7 @@ namespace DotNetEd.CoreAdmin.Controllers
                         viewModel.DbSetProperty = dbSetProperty;
 
                         var dbContextObject = (DbContext)this.HttpContext.RequestServices.GetRequiredService(dbSetEntity.DbContextType);
-                        var query = dbContextObject.Set(viewModel.EntityType);
+                        var query = PostAsync<IQueryable<object>>("api/DatabaseGeneric/Set", viewModel.EntityType).Result;
 
                         var dbSetValue = dbSetProperty.GetValue(dbContextObject);
 

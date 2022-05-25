@@ -33,6 +33,7 @@ try
     });
     builder.Services.AddSingleton<CustomConfigProvider>();
     builder.Services.AddScoped<ILibraryService, LibraryService>();
+    builder.Services.AddScoped<IDBGenericService, DBGenericService>();
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
     //should be only API but use it also as Web Site cause of IdentityServer (some classes are not deserializable with json.... so the login is handled by API)
