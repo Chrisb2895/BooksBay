@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
+
 namespace LibraryManager.Controllers
 {
     //This controller is used mvc like because ASP Net Identity ClaimsIdentity class is not completly serializable and so cant use API like.....
@@ -12,13 +13,15 @@ namespace LibraryManager.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IIdentityServerInteractionService _interactionService;
+        public readonly IConfiguration _configuration;
 
         public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
-            IIdentityServerInteractionService interactionService)
+            IIdentityServerInteractionService interactionService, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _interactionService = interactionService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -54,6 +57,7 @@ namespace LibraryManager.Controllers
             return View(vm);
         }
 
+
         [HttpGet]
         [Route("/Auth/Login")]
         public async Task<IActionResult> Login(string returnUrl)
@@ -61,6 +65,21 @@ namespace LibraryManager.Controllers
 
             //External Login Google Step 2
             var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
+
+            //SPEED UP LOGIN WHILE DEBUGGING - TOREMOVE TO PRD NOTES
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                return Login(new LoginViewModel()
+                {
+                    Email = _configuration["LoginUser"],
+                    Password = _configuration["LoginPwd"],
+                    ExternalProviders = externalProviders,
+                    RememberMe = false,
+                    ReturnUrl = returnUrl
+                }).Result;
+                
+            }
+
 
             return View(new LoginViewModel
             {
@@ -150,7 +169,7 @@ namespace LibraryManager.Controllers
             var userName = info.Principal.FindFirst(ClaimTypes.Name.Replace(" ", "_")).Value;
 
             return View("LoginResult", new LoginResultViewModel(false, Url.Action("ExternalRegister")));
- 
+
         }
 
         [HttpPost]

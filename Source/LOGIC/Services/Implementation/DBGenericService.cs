@@ -3,7 +3,6 @@ using DAL.DataContext;
 using DAL.Functions.CRUD;
 using LOGIC.Services.Interfaces;
 using LOGIC.Services.Models;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace LOGIC.Services.Implementation
@@ -18,6 +17,27 @@ namespace LOGIC.Services.Implementation
             _dbContext = dbContext;
             _CRUD = new CRUD(_dbContext);
 
+        }
+
+        public GenericResultSet<DatabaseContext> GetDBContext()
+        {
+            GenericResultSet<DatabaseContext> result = new GenericResultSet<DatabaseContext>();
+            var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
+            var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
+            try
+            {
+                result.UserMessage = $"The DataBaseContext was retrieved successfully ";
+                result.InternalMessage = $"{fullName} executed successfully";
+                result.ResultSet = _dbContext;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.UserMessage = $"There was an error getting DatabaseContext, please try again";
+                result.InternalMessage = $"ERROR: {fullName} : {ex.Message}";
+            }
+            return result;
         }
 
         public GenericResultSet<IQueryable<object>> Set(Type type)

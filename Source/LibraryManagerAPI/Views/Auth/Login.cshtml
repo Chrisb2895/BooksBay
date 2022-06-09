@@ -4,22 +4,12 @@
 	ViewBag.Title = "User Login";
 }
 
-
-
 <div class="login-body">
 	<div class="login-main">
 		<input type="checkbox" id="chk" aria-hidden="true">
 
-		<div class="login-signup">
-			<form method="post">
-				<label class="login-label" for="chk" aria-hidden="true">Sign up</label>
-				<input class="login-input" type="text" name="txt" placeholder="User name" required="">
-				<input class="login-input" type="email" name="email" placeholder="Email" required="">
-				<input class="login-input" type="password" name="pswd" placeholder="Password" required="">
-				<button class="login-button">Sign up</button>
-			</form>
-		</div>
-
+		@await Html.PartialAsync("Register.cshtml", new RegisterViewModel())
+		
 		<div class="login">
 			<form method="post">
 				<input type="hidden" asp-for="ReturnUrl" />

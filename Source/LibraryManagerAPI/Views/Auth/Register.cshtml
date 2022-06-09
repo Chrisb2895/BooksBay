@@ -1,37 +1,29 @@
-﻿@model RegisterViewModel 
+﻿@model RegisterViewModel
 
-@{ 
-    ViewBag.Title = "User Registration";
+@{
+	ViewBag.Title = "User Registration";
 }
 
-<h1>User Registration</h1>
+<div class="login-signup">
+	<form method="post" asp-controller="Auth" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">
 
-<div class="row">
-    <div class="col-md-12">
-        <form method="post">
-            <input type="hidden" asp-for="ReturnUrl" />
-            <div asp-validation-summary="All" class="text-danger"></div>
+		<label class="login-label" for="chk" aria-hidden="true">Sign up</label>
 
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
+		<input type="hidden" asp-for="ReturnUrl" />
+		<div asp-validation-summary="All" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="ConfirmPassword"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
+		<input asp-for="Email" class="login-input" placeholder="Email" />
+		<span asp-validation-for="Email" class="text-danger"></span>
 
-            <button type="submit" class="btn btn-primary">Register</button>
+		<input asp-for="Password" class="login-input" placeholder="Password" />
+		<span asp-validation-for="Password" class="text-danger"></span>
 
-        </form>
-    </div>
+		<input asp-for="ConfirmPassword" class="login-input" placeholder="ConfirmPassword" />
+		<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+		<button type="submit" class="login-button">Sign Up</button>
+
+	</form>
 </div>
+

@@ -40,7 +40,7 @@ try
     builder.Services.AddControllersWithViews().AddNewtonsoftJson(s =>
     {
 
-        s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();    
 
     });
 

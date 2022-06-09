@@ -101,7 +101,8 @@
         }
 
         // only supports single PKs, not composite ones
-        var pkProperties = Model.DbContext.Model.FindEntityTypes(Model.EntityType).First().FindPrimaryKey().Properties;
+        //var pkProperties = Model.DbContext.Model.FindEntityTypes(Model.EntityType).First().FindPrimaryKey().Properties;
+        var pkProperties = Model.DbModelInfo.Properties;
         if (pkProperties.Count == 1)
         {
             var pKProperty = pkProperties.Single()?.PropertyInfo;

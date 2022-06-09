@@ -2,6 +2,9 @@
 using BooksBay.Areas.Admin.ViewModels;
 using BooksBay.Common;
 using DAL.CoreAdminExtensions;
+using DAL.DataContext;
+using LOGIC.Services.Models.CoreAdminDataModels;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -46,12 +49,14 @@ namespace DotNetEd.CoreAdmin.Controllers
                         viewModel.EntityType = dbSetProperty.PropertyType.GetGenericArguments().First();
                         viewModel.DbSetProperty = dbSetProperty;
 
-                        var dbContextObject = (DbContext)this.HttpContext.RequestServices.GetRequiredService(dbSetEntity.DbContextType);
-                        var query = PostAsync<IQueryable<object>>("api/DatabaseGeneric/Set", viewModel.EntityType).Result;
+                        //var dbContextObject = GetAsync<DatabaseContext>("api/DatabaseGeneric/GetDatabaseContext").Result;
+                        CoreAdminDataIndex infoResult = PostAsync<CoreAdminDataIndex>("api/DatabaseGeneric/CoreAdminDataIndex", viewModel.EntityType).Result;
+                        var query = infoResult.Query ;
+                        //var query = (IQueryable<object>)(IdentityDbContext)dbContextObject.Set(viewModel.EntityType);
 
-                        var dbSetValue = dbSetProperty.GetValue(dbContextObject);
+                        //var dbSetValue = dbSetProperty.GetValue(dbContextObject);
 
-                        var navProperties = dbContextObject.Model.FindEntityType(viewModel.EntityType).GetNavigations();
+                        var navProperties = infoResult.Navigations;// dbContextObject.Model.FindEntityType(viewModel.EntityType).GetNavigations();
                         foreach (var property in navProperties)
                         {
                             // Only display One to One relationships on the Grid
@@ -60,15 +65,16 @@ namespace DotNetEd.CoreAdmin.Controllers
                         }
 
                         viewModel.Data = (IEnumerable<object>)query;
-                        viewModel.DbContext = dbContextObject;
+                        viewModel.DbContext = null;
+                        viewModel.DbModelInfo = infoResult;
                     }
                 }
             }
 
-            if (viewModel.DbContext == null)
+            /*if (viewModel.DbContext == null)
             {
                 return NotFound();
-            }
+            }*/
 
             return View(viewModel);
         }
