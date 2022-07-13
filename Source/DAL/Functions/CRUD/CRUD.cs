@@ -3,6 +3,7 @@ using DAL.Entities.Utils.ExtensionsMethods;
 using DAL.Entities.Utils.Pagination;
 using Microsoft.EntityFrameworkCore;
 using DAL.CoreAdminExtensions;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DAL.Functions.CRUD
 {
@@ -105,12 +106,37 @@ namespace DAL.Functions.CRUD
             }
         }
 
-        public IQueryable<object> Set(Type type) 
+        public IEnumerable<object> Set(Type type) 
         {
             try
             {
-                return (IQueryable<object>)(DbContext)_dbContext.Set(type);
+                return (_dbContext.Set(type).AsEnumerable());
                 
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IEnumerable<INavigation> GetNavigations(Type type)
+        {
+            try
+            {
+                return _dbContext.Model.FindEntityType(type).GetNavigations();
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IReadOnlyList<IProperty> GetProperties(Type type)
+        {
+            try
+            {
+                return _dbContext.Model.FindEntityTypes(type).First().FindPrimaryKey().Properties;
             }
             catch
             {

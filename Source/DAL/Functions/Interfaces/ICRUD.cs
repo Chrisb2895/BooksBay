@@ -1,4 +1,6 @@
-﻿namespace DAL
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+
+namespace DAL
 {
     public interface ICRUD
     {
@@ -14,6 +16,10 @@
 
         Task<bool> Delete<T>(object entityID) where T : class;
 
-        IQueryable<object> Set(Type type);
+        IEnumerable<object> Set(Type type);
+
+        IEnumerable<INavigation> GetNavigations(Type type);
+
+        IReadOnlyList<IProperty> GetProperties(Type type);
     }
 }

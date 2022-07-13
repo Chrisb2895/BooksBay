@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace BooksBay.Common
 {
     public class CoreAdminCommonController : Controller
     {
-    
+
         public readonly ILogger<CoreAdminCommonController> _logger;
         public readonly IHttpClientFactory _httpClientFactory;
         public readonly string _API_Endpoint;
@@ -26,14 +27,24 @@ namespace BooksBay.Common
         [NonAction]
         public async Task<T> GetAsync<T>(string methodName)
         {
-            var serverClient = _httpClientFactory.CreateClient();
-            var getDbResponse = serverClient.GetAsync(_API_Endpoint + methodName);
-            if (getDbResponse.Result.IsSuccessStatusCode)
+            try
             {
-                var jsonDbResult = await getDbResponse.Result.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<T>(jsonDbResult);
+                var serverClient = _httpClientFactory.CreateClient();
+                var getDbResponse = serverClient.GetAsync(_API_Endpoint + methodName);
+                if (getDbResponse.Result.IsSuccessStatusCode)
+                {
+                    var jsonDbResult = await getDbResponse.Result.Content.ReadAsStringAsync();
+                    var res = JsonConvert.DeserializeObject<T>(jsonDbResult);
+                    return res;
+                }
+                return default(T);
             }
-            return default(T);
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "CoreAdminCommonController Get Error : {0} {1}", ex.Message, ex.StackTrace);
+                return default(T);
+            }
+            
         }
 
         [NonAction]
@@ -41,11 +52,18 @@ namespace BooksBay.Common
         {
             var serverClient = _httpClientFactory.CreateClient();
             var stringContent = new StringContent(JsonConvert.SerializeObject(postData), UnicodeEncoding.UTF8, "application/json");
+            stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             HttpResponseMessage res = await serverClient.PostAsync(_API_Endpoint + methodName, stringContent);
+            var results = await res.Content.ReadAsStringAsync();
             if (res.IsSuccessStatusCode)
             {
-                var results = await res.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<TResult>(results);
+                var ret = JsonConvert.DeserializeObject<TResult>(results, new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    NullValueHandling = NullValueHandling.Ignore,
+
+                });
+                return ret;
 
             }
 

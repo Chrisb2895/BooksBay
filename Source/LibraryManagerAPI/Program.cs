@@ -40,7 +40,8 @@ try
     builder.Services.AddControllersWithViews().AddNewtonsoftJson(s =>
     {
 
-    s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();    
+        s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+        s.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
     });
 
@@ -112,16 +113,17 @@ try
     });
     //END OWASP SECURING
 
-    builder.Services.AddCoreAdmin(new CoreAdminOptions() 
-    { IgnoreEntityTypes = new List<Type>() 
+    builder.Services.AddCoreAdmin(new CoreAdminOptions()
+    {
+        IgnoreEntityTypes = new List<Type>()
         { typeof(IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext),
           typeof(IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext)
-        } 
+        }
     });
 
 
     var app = builder.Build();
-    
+
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())

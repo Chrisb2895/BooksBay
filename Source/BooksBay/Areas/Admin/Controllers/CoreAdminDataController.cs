@@ -3,6 +3,7 @@ using BooksBay.Areas.Admin.ViewModels;
 using BooksBay.Common;
 using DAL.CoreAdminExtensions;
 using DAL.DataContext;
+using LOGIC.Services.Models;
 using LOGIC.Services.Models.CoreAdminDataModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -23,14 +24,17 @@ namespace DotNetEd.CoreAdmin.Controllers
     public class CoreAdminDataController : CoreAdminCommonController
     {
         private readonly IEnumerable<DiscoveredDbSetEntityType> dbSetEntities;
- 
+
+        private readonly ILogger<CoreAdminCommonController> logger;
+
+
 
         public CoreAdminDataController(ILogger<CoreAdminCommonController> logger, IHttpClientFactory httpClientFactory, IConfiguration configuration
             , IEnumerable<DiscoveredDbSetEntityType> dbSetEntities):base(logger, httpClientFactory, configuration)
             
         {
             this.dbSetEntities = dbSetEntities;
-
+            this.logger = logger;
         }
 
         
@@ -39,36 +43,42 @@ namespace DotNetEd.CoreAdmin.Controllers
         public IActionResult Index(string id)
         {
             var viewModel = new DataListViewModel();
-
-            foreach (var dbSetEntity in dbSetEntities.Where(db => db.Name.ToLowerInvariant() == id.ToLowerInvariant()))
+            try
             {
-                foreach (var dbSetProperty in dbSetEntity.DbContextType.GetProperties())
+                foreach (var dbSetEntity in dbSetEntities.Where(db => db.Name.ToLowerInvariant() == id.ToLowerInvariant()))
                 {
-                    if (dbSetProperty.PropertyType.IsGenericType && dbSetProperty.PropertyType.Name.StartsWith("DbSet") && dbSetProperty.Name.ToLowerInvariant() == id.ToLowerInvariant())
+                    foreach (var dbSetProperty in dbSetEntity.DbContextType.GetProperties())
                     {
-                        viewModel.EntityType = dbSetProperty.PropertyType.GetGenericArguments().First();
-                        viewModel.DbSetProperty = dbSetProperty;
-
-                        //var dbContextObject = GetAsync<DatabaseContext>("api/DatabaseGeneric/GetDatabaseContext").Result;
-                        CoreAdminDataIndex infoResult = PostAsync<CoreAdminDataIndex>("api/DatabaseGeneric/CoreAdminDataIndex", viewModel.EntityType).Result;
-                        var query = infoResult.Query ;
-                        //var query = (IQueryable<object>)(IdentityDbContext)dbContextObject.Set(viewModel.EntityType);
-
-                        //var dbSetValue = dbSetProperty.GetValue(dbContextObject);
-
-                        var navProperties = infoResult.Navigations;// dbContextObject.Model.FindEntityType(viewModel.EntityType).GetNavigations();
-                        foreach (var property in navProperties)
+                        if (dbSetProperty.PropertyType.IsGenericType && dbSetProperty.PropertyType.Name.StartsWith("DbSet") && dbSetProperty.Name.ToLowerInvariant() == id.ToLowerInvariant())
                         {
-                            // Only display One to One relationships on the Grid
-                            if (property.GetCollectionAccessor() == null)
-                                query = query.Include(property.Name);
-                        }
+                            viewModel.EntityType = dbSetProperty.PropertyType.GetGenericArguments().First();
+                            viewModel.DbSetProperty = dbSetProperty;
+                            //var result = GetAsync<GenericResultSet<DatabaseContext>>("api/DatabaseGeneric/GetDatabaseContext").Result;
+                            //var dbContextObject = result.ResultSet;
+                            GenericResultSet<CoreAdminDataIndex> infoResult = PostAsync<GenericResultSet<CoreAdminDataIndex>>("api/DatabaseGeneric/CoreAdminDataIndex", viewModel.EntityType).Result;
+                            IEnumerable<object> query = infoResult.ResultSet.Query.AsEnumerable<object>();
 
-                        viewModel.Data = (IEnumerable<object>)query;
-                        viewModel.DbContext = null;
-                        viewModel.DbModelInfo = infoResult;
+                            //var dbSetValue = dbSetProperty.GetValue(dbContextObject);
+
+                            var navProperties = infoResult.ResultSet.Navigations;
+                            foreach (var property in navProperties)
+                            {
+                                // Only display One to One relationships on the Grid
+                                if (property.GetCollectionAccessor() == null)
+                                    query = ((IQueryable<object>)query).Include(property.Name);
+                            }
+
+                            viewModel.Data = (IEnumerable<object>)query;
+                            //viewModel.DbContext = dbContextObject;
+                            viewModel.DbModelInfo = infoResult.ResultSet;
+
+                        }
                     }
                 }
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex,"CoreAdminData Index Get Error : {0} {1}",ex.Message,ex.StackTrace);
             }
 
             /*if (viewModel.DbContext == null)

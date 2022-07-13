@@ -18,7 +18,7 @@ namespace BooksBay.CoreAdminExtensions
 
         public void GetEntities(IServiceCollection services)
         {
-
+            var coreAdminOptions = new CoreAdminOptions();
             var discoveredServices = new List<DiscoveredDbSetEntityType>();
             discoveredServices = GetAsync<IEnumerable<DiscoveredDbSetEntityType>>("api/DatabaseGeneric").Result.ToList();
 
@@ -33,6 +33,8 @@ namespace BooksBay.CoreAdminExtensions
             {
                 services.AddTransient(_ => service);
             }
+
+            services.AddSingleton(coreAdminOptions);
         }
     }
 }

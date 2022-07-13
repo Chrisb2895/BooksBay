@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using DAL.CoreAdminExtensions;
 using LOGIC.Services.Interfaces;
+using LOGIC.Services.Models;
+using LOGIC.Services.Models.CoreAdminDataModels;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace LibraryManagerAPI.Controllers
 {
@@ -37,9 +40,17 @@ namespace LibraryManagerAPI.Controllers
         //GET api/DatabaseGeneric/CoreAdminDataIndex
         [HttpPost]
         [Route("CoreAdminDataIndex")]
-        public IActionResult CoreAdminDataIndex([FromBody] Type type)
-        {
-            return Ok(_dbService.Set(type));
+        public IActionResult CoreAdminDataIndex([FromBody] string type)
+        {          
+            Type _type = Type.GetType(type);
+            var ret = JsonConvert.SerializeObject(_dbService.CoreAdminDataIndex(_type), new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                NullValueHandling = NullValueHandling.Ignore,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+
+            });
+            return Ok(ret);
 
         }
     }

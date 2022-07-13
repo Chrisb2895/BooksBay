@@ -3,7 +3,7 @@ using DAL.DataContext;
 using DAL.Functions.CRUD;
 using LOGIC.Services.Interfaces;
 using LOGIC.Services.Models;
-
+using LOGIC.Services.Models.CoreAdminDataModels;
 
 namespace LOGIC.Services.Implementation
 {
@@ -40,7 +40,7 @@ namespace LOGIC.Services.Implementation
             return result;
         }
 
-        public GenericResultSet<IQueryable<object>> Set(Type type)
+        /*public GenericResultSet<IQueryable<object>> Set(Type type)
         {
             GenericResultSet<IQueryable<object>> result = new GenericResultSet<IQueryable<object>>();
             var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
@@ -58,6 +58,31 @@ namespace LOGIC.Services.Implementation
             {
                 result.Exception = ex;
                 result.UserMessage = $"There was an error Setting type {type.Name} to get IQueryable object, please try again";
+                result.InternalMessage = $"ERROR: {fullName} : {ex.Message}";
+            }
+            return result;
+        }*/
+
+        public GenericResultSet<CoreAdminDataIndex> CoreAdminDataIndex(Type type)
+        {
+            GenericResultSet<CoreAdminDataIndex> result = new GenericResultSet<CoreAdminDataIndex>();
+            result.ResultSet = new CoreAdminDataIndex();
+            var methodInfo = System.Reflection.MethodBase.GetCurrentMethod();
+            var fullName = methodInfo.DeclaringType.FullName + "." + methodInfo.Name;
+            try
+            {
+                IEnumerable<object> res = _CRUD.Set(type);
+                result.ResultSet.Query = res.ToList();
+                result.ResultSet.Navigations = _CRUD.GetNavigations(type).ToList();
+                //result.ResultSet.Properties = _CRUD.GetProperties(type).ToList();             
+                result.UserMessage = $"{fullName} executed successfully";
+                result.InternalMessage = $"{fullName} executed successfully";
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
+                result.UserMessage = $"ERROR: {fullName} : {ex.Message}";
                 result.InternalMessage = $"ERROR: {fullName} : {ex.Message}";
             }
             return result;
